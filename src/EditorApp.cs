@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Myra;
+using Myra.Graphics2D.UI;
 
 namespace QMEditor;
 
@@ -8,6 +10,8 @@ public class EditorApp : Game {
 
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
+
+    private Desktop _desktop;
 
     private Tab[] _tabs;
     private int _tabId;
@@ -33,6 +37,7 @@ public class EditorApp : Game {
 
     protected override void LoadContent() {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
+        _desktop = new Desktop();
     }
 
     protected override void Update(GameTime gameTime) {
@@ -48,6 +53,8 @@ public class EditorApp : Game {
         _spriteBatch.Begin(SpriteSortMode.FrontToBack);
         _tabs[_tabId].Draw(_spriteBatch);
         _spriteBatch.End();
+
+        _desktop.Render();
 
         base.Draw(gameTime);
     }
