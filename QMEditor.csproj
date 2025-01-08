@@ -27,6 +27,9 @@
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.2.1105" />
     <PackageReference Include="Myra" Version="1.5.9" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="$(SolutionDir)assets\**" CopyToOutputDirectory="Always" LinkBase="assets\" />
+  </ItemGroup>
   <Target Name="RestoreDotnetTools" BeforeTargets="Restore">
     <Message Text="Restoring dotnet tools" Importance="High" />
     <Exec Command="dotnet tool restore" />

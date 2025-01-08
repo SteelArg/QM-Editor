@@ -16,6 +16,4 @@ public class World : Singleton<World> {
         _grid = new Grid(_gridSize);
     }
 
-    public void Hello() {}
-
 }

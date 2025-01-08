@@ -1,43 +1,40 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.IO;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Myra;
-using Myra.Graphics2D.UI;
 
 namespace QMEditor;
 
 public class EditorApp : Game {
 
     public const int DefaultWorldSize = 8;
+    public const int WindowRenderSizeX = 1920;
+    public const int WindowRenderSizeY = 1080;
 
-    private GraphicsDeviceManager _graphics;
-    private SpriteBatch _spriteBatch;
-    private Desktop _desktop;
-
-    private Tab[] _tabs;
-    private int _tabId;
+    private ScreenRenderer _renderer;
+    private TabsManager _tabsManager;
     private World _world;
 
+    private Texture2D _testTexture;
+
     public EditorApp() {
-        _graphics = new GraphicsDeviceManager(this);
-        Content.RootDirectory = "Content";
+        _renderer = new ScaledScreenRenderer(this, Resolution.Small, Resolution.HD);
         IsMouseVisible = true;
-
-        // Tabs
-        _tabs = [new SettingsTab(), new SceneTab(), new AssetsTab()];
-        _tabId = 0;
-
+        
+        _tabsManager = new TabsManager([new SettingsTab(), new SceneTab(), new CharacterTab(), new AssetsTab()]);
         _world = new World(DefaultWorldSize, DefaultWorldSize);
-        World.Instance.Hello();
+        _renderer.OnRender += Render;
     }
 
     protected override void Initialize() {
         base.Initialize();
+        _renderer.Init();
     }
 
     protected override void LoadContent() {
-        _spriteBatch = new SpriteBatch(GraphicsDevice);
-        _desktop = new Desktop();
+        _renderer.Load();
+        using var fileStream = new FileStream("assets\\test_render.png", FileMode.Open);
+            _testTexture = Texture2D.FromStream(GraphicsDevice, fileStream);
     }
 
     protected override void Update(GameTime gameTime) {
@@ -48,21 +45,14 @@ public class EditorApp : Game {
     }
 
     protected override void Draw(GameTime gameTime) {
-        GraphicsDevice.Clear(Color.CornflowerBlue);
-
-        _spriteBatch.Begin(SpriteSortMode.FrontToBack);
-        _tabs[_tabId].Draw(_spriteBatch);
-        _spriteBatch.End();
-
-        _desktop.Render();
+        _renderer.Draw(gameTime);
 
         base.Draw(gameTime);
     }
 
-    public void SwitchToTab(int newTabId) {
-        if (newTabId == _tabId) return;
-        _tabs[_tabId].Close();
-        _tabId = newTabId;
-        _tabs[_tabId].Open();
+    private void Render(SpriteBatch spriteBatch) {
+        _tabsManager.Render(spriteBatch);
+        spriteBatch.Draw(_testTexture, Vector2.Zero, Color.White);
     }
+
 }
