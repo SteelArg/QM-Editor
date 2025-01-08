@@ -6,7 +6,7 @@ namespace QMEditor;
 public class Grid {
 
     private Dictionary<Vector2, GridCell> _cells;
-    Vector2 _gridSize;
+    private Vector2 _gridSize;
 
     public Grid(Vector2 size) {
         _gridSize = size;

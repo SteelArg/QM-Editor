@@ -8,7 +8,7 @@ namespace QMEditor;
 
 public class EditorApp : Game {
 
-    private const int DEFAULT_WORLD_SIZE = 8;
+    public const int DefaultWorldSize = 8;
 
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
@@ -27,8 +27,8 @@ public class EditorApp : Game {
         _tabs = [new SettingsTab(), new SceneTab(), new AssetsTab()];
         _tabId = 0;
 
-        _world = new World(DEFAULT_WORLD_SIZE, DEFAULT_WORLD_SIZE);
-        World.instance.Hello();
+        _world = new World(DefaultWorldSize, DefaultWorldSize);
+        World.Instance.Hello();
     }
 
     protected override void Initialize() {
