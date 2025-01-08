@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework.Graphics;
 
-namespace QMEditor;
+namespace QMEditor.Controllers;
 
 public abstract class Tab {
 

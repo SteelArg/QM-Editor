@@ -1,10 +1,10 @@
 using Microsoft.Xna.Framework.Graphics;
 
-namespace QMEditor;
+namespace QMEditor.Controllers;
 
-public class SettingsTab : Tab {
+public class AssetsTab : Tab {
 
-    public SettingsTab() : base() {
+    public AssetsTab() : base() {
 
     }
 

@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework;
 
-namespace QMEditor;
+namespace QMEditor.Model;
 
 public class Character : IPlacedOnGrid {
 

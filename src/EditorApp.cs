@@ -2,27 +2,23 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Myra;
+using QMEditor.Controllers;
 
 namespace QMEditor;
 
 public class EditorApp : Game {
 
-    public const int DefaultWorldSize = 8;
-    public const int WindowRenderSizeX = 1920;
-    public const int WindowRenderSizeY = 1080;
-
     private ScreenRenderer _renderer;
     private TabsManager _tabsManager;
-    private World _world;
 
     private Texture2D _testTexture;
 
     public EditorApp() {
-        _renderer = new ScaledScreenRenderer(this, Resolution.Small, Resolution.HD);
+        _renderer = new ScreenRenderer(this, Resolution.HD);
         IsMouseVisible = true;
         
         _tabsManager = new TabsManager([new SettingsTab(), new SceneTab(), new CharacterTab(), new AssetsTab()]);
-        _world = new World(DefaultWorldSize, DefaultWorldSize);
         _renderer.OnRender += Render;
     }
 
@@ -32,7 +28,9 @@ public class EditorApp : Game {
     }
 
     protected override void LoadContent() {
+        MyraEnvironment.Game = this;
         _renderer.Load();
+        _tabsManager.Load();
         using var fileStream = new FileStream("assets\\test_render.png", FileMode.Open);
             _testTexture = Texture2D.FromStream(GraphicsDevice, fileStream);
     }
@@ -51,8 +49,8 @@ public class EditorApp : Game {
     }
 
     private void Render(SpriteBatch spriteBatch) {
+        spriteBatch.Draw(_testTexture, AppLayout.DrawPos, AppLayout.DrawSize, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
         _tabsManager.Render(spriteBatch);
-        spriteBatch.Draw(_testTexture, Vector2.Zero, Color.White);
     }
 
 }

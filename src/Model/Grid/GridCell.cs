@@ -1,7 +1,7 @@
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 
-namespace QMEditor;
+namespace QMEditor.Model;
 
 public class GridCell {
     private List<IPlacedOnGrid> _objects;

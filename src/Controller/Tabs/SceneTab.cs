@@ -1,10 +1,10 @@
 using Microsoft.Xna.Framework.Graphics;
 
-namespace QMEditor;
+namespace QMEditor.Controllers;
 
-public class CharacterTab : Tab {
+public class SceneTab : Tab {
 
-    public CharacterTab() : base() {
+    public SceneTab() : base() {
 
     }
 

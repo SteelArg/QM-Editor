@@ -1,10 +1,10 @@
 using Microsoft.Xna.Framework.Graphics;
 
-namespace QMEditor;
+namespace QMEditor.Controllers;
 
-public class AssetsTab : Tab {
+public class CharacterTab : Tab {
 
-    public AssetsTab() : base() {
+    public CharacterTab() : base() {
 
     }
 
