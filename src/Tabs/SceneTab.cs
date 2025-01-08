@@ -1,5 +1,7 @@
 using Microsoft.Xna.Framework.Graphics;
 
+namespace QMEditor;
+
 public class SceneTab : Tab {
 
     public SceneTab() : base() {

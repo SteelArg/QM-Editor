@@ -8,14 +8,14 @@ namespace QMEditor;
 
 public class EditorApp : Game {
 
+    private const int DEFAULT_WORLD_SIZE = 8;
+
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
-
     private Desktop _desktop;
 
     private Tab[] _tabs;
     private int _tabId;
-
     private World _world;
 
     public EditorApp() {
@@ -24,10 +24,10 @@ public class EditorApp : Game {
         IsMouseVisible = true;
 
         // Tabs
-        _tabs = new Tab[] { new SettingsTab(), new SceneTab(), new AssetsTab() };
+        _tabs = [new SettingsTab(), new SceneTab(), new AssetsTab()];
         _tabId = 0;
 
-        _world = new World();
+        _world = new World(DEFAULT_WORLD_SIZE, DEFAULT_WORLD_SIZE);
         World.instance.Hello();
     }
 

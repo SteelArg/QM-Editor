@@ -1,5 +1,7 @@
 using Microsoft.Xna.Framework.Graphics;
 
+namespace QMEditor;
+
 public class SettingsTab : Tab {
 
     public SettingsTab() : base() {
