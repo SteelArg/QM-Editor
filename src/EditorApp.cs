@@ -15,11 +15,13 @@ public class EditorApp : Game {
     private Texture2D _testTexture;
 
     public EditorApp() {
-        _renderer = new ScreenRenderer(this, Resolution.HD);
+        _renderer = new SeperatedScreenRenderer(this, Resolution.HD);
         IsMouseVisible = true;
         
         _tabsManager = new TabsManager([new SettingsTab(), new SceneTab(), new CharacterTab(), new AssetsTab()]);
-        _renderer.OnRender += Render;
+        _renderer.UIRenderList.AddRenderer(new TabsUIRenderer(_tabsManager));
+        _renderer.SpriteRenderList.AddRenderer(new TabsSpriteRenderer(_tabsManager));
+        _renderer.SpriteRenderList.AddRenderer(new DelegateRenderer((sb) => {sb.Draw(_testTexture, Vector2.Zero, null, Color.White);}));
     }
 
     protected override void Initialize() {
@@ -46,11 +48,6 @@ public class EditorApp : Game {
         _renderer.Draw(gameTime);
 
         base.Draw(gameTime);
-    }
-
-    private void Render(SpriteBatch spriteBatch) {
-        spriteBatch.Draw(_testTexture, AppLayout.DrawPos, AppLayout.DrawSize, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 1f);
-        _tabsManager.Render(spriteBatch);
     }
 
 }

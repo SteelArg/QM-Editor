@@ -7,6 +7,8 @@ namespace QMEditor.Controllers;
 
 public class TabsManager {
 
+    public Tab CurrentTab {get => _tabs[_tabId];}
+
     private TabSelect _tabSelect;
     private Desktop _desktop;
 
@@ -22,26 +24,31 @@ public class TabsManager {
 
     public void Load() {
         _desktop = new Desktop();
+        BuildUI();
+    }
+
+    public void BuildUI() {
         var grid = new Grid();
         grid.RowsProportions.Add(new Proportion(ProportionType.Pixels, AppLayout.TabSelectHeight));
-
         Widget tabSelection = _tabSelect.BuildUI();
         grid.Widgets.Add(tabSelection);
-        
         _desktop.Root = grid;
     }
 
     public void Render(SpriteBatch spriteBatch) {
+        CurrentTab.Draw(spriteBatch);
+    }
+
+    public void DrawUI() {
         _desktop.Render();
-        _tabs[_tabId].Draw(spriteBatch);
     }
 
     public void SwitchToTab(int newTabId) {
         if (newTabId == _tabId) return;
         Console.WriteLine($"Switched to tab {newTabId}");
-        _tabs[_tabId].Close();
+        CurrentTab.Close();
         _tabId = newTabId;
-        _tabs[_tabId].Open();
+        CurrentTab.Open();
     }
 
 }

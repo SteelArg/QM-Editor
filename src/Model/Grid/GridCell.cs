@@ -6,6 +6,9 @@ namespace QMEditor.Model;
 public class GridCell {
     private List<IPlacedOnGrid> _objects;
     private Vector2 _position;
+
+    public Vector2 Position {get => _position;}
+    public IPlacedOnGrid[] Objects {get => _objects.ToArray();}
     
     public GridCell(Vector2 pos, List<IPlacedOnGrid> objects = null) {
         _position = pos;

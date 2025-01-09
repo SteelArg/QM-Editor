@@ -1,8 +1,10 @@
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace QMEditor;
 
+[Obsolete("Scaled screen renderer is deprecated. It does not work with Myra UI")]
 public class ScaledScreenRenderer : ScreenRenderer {
 
     private RenderTarget2D _screenRenderTarget;

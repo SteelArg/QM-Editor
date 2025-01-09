@@ -6,7 +6,8 @@ namespace QMEditor;
 
 public class ScreenRenderer {
 
-    public Action<SpriteBatch> OnRender;
+    public RenderList UIRenderList = new RenderList();
+    public RenderList SpriteRenderList = new RenderList();
 
     private GraphicsDeviceManager _graphics;
     protected SpriteBatch _spriteBatch;
@@ -32,10 +33,18 @@ public class ScreenRenderer {
 
     public virtual void Draw(GameTime gameTime) {
         _game.GraphicsDevice.Clear(Color.Black);
+        DrawUI();
+        DrawSprites();
+    }
 
+    protected void DrawSprites() {
         _spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend);
-        OnRender?.Invoke(_spriteBatch);
+        SpriteRenderList.Render(_spriteBatch);
         _spriteBatch.End();
+    }
+
+    protected void DrawUI() {
+        UIRenderList.Render();
     }
 
 }

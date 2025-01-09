@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace QMEditor.Model;
 
@@ -33,5 +34,7 @@ public class Grid {
     public IPlacedOnGrid[] GetObjectsOnGridPosition(Vector2 pos) {
         return _cells[pos].GetPlacedObjects();
     }
+
+    public GridCell[] GetGridCells() => _cells.Values.ToArray();
 
 }
