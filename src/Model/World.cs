@@ -4,12 +4,20 @@ namespace QMEditor.Model;
 
 public class World : Singleton<World> {
 
-    private Grid _grid;
+    public WorldSettings Settings;
 
+    private Grid _grid;
     private Vector2 _gridSize;
 
-    public World(int sizeX, int sizeY) : base() {
-        _gridSize = new Vector2(sizeX, sizeY);
+    public Grid Grid {get => _grid;}
+
+    static World() {
+        new World(WorldSettings.Default);
+    }
+
+    public World(WorldSettings settings) : base() {
+        Settings = settings;
+        _gridSize = new Vector2(settings.WorldSize[0], settings.WorldSize[1]);
     }
 
     protected override void OnSingletonCreated() {

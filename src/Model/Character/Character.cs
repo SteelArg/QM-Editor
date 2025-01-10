@@ -9,7 +9,9 @@ public class Character : IPlacedOnGrid {
     private Asset _asset;
     private List<Accessory> _accessories = new List<Accessory>();
 
-    public Character() {}
+    public Character(Asset asset) {
+        _asset = asset;
+    }
 
     public void AddAccessory(Accessory accessory) {
         _accessories.Add(accessory);

@@ -15,7 +15,7 @@ public class EditorApp : Game {
     private Texture2D _testTexture;
 
     public EditorApp() {
-        _renderer = new SeperatedScreenRenderer(this, Resolution.HD);
+        _renderer = new SeperatedScreenRenderer(this, Resolution.Pick(Resolution.HD));
         IsMouseVisible = true;
         
         _tabsManager = new TabsManager([new SettingsTab(), new SceneTab(), new CharacterTab(), new AssetsTab()]);
