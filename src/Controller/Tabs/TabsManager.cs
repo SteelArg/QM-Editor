@@ -17,7 +17,7 @@ public class TabsManager {
 
     public TabsManager(Tab[] tabs) {
         _tabs = tabs;
-        _tabId = 0;
+        _tabId = -1;
         _tabSelect = new TabSelect();
         _tabSelect.TabSelected += SwitchToTab;
     }
@@ -25,14 +25,24 @@ public class TabsManager {
     public void Load() {
         _desktop = new Desktop();
         BuildUI();
+        foreach (Tab tab in _tabs) {
+            tab.Load();
+        }
+        SwitchToTab(0);
     }
 
     public void BuildUI() {
-        var grid = new Grid();
-        grid.RowsProportions.Add(new Proportion(ProportionType.Pixels, AppLayout.TabSelectHeight));
+        var rootGrid = new Grid();
+        rootGrid.RowsProportions.Add(new Proportion(ProportionType.Pixels, AppLayout.TabSelectHeight));
+        rootGrid.RowsProportions.Add(new Proportion(ProportionType.Fill));
         Widget tabSelection = _tabSelect.BuildUI();
-        grid.Widgets.Add(tabSelection);
-        _desktop.Root = grid;
+        rootGrid.Widgets.Add(tabSelection);
+        var grid = new Grid();
+        grid.ColumnsProportions.Add(new Proportion(ProportionType.Fill));
+        grid.ColumnsProportions.Add(new Proportion(ProportionType.Pixels, AppLayout.InspectorWidth));
+        Grid.SetRow(grid, 1);
+        rootGrid.Widgets.Add(grid);
+        _desktop.Root = rootGrid;
     }
 
     public void Render(SpriteBatch spriteBatch) {
@@ -46,9 +56,14 @@ public class TabsManager {
     public void SwitchToTab(int newTabId) {
         if (newTabId == _tabId) return;
         Console.WriteLine($"Switched to tab {newTabId}");
-        CurrentTab.Close();
+        if (_tabId > -1)
+            CurrentTab.Close();
         _tabId = newTabId;
         CurrentTab.Open();
+        Grid rootGrid = (Grid)_desktop.Root;
+        Grid grid = (Grid)rootGrid.Widgets[1];
+        grid.Widgets.Clear();
+        grid.Widgets.Add(CurrentTab.Widget);
     }
 
 }

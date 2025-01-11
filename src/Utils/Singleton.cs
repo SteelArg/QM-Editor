@@ -10,6 +10,4 @@ public abstract class Singleton<T> where T : Singleton<T> {
         _instance = (T)this;
     }
 
-    protected abstract void OnSingletonCreated();
-
 }

@@ -10,8 +10,4 @@ public class Accessory {
         _asset = asset;
     }
 
-    public void Render(Grid grid, Vector2 gridPos) {
-        // Render
-    }
-
 }

@@ -1,36 +1,25 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace QMEditor.Model;
 
-public class Character : IPlacedOnGrid {
+public class Character : RenderableGridObject {
 
-    private Vector2 _gridPosition;
-    private Asset _asset;
     private List<Accessory> _accessories = new List<Accessory>();
 
-    public Character(Asset asset) {
-        _asset = asset;
+    public Character(Asset asset) : base(asset) {}
+
+    public void AddAccessory(Accessory accessory) => _accessories.Add(accessory);
+    public void RemoveAccessory(Accessory accessory) => _accessories.Remove(accessory);
+
+    public override void Render(SpriteBatch spriteBatch, GridRenderSettings renderSettings, float depth) {
+        base.Render(spriteBatch, renderSettings, depth);
+        // TODO: Render accessories
     }
 
-    public void AddAccessory(Accessory accessory) {
-        _accessories.Add(accessory);
+    protected override Vector2 GetRenderPos(GridRenderSettings renderSettings) {
+        return renderSettings.CalculateRenderPosition([(int)GridPosition.X, (int)GridPosition.Y], _asset.GetSize());
     }
-
-    public void RemoveAccessory(Accessory accessory) {
-        _accessories.Remove(accessory);
-    }
-
-    public void Render(Grid grid) {
-        // Render on a grid
-        foreach (Accessory acc in _accessories) {
-            acc.Render(grid, _gridPosition);
-        }
-    }
-
-    public void SetGridPosition(Vector2 pos) {
-        _gridPosition = pos;
-    }
-    public Vector2 GetGridPosition() => _gridPosition;
 
 }

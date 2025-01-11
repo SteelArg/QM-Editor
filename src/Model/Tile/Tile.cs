@@ -2,16 +2,12 @@ using Microsoft.Xna.Framework;
 
 namespace QMEditor.Model;
 
-public class Tile : IPlacedOnGrid {
+public class Tile : RenderableGridObject {
 
-    private Vector2 _gridPosition;
-    private Asset _asset;
+    public Tile(Asset asset) : base(asset) {}
 
-    public Tile(Asset asset) {
-        _asset = asset;
+    protected override Vector2 GetRenderPos(GridRenderSettings renderSettings) {
+        return renderSettings.CalculateTilePosition([(int)GridPosition.X, (int)GridPosition.Y]);
     }
-
-    public Vector2 GetGridPosition() => _gridPosition;
-    public void SetGridPosition(Vector2 pos) => _gridPosition = pos;
 
 }

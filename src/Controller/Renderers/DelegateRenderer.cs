@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace QMEditor;
+namespace QMEditor.Controllers;
 
 public class DelegateRenderer : Renderer {
 

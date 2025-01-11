@@ -8,7 +8,7 @@ public class AppSettings : Singleton<AppSettings> {
 
     private Setting<float> _volume;
 
-    protected override void OnSingletonCreated() {
+    public AppSettings() : base() {
         _volume = new Setting<float>("volume", 1f);
         Load();
     }

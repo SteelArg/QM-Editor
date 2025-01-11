@@ -1,16 +1,16 @@
 using Microsoft.Xna.Framework.Graphics;
-using QMEditor.Model;
+using Myra.Graphics2D.UI;
 
 namespace QMEditor.Controllers;
 
 public class SettingsTab : Tab {
 
-    public const int DefaultWorldSize = 8;
-
-    private World _currentWorld;
-
     public SettingsTab() : base() {
-        _currentWorld = new World(DefaultWorldSize, DefaultWorldSize);
+        
+    }
+
+    protected override Widget BuildUI() {
+        return null;
     }
 
     public override void Open() {}
