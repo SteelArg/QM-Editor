@@ -7,31 +7,23 @@ public class AppSettings : Singleton<AppSettings> {
     public static Setting<float> Volume {get => Instance._volume;}
 
     private Setting<float> _volume;
+    private StringDataParser _dataParser;
 
     public AppSettings() : base() {
         _volume = new Setting<float>("volume", 1f);
+        _dataParser = new StringDataParser(SettingsPath);
         Load();
     }
 
-    public static void Save() {
-        string settings = Instance._volume.GetSaveString();
-        ServiceLocator.FileService.Write(SettingsPath, settings);
+    public void Save() {
+        _dataParser.SetValue("volume", _volume.ToString());
+        _dataParser.Save();
     }
 
-    public static void Load() {
-        string settings = ServiceLocator.FileService.Read(SettingsPath);
-
-        foreach (string line in settings.Split(" ")) {
-            if (line == string.Empty) continue;
-
-            string name = line.Split('=')[0];
-            string value = line.Split('=')[1];
-            
-            switch (name) {
-                case "volume":
-                    Instance._volume.SetValue(float.Parse(value)); break;
-            }
-        }
+    public void Load() {
+        _dataParser.Load();
+        _dataParser.Ensure("volume", 1f.ToString());
+        _volume.SetValue(float.Parse(_dataParser.GetValue("volume")));
     }
 
 }
@@ -48,11 +40,7 @@ public class Setting<T> {
         _value = value;
     }
 
-    public string GetSaveString() {
-        return $"{_settingId}={ToStr()}";
-    }
-
-    public string ToStr() {
+    public override string ToString() {
         return _value.ToString();
     }
 

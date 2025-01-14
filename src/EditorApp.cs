@@ -12,11 +12,11 @@ public class EditorApp : Game {
 
     private ScreenRenderer _renderer;
     private TabsManager _tabsManager;
-
-    private Texture2D _testTexture;
+    private AppSettings _settings;
 
     public EditorApp() {
         _renderer = new SeperatedScreenRenderer(this, Resolution.Pick(Resolution.HD), 4f);
+        _settings = new AppSettings();
         IsMouseVisible = true;
         
         new World(WorldSettings.Default);
@@ -24,7 +24,6 @@ public class EditorApp : Game {
         _tabsManager = new TabsManager([new SettingsTab(), new SceneTab(), new CharacterTab(), new AssetsTab()]);
         _renderer.UIRenderList.AddRenderer(new TabsUIRenderer(_tabsManager));
         _renderer.SpriteRenderList.AddRenderer(new TabsSpriteRenderer(_tabsManager));
-        //_renderer.SpriteRenderList.AddRenderer(new DelegateRenderer((sb) => {sb.Draw(_testTexture, Vector2.Zero, null, Color.White);}));
     }
 
     protected override void Initialize() {
@@ -34,21 +33,13 @@ public class EditorApp : Game {
 
     protected override void LoadContent() {
         MyraEnvironment.Game = this;
-        _renderer.Load();
-        _tabsManager.Load();
-        using var fileStream = new FileStream("assets\\test_render.png", FileMode.Open);
-            _testTexture = Texture2D.FromStream(GraphicsDevice, fileStream);
-        
-        // Steven character
-        Asset stevenAsset = new Asset("test\\steven.png");
-        stevenAsset.Load(this);
-        var steven = new Character(stevenAsset);
-        World.Instance.Grid.PlaceOnGrid(steven, new Vector2(2, 3));
 
-        // Fill grid with tiles
-        Asset tileAsset = new Asset("test\\tile.png");
-        tileAsset.Load(this);
-        var tileFactory = new TileFactory(tileAsset);
+        _renderer.Load();
+        _tabsManager.Load(this);
+        
+        World.Instance.Grid.PlaceOnGrid(AssetsLoader.Instance.GetCharacter("steven"), new Vector2(2, 3));
+
+        var tileFactory = new TileFactory(AssetsLoader.Instance.GetAsset("default", AssetsLoader.Folders.Tiles));
         tileFactory.FillGrid(World.Instance.Grid);
     }
 
@@ -63,6 +54,12 @@ public class EditorApp : Game {
         _renderer.Draw(gameTime);
 
         base.Draw(gameTime);
+    }
+
+    public new void Exit() {
+        AppSettings.Instance.Save();
+        WorldSaver.Save();
+        base.Exit();
     }
 
 }

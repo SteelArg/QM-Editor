@@ -1,3 +1,4 @@
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Myra.Graphics2D.UI;
 
@@ -11,7 +12,7 @@ public abstract class Tab {
 
     public Tab() {}
 
-    public void Load() {
+    public virtual void Load(Game game) {
         _widget = BuildUI();
         if (_widget == null) _widget = new Widget();
     }

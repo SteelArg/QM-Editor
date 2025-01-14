@@ -7,7 +7,7 @@ public static class ServiceLocator {
     public static IFileService FileService { get; private set; }
 
     static ServiceLocator() {
-        FileService = new DebugFileServiceProvider(new EmptyFileServiceProvider());
+        FileService = new DebugFileServiceProvider(new DefaultFileServiceProvider());
     }
 
 }

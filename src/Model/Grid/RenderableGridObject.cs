@@ -6,6 +6,7 @@ namespace QMEditor.Model;
 public abstract class RenderableGridObject : GridObject {
 
     protected Asset _asset;
+    public Asset Asset { get => _asset; }
 
     public RenderableGridObject(Asset asset) {
         _asset = asset;
