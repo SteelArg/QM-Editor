@@ -14,7 +14,8 @@ public struct GridRenderSettings {
     public readonly Vector2 StepX { get; }
     public readonly Vector2 StepY { get; }
 
-    private static readonly Dictionary<Type, float> _depth = new Dictionary<Type, float>() { {typeof(Character), 0.5f}, {typeof(Tile), 0f} };
+    private static readonly Dictionary<Type, float> _depth = new Dictionary<Type, float>() { {typeof(Character), 0.5f}, {typeof(Tile), 0f}, {typeof(Accessory), 0.7f} };
+    private const int spriteLift = -3;
 
     public GridRenderSettings(Vector2 offset, Vector2 tileTopSize) {
         Offset = offset;
@@ -25,8 +26,9 @@ public struct GridRenderSettings {
 
     public Vector2 CalculateRenderPosition(int[] gridCell, int[] spriteSize) {
         Vector2 pos = CalculateTilePosition(gridCell);
+        pos += StepX;
 
-        pos += new Vector2(MathF.Ceiling(-spriteSize[0]/2f), -spriteSize[1]);
+        pos += new Vector2(MathF.Ceiling(-spriteSize[0]/2f), -spriteLift-spriteSize[1]);
 
         return pos;
     }
@@ -38,6 +40,22 @@ public struct GridRenderSettings {
         pos += gridCell[1] * StepY;
 
         return pos + Offset;
+    }
+
+    public int[] ScreenPositionToGrid(Vector2 screen) {
+        Vector2 localPos = screen - Offset;
+        
+        float x1 = localPos.X - StepX.X;
+        float y1 = localPos.Y * StepY.X/StepY.Y;
+        // Apply a counter-clockwise rotation of 45 degrees
+        float xr = MathF.Cos(MathF.PI/4)*x1 - MathF.Sin(MathF.PI/4)*y1;
+        float yr = MathF.Sin(MathF.PI/4)*x1 + MathF.Cos(MathF.PI/4)*y1;
+
+        float diag = StepX.X * MathF.Sqrt(2f);
+        int x2 = (int)(xr / diag);
+        int y2 = (int)(yr * -1 / diag);
+        
+        return [x2, y2];
     }
 
     public float GetDepthFor<T>() {

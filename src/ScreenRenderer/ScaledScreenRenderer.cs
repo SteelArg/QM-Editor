@@ -11,22 +11,22 @@ public class ScaledScreenRenderer : ScreenRenderer {
 
     private int[] _renderSize;
 
-    public ScaledScreenRenderer(Game game, int[] windowSize, int[] renderSize) : base(game, windowSize) {
+    public ScaledScreenRenderer(int[] windowSize, int[] renderSize) : base(windowSize) {
         _renderSize = renderSize;
     }
 
     public override void Load() {
         base.Load();
-        _screenRenderTarget = new RenderTarget2D(_game.GraphicsDevice, _renderSize[0], _renderSize[1]);
+        _screenRenderTarget = new RenderTarget2D(Global.Game.GraphicsDevice, _renderSize[0], _renderSize[1]);
     }
 
     public override void Draw(GameTime gameTime) {
-        _game.GraphicsDevice.SetRenderTarget(_screenRenderTarget);
+        Global.Game.GraphicsDevice.SetRenderTarget(_screenRenderTarget);
         base.Draw(gameTime);
 
         // Render to the window itself
-        _game.GraphicsDevice.SetRenderTarget(null);
-        _game.GraphicsDevice.Clear(Color.Green);
+        Global.Game.GraphicsDevice.SetRenderTarget(null);
+        Global.Game.GraphicsDevice.Clear(Color.Green);
 
         float calculatedScale = _windowSize[1] / (float)_renderSize[1];
 

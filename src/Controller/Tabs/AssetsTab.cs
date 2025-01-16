@@ -1,4 +1,3 @@
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Myra.Graphics2D.UI;
 using QMEditor.Model;
@@ -13,9 +12,9 @@ public class AssetsTab : Tab {
         _loader = new AssetsLoader();
     }
 
-    public override void Load(Game game) {
-        base.Load(game);
-        _loader.Load(game);
+    public override void Load() {
+        base.Load();
+        _loader.Load();
     }
 
     protected override Widget BuildUI() {

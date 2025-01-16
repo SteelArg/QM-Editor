@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Microsoft.Xna.Framework;
 
 namespace QMEditor.Model;
 
@@ -17,7 +16,7 @@ public class AssetFolder {
         _factory = new AssetFactory();
     }
 
-    public void Scan(Game game) {
+    public void Scan() {
         Directory.CreateDirectory(_assetsPath);
 
         _assets.Clear();
@@ -25,7 +24,7 @@ public class AssetFolder {
         
         foreach (string file in files) {
             Asset asset = _factory.Create($"{_path}\\{file}");
-            asset.Load(game);
+            asset.Load();
             _assets.Add(asset.Name, asset);
         }
     }

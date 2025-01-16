@@ -23,11 +23,11 @@ public class TabsManager {
         _tabSelect.TabSelected += SwitchToTab;
     }
 
-    public void Load(Game game) {
+    public void Load() {
         _desktop = new Desktop();
         BuildUI();
         foreach (Tab tab in _tabs) {
-            tab.Load(game);
+            tab.Load();
         }
         SwitchToTab(0);
     }

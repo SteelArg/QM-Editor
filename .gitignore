@@ -66,3 +66,6 @@ artifacts/
 
 # MGCB
 *.mgcb
+
+# UML Diagrams
+*.drawio

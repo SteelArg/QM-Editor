@@ -20,7 +20,7 @@ public class SceneTab : Tab {
             Width = 200, Height = 120,
             Margin = new Thickness(20)
         };
-        renderButton.Click += (s, a) => { Flags.Set(Flag.SaveAsPng); };
+        renderButton.Click += (s, a) => { WorldRenderer.SaveToPng("output\\render.png", [1024, 512]); };
 
         Grid.SetColumn(renderButton, 1);
         return renderButton;

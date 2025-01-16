@@ -1,3 +1,5 @@
+using QMEditor.Model;
+
 namespace QMEditor;
 
 public class AppSettings : Singleton<AppSettings> {

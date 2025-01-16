@@ -1,5 +1,4 @@
 using System.IO;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace QMEditor.Model;
@@ -20,8 +19,8 @@ public class Asset {
         NameOfFile = Path.GetFileName(path);
     }
 
-    public virtual void Load(Game game) {
-        _texture = ServiceLocator.FileService.LoadTexture(_assetsPath, game);
+    public virtual void Load() {
+        _texture = ServiceLocator.FileService.LoadTexture(_assetsPath);
         _isLoaded = true;
     }
 

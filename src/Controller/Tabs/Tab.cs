@@ -12,7 +12,7 @@ public abstract class Tab {
 
     public Tab() {}
 
-    public virtual void Load(Game game) {
+    public virtual void Load() {
         _widget = BuildUI();
         if (_widget == null) _widget = new Widget();
     }

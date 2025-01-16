@@ -1,5 +1,4 @@
 using System;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace QMEditor.Model.IO;
@@ -28,9 +27,14 @@ public class DebugFileServiceProvider : IFileService {
         return _fileService.GetAllFiles(path, fullNames);
     }
 
-    public Texture2D LoadTexture(string path, Game game) {
+    public Texture2D LoadTexture(string path) {
         Console.WriteLine($"Loaded texture from {path}");
-        return _fileService.LoadTexture(path, game);
+        return _fileService.LoadTexture(path);
+    }
+
+    public void SaveAsPng(string path, RenderTarget2D renderTarget, int[] pngSize) {
+        Console.WriteLine($"Saved a PNG to {path}");
+        _fileService.SaveAsPng(path, renderTarget, pngSize);
     }
 
 }

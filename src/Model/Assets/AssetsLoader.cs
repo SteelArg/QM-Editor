@@ -13,9 +13,9 @@ public class AssetsLoader : Singleton<AssetsLoader> {
         _characters = new AssetFolder("characters");
     }
 
-    public void Load(Game game) {
-        _tiles.Scan(game);
-        _characters.Scan(game);
+    public void Load() {
+        _tiles.Scan();
+        _characters.Scan();
     }
 
     public Asset GetAsset(string assetName, Folders folders) {

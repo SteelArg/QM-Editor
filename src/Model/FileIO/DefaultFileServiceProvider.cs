@@ -12,6 +12,7 @@ public class DefaultFileServiceProvider : IFileService {
     }
 
     public void Write(string path, string content) {
+        Directory.CreateDirectory(Path.GetDirectoryName(path));
         File.WriteAllText(path, content);
     }
 
@@ -27,9 +28,15 @@ public class DefaultFileServiceProvider : IFileService {
         return shortFilenames;
     }
 
-    public Texture2D LoadTexture(string path, Game game) {
+    public Texture2D LoadTexture(string path) {
         var fileStream = new FileStream(path, FileMode.Open);
-        return Texture2D.FromStream(game.GraphicsDevice, fileStream);
+        return Texture2D.FromStream(Global.Game.GraphicsDevice, fileStream);
+    }
+    
+    public void SaveAsPng(string path, RenderTarget2D renderTarget, int[] pngSize) {
+        Directory.CreateDirectory(Path.GetDirectoryName(path));
+        using var pngFile = new FileStream(path, FileMode.Create);
+            renderTarget.SaveAsPng(pngFile, 1024, 512);
     }
 
 }

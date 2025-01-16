@@ -13,8 +13,8 @@ public class Character : RenderableGridObject {
     public void AddAccessory(Accessory accessory) => _accessories.Add(accessory);
     public void RemoveAccessory(Accessory accessory) => _accessories.Remove(accessory);
 
-    public override void Render(SpriteBatch spriteBatch, GridRenderSettings renderSettings, float depth) {
-        base.Render(spriteBatch, renderSettings, depth);
+    public override void Render(SpriteBatch spriteBatch, GridRenderSettings renderSettings, float depth, bool hovered = false) {
+        base.Render(spriteBatch, renderSettings, depth, hovered);
         // TODO: Render accessories
     }
 

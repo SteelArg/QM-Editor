@@ -1,23 +1,22 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using QMEditor.Controllers;
 
 namespace QMEditor;
 
-public class ScreenRenderer {
+public class ScreenRenderer : Singleton<ScreenRenderer> {
 
     public RenderList UIRenderList = new RenderList();
     public RenderList SpriteRenderList = new RenderList();
 
     private GraphicsDeviceManager _graphics;
     protected SpriteBatch _spriteBatch;
-    protected Game _game;
 
     protected int[] _windowSize;
 
-    public ScreenRenderer(Game game, int[] windowSize) {
-        _game = game;
-        _graphics = new GraphicsDeviceManager(game);
+    public ScreenRenderer(int[] windowSize) {
+        _graphics = new GraphicsDeviceManager(Global.Game);
         _windowSize = windowSize;
     }
 
@@ -28,11 +27,11 @@ public class ScreenRenderer {
     }
 
     public virtual void Load() {
-        _spriteBatch = new SpriteBatch(_game.GraphicsDevice);
+        _spriteBatch = new SpriteBatch(Global.Game.GraphicsDevice);
     }
 
     public virtual void Draw(GameTime gameTime) {
-        _game.GraphicsDevice.Clear(Color.Black);
+        Global.Game.GraphicsDevice.Clear(Color.Black);
         DrawUI();
         DrawSprites();
     }
@@ -45,6 +44,10 @@ public class ScreenRenderer {
 
     protected void DrawUI() {
         UIRenderList.Render();
+    }
+
+    public virtual Vector2 GetMousePosition() {
+        return Mouse.GetState().Position.ToVector2();
     }
 
 }

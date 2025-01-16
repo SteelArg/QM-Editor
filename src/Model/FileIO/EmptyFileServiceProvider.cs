@@ -1,4 +1,3 @@
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace QMEditor.Model.IO;
@@ -18,8 +17,12 @@ public class EmptyFileServiceProvider : IFileService {
         return [];
     }
 
-    public Texture2D LoadTexture(string path, Game game) {
+    public Texture2D LoadTexture(string path) {
         return null;
+    }
+
+    public void SaveAsPng(string path, RenderTarget2D renderTarget, int[] pngSize) {
+        // noop
     }
     
 }

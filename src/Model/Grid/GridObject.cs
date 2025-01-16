@@ -14,7 +14,7 @@ public class GridObject {
         _gridPosition = pos;
     }
 
-    public virtual void Render(SpriteBatch spriteBatch, GridRenderSettings renderSettings, float depth) {
+    public virtual void Render(SpriteBatch spriteBatch, GridRenderSettings renderSettings, float depth, bool hovered = false) {
         // noop
     }
 

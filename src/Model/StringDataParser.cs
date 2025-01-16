@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using System.IO;
 
-namespace QMEditor;
+namespace QMEditor.Model;
 
 public class StringDataParser {
 
@@ -51,7 +50,6 @@ public class StringDataParser {
             buffer += key + "=" + _data[key] + "\n";
         }
 
-        Directory.CreateDirectory(Path.GetDirectoryName(_filename));
         ServiceLocator.FileService.Write(_filename, buffer);
     }
 }
