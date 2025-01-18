@@ -1,5 +1,4 @@
 using System;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Myra.Graphics2D.UI;
 using QMEditor.View;
@@ -21,6 +20,10 @@ public class TabsManager {
         _tabId = -1;
         _tabSelect = new TabSelect();
         _tabSelect.TabSelected += SwitchToTab;
+
+        foreach (Tab tab in tabs) {
+            tab.SetManager(this);
+        }
     }
 
     public void Load() {

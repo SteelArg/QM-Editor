@@ -35,7 +35,7 @@ public class EditorApp : Game {
         
         World.Instance.Grid.PlaceOnGrid(AssetsLoader.Instance.GetCharacter("steven"), new Vector2(2, 3));
 
-        var tileFactory = new TileFactory(AssetsLoader.Instance.GetAsset("default", AssetsLoader.Folders.Tiles));
+        var tileFactory = new TileFactory(AssetsLoader.Instance.GetAsset("default", AssetsFolders.Tiles));
         tileFactory.FillGrid(World.Instance.Grid);
     }
 

@@ -8,6 +8,7 @@ public class DefaultFileServiceProvider : IFileService {
 
 
     public string Read(string path) {
+        if (!File.Exists(path)) return string.Empty;
         return File.ReadAllText(path);
     }
 
