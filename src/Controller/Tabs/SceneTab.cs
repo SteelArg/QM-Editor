@@ -1,13 +1,16 @@
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using Myra.Graphics2D;
 using Myra.Graphics2D.UI;
+using QMEditor.View;
 
 namespace QMEditor.Controllers;
 
 public class SceneTab : Tab {
 
     public SceneTab() : base() {
-
+        
     }
 
     protected override Widget BuildUI() {
@@ -28,7 +31,14 @@ public class SceneTab : Tab {
 
     public override void Open() {}
     public override void Close() {}
-    
+
+    public override void Update(GameTime gameTime) {
+        if (Input.MouseButtonClicked(0))
+            WorldEditor.PlaceObjectOnCursor();
+        if (Input.MouseButtonHeld(1))
+            WorldEditor.ClearCellOnCursor(Input.KeyHeld(Keys.LeftShift));
+    }
+
     public override void Draw(SpriteBatch spriteBatch) {
         WorldRenderer.Render(spriteBatch, 1f);
     }

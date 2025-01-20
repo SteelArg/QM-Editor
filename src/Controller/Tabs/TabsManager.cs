@@ -1,4 +1,5 @@
 using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Myra.Graphics2D.UI;
 using QMEditor.View;
@@ -47,6 +48,10 @@ public class TabsManager {
         Grid.SetRow(grid, 1);
         rootGrid.Widgets.Add(grid);
         _desktop.Root = rootGrid;
+    }
+
+    public void Update(GameTime gameTime) {
+        CurrentTab.Update(gameTime);
     }
 
     public void Render(SpriteBatch spriteBatch) {

@@ -16,6 +16,7 @@ public class AssetsTab : Tab {
     private AssetView _assetView;
 
     private Asset _selectedAsset;
+    private AssetsFolders _selectedAssetFolder;
 
     public AssetsTab() : base() {
         _loader = new AssetsLoader();
@@ -63,10 +64,21 @@ public class AssetsTab : Tab {
 
     public void OnAssetSelected(string assetName, AssetsFolders folder) {
         _selectedAsset = _loader.GetAsset(assetName, folder);
+        _selectedAssetFolder = folder;
         _assetView.SetAsset(_selectedAsset.NameOfFile, _selectedAsset.GetTexture());
     }
 
     public void OnClickedPlaceAsset() {
+        IGridObjectFactory gridObjectFactory = null;
+        switch (_selectedAssetFolder) {
+            case AssetsFolders.Tiles:
+                gridObjectFactory = new TileFactory(_selectedAsset);
+                break;
+            case AssetsFolders.Characters:
+                gridObjectFactory = new CharacterFactory(_selectedAsset);
+                break;
+        }
+        WorldEditor.ObjectInCursor = gridObjectFactory;
         _manager.SwitchToTab(1);
     }
 

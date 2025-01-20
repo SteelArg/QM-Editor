@@ -19,7 +19,31 @@ public class Character : RenderableGridObject {
     }
 
     protected override Vector2 GetRenderPos(GridRenderSettings renderSettings) {
-        return renderSettings.CalculateRenderPosition([(int)GridPosition.X, (int)GridPosition.Y], _asset.GetSize());
+        return renderSettings.CalculateRenderPosition(GridPosition, _asset.GetSize());
+    }
+
+}
+
+public class CharacterFactory : IGridObjectFactory {
+
+    private Asset _asset;
+    private AccessoryFactory[] _accessoryFactories;
+
+    public CharacterFactory(Asset asset, AccessoryFactory[] accessoryFactories = null) {
+        _asset = asset;
+        _accessoryFactories = accessoryFactories;
+    }
+
+    public GridObject Create() {
+        Character character = new Character(_asset);
+        
+        if (_accessoryFactories != null) {
+            foreach (AccessoryFactory accessoryFactory in _accessoryFactories) {
+                character.AddAccessory(accessoryFactory.Create());
+            }
+        }
+
+        return character;
     }
 
 }

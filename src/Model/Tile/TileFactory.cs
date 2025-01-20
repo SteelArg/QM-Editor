@@ -1,8 +1,6 @@
-using Microsoft.Xna.Framework;
-
 namespace QMEditor.Model;
 
-public class TileFactory {
+public class TileFactory : IGridObjectFactory {
 
     private Asset _asset;
 
@@ -16,8 +14,12 @@ public class TileFactory {
 
     public void FillGrid(Grid grid) {
         LoopThroughPositions.Every((x, y) => {
-            grid.PlaceOnGrid(Create(), new Vector2(x, y));
+            grid.PlaceOnGrid(Create(), [x,y]);
         }, grid.Size);
+    }
+
+    GridObject IGridObjectFactory.Create() {
+        return Create();
     }
 
 }

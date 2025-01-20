@@ -11,10 +11,10 @@ public static class WorldSaver {
         var parser = new StringDataParser("saves\\test.qmworld");
         
         Grid grid = World.Instance.Grid;
-        parser.SetValue(size, $"{grid.Size.X};{grid.Size.Y}");
+        parser.SetValue(size, $"{grid.Size[0]};{grid.Size[1]}");
         
         foreach (GridCell cell in grid.GetGridCells()) {
-            string cellLocation = $"{cell.Position.X}_{cell.Position.Y}";
+            string cellLocation = $"{cell.Position[0]}_{cell.Position[1]}";
             string objects = "";
 
             foreach (GridObject obj in cell.Objects) {

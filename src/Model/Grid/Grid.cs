@@ -6,35 +6,34 @@ namespace QMEditor.Model;
 
 public class Grid {
 
-    private Dictionary<Vector2, GridCell> _cells;
-    private Vector2 _gridSize;
+    private GridCell[,] _cells;
+    private int[] _gridSize;
 
-    public Vector2 Size { get => _gridSize; }
+    public int[] Size { get => _gridSize; }
 
-    public Grid(Vector2 size) {
+    public Grid(int[] size) {
         _gridSize = size;
         
         // Grid cells
-        _cells = new Dictionary<Vector2, GridCell>();
+        _cells = new GridCell[size[0], size[1]];
         LoopThroughPositions.Every((x, y) => {
-            Vector2 pos = new Vector2(x, y);
-            _cells[pos] = new GridCell(pos);
+            _cells[x,y] = new GridCell([x,y]);
         }, _gridSize);
     }
 
-    public void PlaceOnGrid(GridObject placableObject, Vector2 gridPosition) {
-        _cells[gridPosition].AddObject(placableObject);
+    public void PlaceOnGrid(GridObject placableObject, int[] gridPosition) {
+        _cells[gridPosition[0], gridPosition[1]].AddObject(placableObject);
     }
 
-    public void MoveOnGrid(GridObject placedObject, Vector2 newGridPosition) {
-        _cells[placedObject.GridPosition].RemoveObject(placedObject);
-        _cells[newGridPosition].AddObject(placedObject);
+    public void MoveOnGrid(GridObject placedObject, int[] newGridPosition) {
+        _cells[placedObject.GridPosition[0], placedObject.GridPosition[1]].RemoveObject(placedObject);
+        _cells[newGridPosition[0], newGridPosition[1]].AddObject(placedObject);
     }
 
-    public GridObject[] GetObjectsOnGridPosition(Vector2 pos) {
-        return _cells[pos].GetPlacedObjects();
+    public GridCell GetGridCell(int[] pos) {
+        return _cells[pos[0], pos[1]];
     }
 
-    public GridCell[] GetGridCells() => _cells.Values.ToArray();
+    public GridCell[] GetGridCells() => _cells.Cast<GridCell>().ToArray();
 
 }

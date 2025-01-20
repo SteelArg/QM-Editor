@@ -69,3 +69,7 @@ artifacts/
 
 # UML Diagrams
 *.drawio
+*.bkp
+
+# Marketing images
+[Mm]arketing

@@ -1,3 +1,4 @@
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Myra.Graphics2D.UI;
 
@@ -23,6 +24,10 @@ public abstract class Tab {
 
     public abstract void Open();
     public abstract void Close();
+
+    public virtual void Update(GameTime gameTime) {
+        // noop
+    }
 
     public abstract void Draw(SpriteBatch spritebatch);
 

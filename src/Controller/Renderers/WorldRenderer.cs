@@ -9,14 +9,13 @@ public static class WorldRenderer {
     public static void Render(SpriteBatch spriteBatch, float totalDepth, bool displayEditor = true) {
         Grid grid = World.Instance.Grid;
         var renderSettings = GridRenderSettings.Default;
-
-        int[] cursorPos = ValidateGridPosition(renderSettings.ScreenPositionToGrid(ScreenRenderer.Instance.GetMousePosition()));
+        int[] cursorPos = WorldEditor.CursorPositionOnGrid;
         
         LoopThroughPositions.Every((x, y) => {
             float tileDepth = x + y;
-            bool hovered = cursorPos[0] == x && cursorPos[1] == y && displayEditor;
+            bool hovered = cursorPos != null && cursorPos[0] == x && cursorPos[1] == y && displayEditor;
 
-            foreach (GridObject obj in grid.GetObjectsOnGridPosition(new Vector2(x, y))) {
+            foreach (GridObject obj in grid.GetGridCell([x,y]).Objects) {
                 obj.Render(spriteBatch, renderSettings, totalDepth + tileDepth, hovered);
             }
         }, grid.Size);
@@ -36,12 +35,6 @@ public static class WorldRenderer {
         Global.Game.GraphicsDevice.SetRenderTarget(null);
         
         ServiceLocator.FileService.SaveAsPng(path, saveRT, renderSize);
-    }
-
-    private static int[] ValidateGridPosition(int[] originalPos) {
-        if (originalPos[0] < 0 || originalPos[0] >= World.Instance.Grid.Size.X) return [-1, -1];
-        if (originalPos[1] < 0 || originalPos[1] >= World.Instance.Grid.Size.Y) return [-1, -1];
-        return originalPos;
     }
 
 }

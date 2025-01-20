@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Input;
 using QMEditor.Controllers;
 using QMEditor.Model;
+using QMEditor.View;
 
 namespace QMEditor;
 
@@ -13,11 +14,12 @@ public class EditorApp : Game {
     public EditorApp() {
         Global.SetGame(this);
 
-        _renderer = new SeperatedScreenRenderer(Resolution.Pick(Resolution.HD), 4f);
+        _renderer = new SeperatedScreenRenderer(Resolution.Pick(Resolution.HD), 6f);
         IsMouseVisible = true;
         
         new World(WorldSettings.Default);
         new AppSettings();
+        new Input();
 
         _tabsManager = new TabsManager([new SettingsTab(), new SceneTab(), new CharacterTab(), new AssetsTab()]);
         _renderer.UIRenderList.AddRenderer(new TabsUIRenderer(_tabsManager));
@@ -33,7 +35,7 @@ public class EditorApp : Game {
         _renderer.Load();
         _tabsManager.Load();
         
-        World.Instance.Grid.PlaceOnGrid(AssetsLoader.Instance.GetCharacter("steven"), new Vector2(2, 3));
+        World.Instance.Grid.PlaceOnGrid(AssetsLoader.Instance.GetCharacter("steven"), [2,3]);
 
         var tileFactory = new TileFactory(AssetsLoader.Instance.GetAsset("default", AssetsFolders.Tiles));
         tileFactory.FillGrid(World.Instance.Grid);
@@ -43,7 +45,11 @@ public class EditorApp : Game {
         if (Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
 
+        _tabsManager.Update(gameTime);
+
         base.Update(gameTime);
+
+        Input.LateUpdate();
     }
 
     protected override void Draw(GameTime gameTime) {

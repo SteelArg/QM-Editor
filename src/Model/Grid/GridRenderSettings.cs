@@ -6,7 +6,7 @@ namespace QMEditor.Model;
 
 public struct GridRenderSettings {
 
-    public static readonly GridRenderSettings Default = new GridRenderSettings(new Vector2(100f, 50f), new Vector2(16f, 9f));
+    public static readonly GridRenderSettings Default = new GridRenderSettings(new Vector2(70f, 25f), new Vector2(16f, 9f));
 
     public readonly Vector2 Offset;
     public readonly Vector2 TileTopSize;

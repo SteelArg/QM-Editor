@@ -14,7 +14,7 @@ public abstract class RenderableGridObject : GridObject {
 
     public override void Render(SpriteBatch spriteBatch, GridRenderSettings renderSettings, float depth, bool hovered = false) {
         float objectDepth = depth + renderSettings.GetDepthFor(GetType());
-        spriteBatch.Draw(_asset.GetTexture(), GetRenderPos(renderSettings), null, hovered ? Color.Blue : Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, objectDepth/1000f);
+        spriteBatch.Draw(_asset.GetTexture(), GetRenderPos(renderSettings), null, hovered ? Palette.HoverColor : Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, objectDepth/1000f);
     }
 
     protected abstract Vector2 GetRenderPos(GridRenderSettings renderSettings);

@@ -11,3 +11,17 @@ public class Accessory {
     }
 
 }
+
+public class AccessoryFactory {
+
+    private Asset _asset;
+
+    public AccessoryFactory(Asset asset) {
+        _asset = asset;
+    }
+
+    public Accessory Create() {
+        return new Accessory(_asset);
+    }
+
+}
