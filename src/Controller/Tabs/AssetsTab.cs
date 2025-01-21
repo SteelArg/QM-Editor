@@ -69,17 +69,22 @@ public class AssetsTab : Tab {
     }
 
     public void OnClickedPlaceAsset() {
-        IGridObjectFactory gridObjectFactory = null;
+        if (_selectedAssetFolder == AssetsFolders.Tiles) {
+            _manager.SwitchToTab(1);
+            WorldEditor.ObjectInCursor = new TileFactory(_selectedAsset);
+            return;
+        }
+
+        _manager.SwitchToTab(2);
+        CharacterTab characterTab = (CharacterTab)_manager.CurrentTab;
         switch (_selectedAssetFolder) {
-            case AssetsFolders.Tiles:
-                gridObjectFactory = new TileFactory(_selectedAsset);
-                break;
             case AssetsFolders.Characters:
-                gridObjectFactory = new CharacterFactory(_selectedAsset);
+                characterTab.SelectCharacter(_selectedAsset);
+                break;
+            case AssetsFolders.Accessories:
+                characterTab.SelectAccessory(_selectedAsset);
                 break;
         }
-        WorldEditor.ObjectInCursor = gridObjectFactory;
-        _manager.SwitchToTab(1);
     }
 
 }

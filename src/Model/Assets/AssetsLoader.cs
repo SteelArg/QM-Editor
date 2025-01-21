@@ -17,6 +17,7 @@ public class AssetsLoader : Singleton<AssetsLoader> {
     public void Load() {
         _tiles.Scan();
         _characters.Scan();
+        _accessories.Scan();
     }
 
     public Asset GetAsset(string assetName, AssetsFolders folders) {
@@ -25,7 +26,7 @@ public class AssetsLoader : Singleton<AssetsLoader> {
         if (folders.IsFolderSelected(AssetsFolders.Characters))
             return _characters.GetAsset(assetName);
         if (folders.IsFolderSelected(AssetsFolders.Accessories))
-            return _characters.GetAsset(assetName);
+            return _accessories.GetAsset(assetName);
         return null;
     } 
 

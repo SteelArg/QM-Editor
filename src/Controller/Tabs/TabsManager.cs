@@ -42,11 +42,13 @@ public class TabsManager {
         rootGrid.RowsProportions.Add(new Proportion(ProportionType.Fill));
         Widget tabSelection = _tabSelect.BuildUI();
         rootGrid.Widgets.Add(tabSelection);
+
         var grid = new Grid();
         grid.ColumnsProportions.Add(new Proportion(ProportionType.Fill));
         grid.ColumnsProportions.Add(new Proportion(ProportionType.Pixels, AppLayout.InspectorWidth));
         Grid.SetRow(grid, 1);
         rootGrid.Widgets.Add(grid);
+        
         _desktop.Root = rootGrid;
     }
 
@@ -64,11 +66,14 @@ public class TabsManager {
 
     public void SwitchToTab(int newTabId) {
         if (newTabId == _tabId) return;
-        Console.WriteLine($"Switched to tab {newTabId}");
+
+        // Tab switch
         if (_tabId > -1)
             CurrentTab.Close();
         _tabId = newTabId;
         CurrentTab.Open();
+        
+        // Tab UI
         Grid rootGrid = (Grid)_desktop.Root;
         Grid grid = (Grid)rootGrid.Widgets[1];
         grid.Widgets.Clear();

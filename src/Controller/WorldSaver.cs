@@ -20,11 +20,23 @@ public static class WorldSaver {
             foreach (GridObject obj in cell.Objects) {
                 string type = obj.GetType().Name;
                 string asset = "none";
+                string addData = "none";
+
                 RenderableGridObject renderableObj = obj as RenderableGridObject;
-                if (renderableObj != null)
+                if (renderableObj != null) {
                     asset = renderableObj.Asset.NameOfFile;
+                    if (renderableObj is Character) {
+                        addData = "";
+                        Character character = renderableObj as Character;
+                        foreach (Accessory accessory in character.Accessories){
+                            addData += $"{accessory.Asset.NameOfFile},";
+                        }
+                        if (addData.Length > 0)
+                            addData = addData.Remove(addData.Length-1);
+                    }
+                }
                 
-                string objectData = $"{type};{asset}";
+                string objectData = $"{type};{asset}:{addData}";
                 objects += objectData + "|";
             }
             objects = objects.Remove(objects.Length-1);
