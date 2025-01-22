@@ -1,6 +1,8 @@
 using System;
 using Microsoft.Xna.Framework;
 
+namespace QMEditor;
+
 public static class LoopThroughPositions {
 
     public static void Every(Action<int, int> action, Vector2 loopSize) {

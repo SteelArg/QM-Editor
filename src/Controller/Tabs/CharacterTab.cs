@@ -16,10 +16,9 @@ public class CharacterTab : Tab {
     }
 
     protected override Widget BuildUI() {
-        _characterEditorView.BuildUI();
         _characterEditorView.CharacterCreated += OnCharacterCreated;
         _characterEditorView.AccessoryRemoved += OnAccessoryRemoved;
-        return _characterEditorView.Widget;
+        return _characterEditorView.BuildUI();
     }
 
     public void SelectCharacter(Asset characterAsset) {
@@ -32,7 +31,7 @@ public class CharacterTab : Tab {
     }
 
     public void OnCharacterCreated() {
-        WorldEditor.ObjectInCursor = _characterEditor.GetCharacterFactory();
+        WorldEditor.Instance.SetObjectInCursor(_characterEditor.GetCharacterFactory());
         _manager.SwitchToTab(1);
     }
 

@@ -21,13 +21,14 @@ public class AssetsLoader : Singleton<AssetsLoader> {
     }
 
     public Asset GetAsset(string assetName, AssetsFolders folders) {
+        Asset foundAsset = null;
         if (folders.IsFolderSelected(AssetsFolders.Tiles))
-            return _tiles.GetAsset(assetName);
+            foundAsset = foundAsset ?? _tiles.TryGetAsset(assetName);
         if (folders.IsFolderSelected(AssetsFolders.Characters))
-            return _characters.GetAsset(assetName);
+            foundAsset = foundAsset ?? _characters.TryGetAsset(assetName);
         if (folders.IsFolderSelected(AssetsFolders.Accessories))
-            return _accessories.GetAsset(assetName);
-        return null;
+            foundAsset = foundAsset ?? _accessories.TryGetAsset(assetName);
+        return foundAsset;
     } 
 
     public List<string> GetAllAssetNames(AssetsFolders folders) {

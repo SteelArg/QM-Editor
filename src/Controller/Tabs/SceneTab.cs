@@ -9,8 +9,10 @@ namespace QMEditor.Controllers;
 
 public class SceneTab : Tab {
 
+    private WorldEditor _worldEditor;
+
     public SceneTab() : base() {
-        
+        _worldEditor = new WorldEditor();
     }
 
     protected override Widget BuildUI() {
@@ -34,9 +36,9 @@ public class SceneTab : Tab {
 
     public override void Update(GameTime gameTime) {
         if (Input.MouseButtonClicked(0))
-            WorldEditor.PlaceObjectOnCursor();
+            _worldEditor.PlaceObjectOnCursor();
         if (Input.MouseButtonHeld(1))
-            WorldEditor.ClearCellOnCursor(Input.KeyHeld(Keys.LeftShift));
+            _worldEditor.ClearCellOnCursor(Input.KeyHeld(Keys.LeftShift));
     }
 
     public override void Draw(SpriteBatch spriteBatch) {

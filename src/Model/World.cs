@@ -10,7 +10,7 @@ public class World : Singleton<World> {
 
     public World(WorldSettings settings) : base() {
         Settings = settings;
-        _grid = new Grid(settings.WorldSize);
+        _grid = new Grid(settings.Size);
     }
 
 }

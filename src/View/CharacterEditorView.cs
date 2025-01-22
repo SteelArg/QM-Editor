@@ -6,8 +6,6 @@ namespace QMEditor.View;
 
 public class CharacterEditorView {
 
-    public Widget Widget{ get => _mainGrid; }
-
     public Action CharacterCreated;
     public Action<int> AccessoryRemoved;
 
@@ -17,7 +15,7 @@ public class CharacterEditorView {
 
     public CharacterEditorView() {}
 
-    public void BuildUI() {
+    public Widget BuildUI() {
         _mainGrid = new Grid();
         Grid.SetColumnSpan(_mainGrid, 2);
         _mainGrid.RowsProportions.Add(new Proportion(ProportionType.Fill));
@@ -46,6 +44,8 @@ public class CharacterEditorView {
         };
         Grid.SetColumn(_accessoryStack, 2);
         _mainGrid.Widgets.Add(_accessoryStack);
+
+        return _mainGrid;
     }
 
     public void AddAccessory(string name) {

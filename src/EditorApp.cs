@@ -60,7 +60,6 @@ public class EditorApp : Game {
 
     public new void Exit() {
         AppSettings.Instance.Save();
-        WorldSaver.Save();
         base.Exit();
     }
 

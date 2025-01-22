@@ -30,6 +30,7 @@ public class AssetFolder {
     }
 
     public Asset GetAsset(string name) => _assets[name];
+    public Asset TryGetAsset(string name) => _assets.ContainsKey(name) ? GetAsset(name) : null;
 
     public Asset[] GetAssets() => _assets.Values.ToArray();
 

@@ -71,7 +71,7 @@ public class AssetsTab : Tab {
     public void OnClickedPlaceAsset() {
         if (_selectedAssetFolder == AssetsFolders.Tiles) {
             _manager.SwitchToTab(1);
-            WorldEditor.ObjectInCursor = new TileFactory(_selectedAsset);
+            WorldEditor.Instance.SetObjectInCursor(new TileFactory(_selectedAsset));
             return;
         }
 

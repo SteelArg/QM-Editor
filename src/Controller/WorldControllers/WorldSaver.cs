@@ -2,16 +2,13 @@ using QMEditor.Model;
 
 namespace QMEditor.Controllers;
 
-public static class WorldSaver {
+public class WorldSaver {
 
-    private const string size = "size";
-    private const string gridObject = "grid_objects_";
-
-    public static void Save() {
-        var parser = new StringDataParser("saves\\test.qmworld");
+    public void Save(string path = "saves\\default.qmworld") {
+        var parser = new StringDataParser(path);
         
         Grid grid = World.Instance.Grid;
-        parser.SetValue(size, $"{grid.Size[0]};{grid.Size[1]}");
+        parser.SetValue("size", $"{grid.Size[0]};{grid.Size[1]}");
         
         foreach (GridCell cell in grid.GetGridCells()) {
             string cellLocation = $"{cell.Position[0]}_{cell.Position[1]}";
@@ -24,12 +21,12 @@ public static class WorldSaver {
 
                 RenderableGridObject renderableObj = obj as RenderableGridObject;
                 if (renderableObj != null) {
-                    asset = renderableObj.Asset.NameOfFile;
+                    asset = renderableObj.Asset.Name;
                     if (renderableObj is Character) {
                         addData = "";
                         Character character = renderableObj as Character;
                         foreach (Accessory accessory in character.Accessories){
-                            addData += $"{accessory.Asset.NameOfFile},";
+                            addData += $"{accessory.Asset.Name},";
                         }
                         if (addData.Length > 0)
                             addData = addData.Remove(addData.Length-1);
@@ -39,8 +36,9 @@ public static class WorldSaver {
                 string objectData = $"{type};{asset}:{addData}";
                 objects += objectData + "|";
             }
-            objects = objects.Remove(objects.Length-1);
-            parser.SetValue(gridObject + cellLocation, objects);
+            if (objects.Length > 0)
+                objects = objects.Remove(objects.Length-1);
+            parser.SetValue("grid_objects_" + cellLocation, objects);
         }
 
         parser.Save();

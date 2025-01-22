@@ -29,6 +29,8 @@ public class TabsManager {
 
     public void Load() {
         _desktop = new Desktop();
+        Global.SetDesktop(_desktop);
+
         BuildUI();
         foreach (Tab tab in _tabs) {
             tab.Load();
