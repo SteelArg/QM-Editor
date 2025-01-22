@@ -10,9 +10,11 @@ namespace QMEditor.Controllers;
 public class SceneTab : Tab {
 
     private WorldEditor _worldEditor;
+    private WorldRenderer _worldRenderer;
 
     public SceneTab() : base() {
         _worldEditor = new WorldEditor();
+        _worldRenderer = new WorldRenderer();
     }
 
     protected override Widget BuildUI() {
@@ -25,7 +27,7 @@ public class SceneTab : Tab {
             Width = 200, Height = 120,
             Margin = new Thickness(20)
         };
-        renderButton.Click += (s, a) => { WorldRenderer.SaveToPng("output\\render.png", [1024, 512]); };
+        renderButton.Click += (s, a) => { _worldRenderer.SaveToPng("output\\render.png", [1024, 512]); };
 
         Grid.SetColumn(renderButton, 1);
         return renderButton;
@@ -42,6 +44,6 @@ public class SceneTab : Tab {
     }
 
     public override void Draw(SpriteBatch spriteBatch) {
-        WorldRenderer.Render(spriteBatch, 1f);
+        _worldRenderer.Render(spriteBatch, 1f);
     }
 }

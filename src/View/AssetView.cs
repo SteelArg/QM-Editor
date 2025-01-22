@@ -34,8 +34,8 @@ public class AssetView {
 
         var image = new Image {
             Renderable = new TextureRegion(_assetTexture),
-            ResizeMode = ImageResizeMode.KeepAspectRatio,
-            Width = 200, Height = 200
+            ResizeMode = ImageResizeMode.Stretch,
+            Width = 200, Height = (int)((float)_assetTexture.Height/_assetTexture.Width*200f)
         };
 
         var button = new Button {

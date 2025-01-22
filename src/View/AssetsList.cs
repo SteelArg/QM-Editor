@@ -24,7 +24,9 @@ public class AssetsList {
     }
 
     public Widget BuildUI(int gridColumn = 0) {
-        _assetsStack = new VerticalStackPanel();
+        _assetsStack = new VerticalStackPanel() {
+            Width = 250
+        };
         
         List<string> sortedAssets = _sortAssets.Invoke(_assets);
         foreach (string asset in sortedAssets) {

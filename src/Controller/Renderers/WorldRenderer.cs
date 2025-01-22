@@ -4,9 +4,9 @@ using QMEditor.Model;
 
 namespace QMEditor.Controllers;
 
-public static class WorldRenderer {
+public class WorldRenderer {
 
-    public static void Render(SpriteBatch spriteBatch, float totalDepth, bool displayEditor = true) {
+    public void Render(SpriteBatch spriteBatch, float totalDepth, bool displayEditor = true) {
         Grid grid = World.Instance.Grid;
         var renderSettings = GridRenderSettings.Default;
         int[] cursorPos = WorldEditor.CursorPositionOnGrid;
@@ -21,7 +21,7 @@ public static class WorldRenderer {
         }, grid.Size);
     }
 
-    public static void SaveToPng(string path, int[] renderSize) {
+    public void SaveToPng(string path, int[] renderSize) {
         var saveRT = new RenderTarget2D(Global.Game.GraphicsDevice, renderSize[0], renderSize[1]);
         var spriteBatch = new SpriteBatch(Global.Game.GraphicsDevice);
         

@@ -19,6 +19,7 @@ public class WorldIOManagerView {
         _grid = new Grid() {
             DefaultColumnProportion = new Proportion(ProportionType.Auto),
             DefaultRowProportion = new Proportion(ProportionType.Auto),
+            ColumnSpacing = 20, RowSpacing = 10,
             HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center
         };
         Grid.SetColumnSpan(_grid, 2);

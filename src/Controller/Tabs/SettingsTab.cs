@@ -13,6 +13,8 @@ public class SettingsTab : Tab {
     private WorldSaver _worldSaver;
     private WorldLoader _worldLoader;
 
+    private string _currentSavePath = null;
+
     public SettingsTab() : base() {
         worldIOManagerView = new WorldIOManagerView();
         _worldSaver = new WorldSaver();
@@ -31,7 +33,7 @@ public class SettingsTab : Tab {
     public void OnClickedLoad() {
         var fileDialog = new FileDialog(FileDialogMode.OpenFile) {
             Filter = "*.qmworld",
-            FilePath = Path.GetFullPath("saves\\save.qmworld")
+            FilePath = _currentSavePath ?? Path.GetFullPath("saves\\save.qmworld")
         };
         fileDialog.Closed += (s, a) => { if (fileDialog.Result) LoadWorld(fileDialog.FilePath); };
         fileDialog.Show(Global.Desktop);
@@ -40,7 +42,7 @@ public class SettingsTab : Tab {
     public void OnClickedSave() {
         var fileDialog = new FileDialog(FileDialogMode.SaveFile) {
             Filter = "*.qmworld",
-            FilePath = Path.GetFullPath("saves\\save.qmworld")
+            FilePath = _currentSavePath ?? Path.GetFullPath("saves\\save.qmworld")
         };
         fileDialog.Closed += (s, a) => { if (fileDialog.Result) SaveWorld(fileDialog.FilePath); };
         fileDialog.Show(Global.Desktop);
@@ -50,12 +52,14 @@ public class SettingsTab : Tab {
         string saveName = Path.GetFileName(path);
         worldIOManagerView.SetSaveName(saveName);
         _worldSaver.Save(path);
+        _currentSavePath = path;
     }
 
     public void LoadWorld(string path) {
         string saveName = Path.GetFileName(path);
         worldIOManagerView.SetSaveName(saveName);
         _worldLoader.Load(path);
+        _currentSavePath = path;
     }
     
     public override void Draw(SpriteBatch spriteBatch) {
