@@ -11,6 +11,9 @@ public interface IFileService {
     public string[] GetAllFiles(string path, bool fullNames = false);
 
     public Texture2D LoadTexture(string path);
-    public void SaveAsPng(string path, RenderTarget2D renderTarget, int[] pngSize);
+
+    public Texture2D[] LoadGif(string path);
+
+    public void SaveAsGif(string path, RenderTarget2D[] renderTargets, int[] gifSize, int frameDelay);
 
 }

@@ -7,8 +7,8 @@ public class AssetFactory {
     public AssetFactory() {}
 
     public Asset Create(string path) {
-        string ext = Path.GetExtension(path);
-        switch (ext.ToLower()) {
+        string ext = Path.GetExtension(path).ToLower();
+        switch (ext) {
             case ".gif":
                 return new GifAsset(path);
             default:

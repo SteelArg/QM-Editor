@@ -21,7 +21,11 @@ public class EmptyFileServiceProvider : IFileService {
         return null;
     }
 
-    public void SaveAsPng(string path, RenderTarget2D renderTarget, int[] pngSize) {
+    public Texture2D[] LoadGif(string path) {
+        return null;
+    }
+
+    public void SaveAsGif(string path, RenderTarget2D[] renderTargets, int[] gifSize, int frameDelay) {
         // noop
     }
     

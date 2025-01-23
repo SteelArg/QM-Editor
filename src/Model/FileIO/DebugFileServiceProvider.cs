@@ -32,9 +32,14 @@ public class DebugFileServiceProvider : IFileService {
         return _fileService.LoadTexture(path);
     }
 
-    public void SaveAsPng(string path, RenderTarget2D renderTarget, int[] pngSize) {
-        Console.WriteLine($"Saved a PNG to {path}");
-        _fileService.SaveAsPng(path, renderTarget, pngSize);
+    public Texture2D[] LoadGif(string path) {
+        Console.WriteLine($"Loaded textures from {path}");
+        return _fileService.LoadGif(path);
+    }
+
+    public void SaveAsGif(string path, RenderTarget2D[] renderTargets, int[] gifSize, int frameDelay) {
+        Console.WriteLine($"Saved a GIF to {path}");
+        _fileService.SaveAsGif(path, renderTargets, gifSize, frameDelay);
     }
 
 }

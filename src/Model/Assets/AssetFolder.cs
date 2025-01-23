@@ -16,7 +16,7 @@ public class AssetFolder {
         _factory = new AssetFactory();
     }
 
-    public void Scan() {
+    public void ScanAndLoad() {
         Directory.CreateDirectory(_assetsPath);
 
         _assets.Clear();

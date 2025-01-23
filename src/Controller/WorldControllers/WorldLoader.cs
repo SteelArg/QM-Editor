@@ -26,7 +26,8 @@ public class WorldLoader {
                     Character character = new Character(asset);
                     foreach (string dataString in addDataStrings) {
                         if (dataString == string.Empty) continue;
-                        Accessory accessory = AssetsLoader.Instance.GetAccessory(dataString);
+                        Asset accessoryAsset = AssetsLoader.Instance.GetAsset(dataString, AssetsFolders.Accessories); 
+                        Accessory accessory = new Accessory(accessoryAsset);
                         character.AddAccessory(accessory);
                     }
                     gridObject = character;

@@ -5,8 +5,7 @@ namespace QMEditor.Model;
 
 public class Asset {
 
-    protected string _path;
-    protected string _assetsPath { get => $"assets\\{_path}"; }
+    protected readonly string _path;
     protected bool _isLoaded = false;
     private Texture2D _texture;
 
@@ -14,13 +13,13 @@ public class Asset {
     public readonly string NameOfFile;
 
     public Asset(string path) {
-        _path = path;
+        _path = $"assets\\{path}";
         Name = Path.GetFileNameWithoutExtension(path);
         NameOfFile = Path.GetFileName(path);
     }
 
     public virtual void Load() {
-        _texture = ServiceLocator.FileService.LoadTexture(_assetsPath);
+        _texture = ServiceLocator.FileService.LoadTexture(_path);
         _isLoaded = true;
     }
 

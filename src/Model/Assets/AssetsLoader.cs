@@ -4,63 +4,40 @@ namespace QMEditor.Model;
 
 public class AssetsLoader : Singleton<AssetsLoader> {
 
-    private AssetFolder _tiles;
-    private AssetFolder _characters;
-    private AssetFolder _accessories;
+    private Dictionary<AssetsFolders, AssetFolder> _folders;
 
     public AssetsLoader() {
-        _tiles = new AssetFolder("tiles");
-        _characters = new AssetFolder("characters");
-        _accessories = new AssetFolder("accessories");
+        _folders = new Dictionary<AssetsFolders, AssetFolder> {
+            { AssetsFolders.Tiles, new AssetFolder("tiles") },
+            { AssetsFolders.Characters, new AssetFolder("characters") },
+            { AssetsFolders.Accessories, new AssetFolder("accessories") }
+        };
     }
 
     public void Load() {
-        _tiles.Scan();
-        _characters.Scan();
-        _accessories.Scan();
+        foreach (AssetFolder folder in _folders.Values) {
+            folder.ScanAndLoad();
+        }
     }
 
-    public Asset GetAsset(string assetName, AssetsFolders folders) {
+    public Asset GetAsset(string assetName, AssetsFolders foldersToSearch) {
         Asset foundAsset = null;
-        if (folders.IsFolderSelected(AssetsFolders.Tiles))
-            foundAsset = foundAsset ?? _tiles.TryGetAsset(assetName);
-        if (folders.IsFolderSelected(AssetsFolders.Characters))
-            foundAsset = foundAsset ?? _characters.TryGetAsset(assetName);
-        if (folders.IsFolderSelected(AssetsFolders.Accessories))
-            foundAsset = foundAsset ?? _accessories.TryGetAsset(assetName);
+        foreach (AssetsFolders scannedFolder in _folders.Keys) {
+            if (foldersToSearch.IsFolderSelected(scannedFolder))
+                foundAsset = foundAsset ?? _folders[scannedFolder].TryGetAsset(assetName);
+        }
         return foundAsset;
     } 
 
-    public List<string> GetAllAssetNames(AssetsFolders folders) {
+    public List<string> GetAllAssetNames(AssetsFolders foldersToSearch) {
         List<string> allAssets = new List<string>();
-        if (folders.IsFolderSelected(AssetsFolders.Tiles)) {
-            foreach (Asset asset in _tiles.GetAssets()) {
-                allAssets.Add(asset.Name);
-            }
-        }
-        if (folders.IsFolderSelected(AssetsFolders.Characters)) {
-            foreach (Asset asset in _characters.GetAssets()) {
-                allAssets.Add(asset.Name);
-            }
-        }
-        if (folders.IsFolderSelected(AssetsFolders.Accessories)) {
-            foreach (Asset asset in _accessories.GetAssets()) {
+        foreach (AssetsFolders scannedFolder in _folders.Keys) {
+            if (!foldersToSearch.IsFolderSelected(scannedFolder)) continue;
+            foreach (Asset asset in _folders[scannedFolder].GetAssets()) {
                 allAssets.Add(asset.Name);
             }
         }
         return allAssets;
-    }
-
-    public Tile GetTile(string tileName) {
-        return new Tile(_tiles.GetAsset(tileName));
-    }
-
-    public Character GetCharacter(string characterName) {
-        return new Character(_characters.GetAsset(characterName));
-    }
-
-    public Accessory GetAccessory(string accessoryName) {
-        return new Accessory(_accessories.GetAsset(accessoryName));
     }
 
 }

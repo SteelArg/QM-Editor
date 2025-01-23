@@ -16,8 +16,8 @@ public class Character : RenderableGridObject {
     public void AddAccessory(Accessory accessory) => _accessories.Add(accessory);
     public void RemoveAccessory(Accessory accessory) => _accessories.Remove(accessory);
 
-    public override void Render(SpriteBatch spriteBatch, GridRenderSettings renderSettings, float depth, bool hovered = false) {
-        base.Render(spriteBatch, renderSettings, depth, hovered);
+    public override void Render(SpriteBatch spriteBatch, GridRenderSettings renderSettings, float depth, int frame = 0, bool hovered = false) {
+        base.Render(spriteBatch, renderSettings, depth, frame, hovered);
         Vector2 renderPos = GetRenderPos(renderSettings);
         
         // TODO: Render accessories
