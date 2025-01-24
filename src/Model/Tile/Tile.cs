@@ -6,8 +6,12 @@ public class Tile : RenderableGridObject {
 
     public Tile(Asset asset) : base(asset) {}
 
-    protected override Vector2 GetRenderPos(GridRenderSettings renderSettings) {
-        return renderSettings.CalculateTilePosition(GridPosition);
+    public int GetLift(GridRenderSettings renderSettings) {
+        return renderSettings.CalculateTileLift(_asset.GetSize()[1]);
+    }
+
+    protected override Vector2 GetRenderPos(GridObjectRenderData renderData) {
+        return renderData.RenderSettings.CalculateTilePosition(GridPosition, _asset.GetSize()[1]);
     }
 
 }

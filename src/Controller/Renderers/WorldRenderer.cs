@@ -12,13 +12,18 @@ public class WorldRenderer {
         Grid grid = World.Instance.Grid;
         var renderSettings = GridRenderSettings.Default;
         int[] cursorPos = WorldEditor.CursorPositionOnGrid;
-        
+        GridObjectRenderData defaultRenderData = new GridObjectRenderData(spriteBatch, renderSettings, totalDepth, frame);
+
         LoopThroughPositions.Every((x, y) => {
             float tileDepth = x + y;
             bool hovered = cursorPos != null && cursorPos[0] == x && cursorPos[1] == y && displayEditor;
 
+            GridObjectRenderData cellRenderData = defaultRenderData.WithAddedDepth(tileDepth);
+            cellRenderData.IsHovered = hovered;
+            cellRenderData.CellLift = grid.GetGridCell([x,y]).Tile?.GetLift(renderSettings) ?? 0;
+
             foreach (GridObject obj in grid.GetGridCell([x,y]).Objects) {
-                obj.Render(spriteBatch, renderSettings, totalDepth + tileDepth, frame, hovered);
+                obj.Render(cellRenderData);
             }
         }, grid.Size);
     }

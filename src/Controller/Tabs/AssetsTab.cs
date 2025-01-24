@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 using Myra.Graphics2D.UI;
 using QMEditor.Model;
@@ -10,9 +11,7 @@ public class AssetsTab : Tab {
     private AssetsLoader _loader;
     private AssetsPreferences _preferences;
 
-    private AssetsList _tilesList;
-    private AssetsList _charactersList;
-    private AssetsList _accessoriesList;
+    private Dictionary<AssetsFolders, AssetsList> _assetsLists;
     private AssetView _assetView;
 
     private Asset _selectedAsset;
@@ -26,18 +25,21 @@ public class AssetsTab : Tab {
     public override void Load() {
         _loader.Load();
 
-        _tilesList = new AssetsList("Tiles", _loader.GetAllAssetNames(AssetsFolders.Tiles), l => l);
-        _charactersList = new AssetsList("Characters", _loader.GetAllAssetNames(AssetsFolders.Characters), l => l);
-        _accessoriesList = new AssetsList("Accessories", _loader.GetAllAssetNames(AssetsFolders.Accessories), l => l);
-
-        _tilesList.AssetSelected += (string name) => { OnAssetSelected(name, AssetsFolders.Tiles); };
-        _charactersList.AssetSelected += (string name) => { OnAssetSelected(name, AssetsFolders.Characters); };
-        _accessoriesList.AssetSelected += (string name) => { OnAssetSelected(name, AssetsFolders.Accessories); };
+        _assetsLists = new Dictionary<AssetsFolders, AssetsList>();
+        string[] assetsListNames = ["Tiles", "Characters", "Accessories", "Props"];
+        AssetsFolders[] assetsListFolders = [AssetsFolders.Tiles, AssetsFolders.Characters, AssetsFolders.Accessories, AssetsFolders.Props];
+        for (int i = 0; i < 4; i++) AddAssetsList(assetsListNames[i], assetsListFolders[i]);
 
         _assetView = new AssetView();
         _assetView.PlaceAsset += OnClickedPlaceAsset;
 
         base.Load();
+    }
+
+    private void AddAssetsList(string listName, AssetsFolders folder) {
+        AssetsList assetsList = new AssetsList(listName, _loader.GetAllAssetNames(folder), l => l);
+        assetsList.AssetSelected += (string name) => { OnAssetSelected(name, folder); };
+        _assetsLists.Add(folder, assetsList);
     }
 
     protected override Widget BuildUI() {
@@ -46,9 +48,9 @@ public class AssetsTab : Tab {
             Spacing = 8, ShowGridLines = true
         };
 
-        mainGrid.Widgets.Add(_tilesList.BuildUI());
-        mainGrid.Widgets.Add(_charactersList.BuildUI());
-        mainGrid.Widgets.Add(_accessoriesList.BuildUI());
+        foreach (AssetsFolders folder in _assetsLists.Keys) {
+            mainGrid.Widgets.Add(_assetsLists[folder].BuildUI());
+        }
         mainGrid.Widgets.Add(_assetView.Widget);
 
         Myra.Graphics2D.UI.Grid.SetColumnSpan(mainGrid, 2);
@@ -69,10 +71,16 @@ public class AssetsTab : Tab {
     }
 
     public void OnClickedPlaceAsset() {
-        if (_selectedAssetFolder == AssetsFolders.Tiles) {
-            _manager.SwitchToTab(1);
-            WorldEditor.Instance.SetObjectInCursor(new TileFactory(_selectedAsset));
-            return;
+
+        switch (_selectedAssetFolder) {
+            case AssetsFolders.Tiles:
+                _manager.SwitchToTab(1);
+                WorldEditor.Instance.SetObjectInCursor(new TileFactory(_selectedAsset));
+                return;
+            case AssetsFolders.Props:
+                _manager.SwitchToTab(1);
+                WorldEditor.Instance.SetObjectInCursor(new PropFactory(_selectedAsset));
+                return;
         }
 
         _manager.SwitchToTab(2);

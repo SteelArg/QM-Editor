@@ -10,7 +10,8 @@ public class AssetsLoader : Singleton<AssetsLoader> {
         _folders = new Dictionary<AssetsFolders, AssetFolder> {
             { AssetsFolders.Tiles, new AssetFolder("tiles") },
             { AssetsFolders.Characters, new AssetFolder("characters") },
-            { AssetsFolders.Accessories, new AssetFolder("accessories") }
+            { AssetsFolders.Accessories, new AssetFolder("accessories") },
+            { AssetsFolders.Props, new AssetFolder("props") }
         };
     }
 

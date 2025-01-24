@@ -35,6 +35,9 @@ public class WorldLoader {
                 else if (typeString == typeof(Tile).Name) {
                     gridObject = new Tile(asset);
                 }
+                else if (typeString == typeof(Prop).Name) {
+                    gridObject = new Prop(asset);
+                }
 
                 World.Instance.Grid.PlaceOnGrid(gridObject, [x,y]);
             }

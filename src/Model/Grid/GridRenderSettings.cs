@@ -6,40 +6,49 @@ namespace QMEditor.Model;
 
 public struct GridRenderSettings {
 
-    public static readonly GridRenderSettings Default = new GridRenderSettings(new Vector2(70f, 25f), new Vector2(16f, 9f));
+    public static readonly GridRenderSettings Default = new GridRenderSettings(new Vector2(70f, 25f), new Vector2(16f, 9f), 5);
 
     public readonly Vector2 Offset;
     public readonly Vector2 TileTopSize;
+    public readonly int TileHeight;
 
     public readonly Vector2 StepX { get; }
     public readonly Vector2 StepY { get; }
 
-    private static readonly Dictionary<Type, float> _depth = new Dictionary<Type, float>() { {typeof(Character), 0.5f}, {typeof(Tile), 0f}, {typeof(Accessory), 0.7f} };
-    private const int spriteLift = -3;
+    private static readonly Dictionary<Type, float> _depth = new Dictionary<Type, float>() { {typeof(Character), 0.6f}, {typeof(Tile), 0f}, {typeof(Accessory), 0.7f}, {typeof(Prop), 0.5f} };
+    private const int spriteLift = 3;
 
-    public GridRenderSettings(Vector2 offset, Vector2 tileTopSize) {
+    public GridRenderSettings(Vector2 offset, Vector2 tileTopSize, int tileHeight) {
         Offset = offset;
         TileTopSize = tileTopSize;
         StepX = Vector2.Floor(TileTopSize/2f);
         StepY = new Vector2(-StepX.X, StepX.Y);
+        TileHeight = tileHeight;
     }
 
     public Vector2 CalculateRenderPosition(int[] gridCell, int[] spriteSize) {
         Vector2 pos = CalculateTilePosition(gridCell);
+        
         pos += StepX;
-
-        pos += new Vector2(MathF.Ceiling(-spriteSize[0]/2f), -spriteLift-spriteSize[1]);
+        pos += new Vector2(MathF.Ceiling(-spriteSize[0]/2f), spriteLift-spriteSize[1]);
 
         return pos;
     }
 
-    public Vector2 CalculateTilePosition(int[] gridCell) {
+    public Vector2 CalculateTilePosition(int[] gridCell, int? tileHeight = null) {
         Vector2 pos = Vector2.Zero;
 
         pos += gridCell[0] * StepX;
         pos += gridCell[1] * StepY;
 
+        if (tileHeight.HasValue)
+            pos -= new Vector2(0, CalculateTileLift(tileHeight.Value));
+        
         return pos + Offset;
+    }
+
+    public int CalculateTileLift(int tileHeight) {
+        return tileHeight-TileHeight-(int)TileTopSize.Y;
     }
 
     public int[] ScreenPositionToGrid(Vector2 screen) {

@@ -6,7 +6,8 @@ public enum AssetsFolders {
     Tiles = 1,
     Characters = 2,
     Accessories = 4,
-    All = Tiles | Characters | Accessories
+    Props = 8,
+    All = Tiles | Characters | Accessories | Props
 }
 
 public static class AssetsFoldersExtensions {

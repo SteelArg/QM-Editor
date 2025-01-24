@@ -13,10 +13,35 @@ public class GridObject {
         _gridPosition = pos;
     }
 
-    public virtual void Render(SpriteBatch spriteBatch, GridRenderSettings renderSettings, float depth, int frame = 0, bool hovered = false) {
+    public virtual void Render(GridObjectRenderData renderData) {
         // noop
     }
 
+}
+
+public struct GridObjectRenderData {
+
+    public readonly SpriteBatch SpriteBatch;
+    public readonly GridRenderSettings RenderSettings;
+    public float Depth;
+    public int Frame;
+    public bool IsHovered;
+    public int CellLift;
+
+    public GridObjectRenderData(SpriteBatch spriteBatch, GridRenderSettings renderSettings, float depth, int frame = 0, bool isHovered = false, int cellLift = 0) {
+        SpriteBatch = spriteBatch;
+        RenderSettings = renderSettings;
+        Depth = depth;
+        Frame = frame;
+        IsHovered = isHovered;
+        CellLift = cellLift;
+    }
+
+    public GridObjectRenderData WithAddedDepth(float addedDepth) {
+        GridObjectRenderData newRenderData = this with { Depth = Depth + addedDepth };
+        return newRenderData;
+    }
+    
 }
 
 public interface IGridObjectFactory {
