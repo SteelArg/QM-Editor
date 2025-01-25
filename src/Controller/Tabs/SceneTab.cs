@@ -41,9 +41,12 @@ public class SceneTab : Tab {
             _worldEditor.PlaceObjectOnCursor();
         if (Input.MouseButtonHeld(1))
             _worldEditor.ClearCellOnCursor(Input.KeyHeld(Keys.LeftShift));
+        if (Input.MouseButtonClicked(2))
+            _worldEditor.CopyGridObjectOnCursor(Input.KeyHeld(Keys.LeftShift));
     }
 
     public override void Draw(SpriteBatch spriteBatch) {
         _worldRenderer.Render(spriteBatch, 1f);
+        _worldEditor.Render(spriteBatch);
     }
 }

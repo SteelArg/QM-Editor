@@ -1,6 +1,6 @@
+using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
 using Myra.Graphics2D.UI;
-using QMEditor.Model;
 using QMEditor.View;
 
 namespace QMEditor.Controllers;
@@ -16,28 +16,19 @@ public class CharacterTab : Tab {
     }
 
     protected override Widget BuildUI() {
-        _characterEditorView.CharacterCreated += OnCharacterCreated;
-        _characterEditorView.AccessoryRemoved += OnAccessoryRemoved;
+        _characterEditorView.CreateCharacterClicked += OnCreateCharacterClicked;
+        _characterEditorView.RemoveAccessoryClicked += OnRemoveAccessoryClicked;
+        _characterEditor.AccessoriesChanged += (accessories) => { _characterEditorView.SetAccessories(accessories.Select(a => a.Name).ToArray()); };
         return _characterEditorView.BuildUI();
     }
 
-    public void SelectCharacter(Asset characterAsset) {
-        _characterEditor.SetCharacterAsset(characterAsset);
-    }
-
-    public void SelectAccessory(Asset accessoryAsset) {
-        _characterEditor.AddAccessory(accessoryAsset);
-        _characterEditorView.AddAccessory(accessoryAsset.Name);
-    }
-
-    public void OnCharacterCreated() {
+    public void OnCreateCharacterClicked() {
         WorldEditor.Instance.SetObjectInCursor(_characterEditor.GetCharacterFactory());
         _manager.SwitchToTab(1);
     }
 
-    public void OnAccessoryRemoved(int accessoryId) {
+    public void OnRemoveAccessoryClicked(int accessoryId) {
         _characterEditor.RemoveAccessory(accessoryId);
-        _characterEditorView.RemoveAccessory(accessoryId);
     }
 
     public override void Open() {}

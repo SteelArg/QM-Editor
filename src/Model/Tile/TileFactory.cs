@@ -8,6 +8,12 @@ public class TileFactory : IGridObjectFactory {
         _asset = asset;
     }
 
+    public static TileFactory FromTile(Tile tile) {
+        if (tile == null || tile.Asset == null) return null;
+
+        return new TileFactory(tile.Asset);
+    }
+
     public Tile Create() {
         return new Tile(_asset);
     }

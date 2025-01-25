@@ -41,6 +41,16 @@ public class CharacterFactory : IGridObjectFactory {
         _accessoryFactories = accessoryFactories;
     }
 
+    public static CharacterFactory FromCharacter(Character character) {
+        if (character == null || character.Asset == null) return null;
+        AccessoryFactory[] accessoryFactories = new AccessoryFactory[character.Accessories.Length];
+        for (int i = 0; i < character.Accessories.Length; i++) {
+            accessoryFactories[i] = new AccessoryFactory(character.Accessories[i].Asset);
+        }
+        var factory = new CharacterFactory(character.Asset, accessoryFactories);
+        return factory;
+    }
+
     public GridObject Create() {
         Character character = new Character(_asset);
         

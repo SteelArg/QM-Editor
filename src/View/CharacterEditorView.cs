@@ -6,14 +6,21 @@ namespace QMEditor.View;
 
 public class CharacterEditorView {
 
-    public Action CharacterCreated;
-    public Action<int> AccessoryRemoved;
+    public Action CreateCharacterClicked;
+    public Action<int> RemoveAccessoryClicked;
 
     private Grid _mainGrid;
     private Button _createButton;
     private VerticalStackPanel _accessoryStack;
 
     public CharacterEditorView() {}
+
+    public void SetAccessories(string[] accessoryNames) {
+        _accessoryStack.Widgets.Clear();
+        for (int i = 0; i< accessoryNames.Length; i++) {
+            _accessoryStack.Widgets.Add(BuildAccessory(accessoryNames[i], i));
+        }
+    }
 
     public Widget BuildUI() {
         _mainGrid = new Grid();
@@ -33,7 +40,7 @@ public class CharacterEditorView {
             Width = 200, Height = 120,
             Margin = new Thickness(20)
         };
-        _createButton.Click += (s, a) => { CharacterCreated?.Invoke(); };
+        _createButton.Click += (s, a) => { CreateCharacterClicked?.Invoke(); };
         Grid.SetColumnSpan(_createButton, 2);
         Grid.SetRow(_createButton, 2);
         _mainGrid.Widgets.Add(_createButton);
@@ -48,7 +55,7 @@ public class CharacterEditorView {
         return _mainGrid;
     }
 
-    public void AddAccessory(string name) {
+    private Widget BuildAccessory(string name, int index) {
         var panel = new Panel();
 
         var removeButton = new Button() {
@@ -58,9 +65,7 @@ public class CharacterEditorView {
             HorizontalAlignment = HorizontalAlignment.Right, VerticalAlignment = VerticalAlignment.Center
         };
         removeButton.Click += (s, a) => {
-            Widget w = (Widget)s;
-            VerticalStackPanel stack = (VerticalStackPanel)w.Parent.Parent;
-            AccessoryRemoved?.Invoke(stack.Widgets.IndexOf(w.Parent));
+            RemoveAccessoryClicked?.Invoke(index);
         };
 
         var nameLabel = new Label() {
@@ -70,9 +75,7 @@ public class CharacterEditorView {
         
         panel.Widgets.Add(nameLabel);
         panel.Widgets.Add(removeButton);
-        _accessoryStack.Widgets.Add(panel);
+        return panel;
     }
-
-    public void RemoveAccessory(int accessoryId) => _accessoryStack.Widgets.RemoveAt(accessoryId);
 
 }

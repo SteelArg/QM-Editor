@@ -84,13 +84,12 @@ public class AssetsTab : Tab {
         }
 
         _manager.SwitchToTab(2);
-        CharacterTab characterTab = (CharacterTab)_manager.CurrentTab;
         switch (_selectedAssetFolder) {
             case AssetsFolders.Characters:
-                characterTab.SelectCharacter(_selectedAsset);
+                CharacterEditor.Instance.SetCharacterAsset(_selectedAsset);
                 break;
             case AssetsFolders.Accessories:
-                characterTab.SelectAccessory(_selectedAsset);
+                CharacterEditor.Instance.AddAccessory(_selectedAsset);
                 break;
         }
     }

@@ -4,13 +4,16 @@ using QMEditor.Model;
 
 namespace QMEditor.Controllers;
 
-public class WorldRenderer {
+public class WorldRenderer : Singleton<WorldRenderer> {
+
+    public static GridRenderSettings RenderSettings { get => Instance.renderSettings; }
 
     private const int renderFrames = 6;
 
+    private GridRenderSettings renderSettings = GridRenderSettings.Default;
+
     public void Render(SpriteBatch spriteBatch, float totalDepth, int frame = 0, bool displayEditor = true) {
         Grid grid = World.Instance.Grid;
-        var renderSettings = GridRenderSettings.Default;
         int[] cursorPos = WorldEditor.CursorPositionOnGrid;
         GridObjectRenderData defaultRenderData = new GridObjectRenderData(spriteBatch, renderSettings, totalDepth, frame);
 

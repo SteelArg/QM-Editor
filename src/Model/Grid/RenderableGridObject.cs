@@ -16,7 +16,7 @@ public abstract class RenderableGridObject : GridObject {
         float objectDepth = renderData.Depth + renderData.RenderSettings.GetDepthFor(GetType());
         
         renderData.SpriteBatch.Draw(_asset.GetTexture(renderData.Frame),
-            GetRenderPos(renderData), null, renderData.IsHovered ? Palette.HoverColor : Color.White,
+            GetRenderPos(renderData), null, renderData.GetObjectColor(),
             0f, Vector2.Zero, 1f, SpriteEffects.None, objectDepth/1000f
         );
     }

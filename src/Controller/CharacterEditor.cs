@@ -1,11 +1,15 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using QMEditor.Model;
 
 namespace QMEditor.Controllers;
 
-public class CharacterEditor {
+public class CharacterEditor : Singleton<CharacterEditor> {
+
+    public Action<Asset[]> AccessoriesChanged;
 
     private Asset _characterAsset;
     private List<Asset> _accessoryAssets;
@@ -17,8 +21,22 @@ public class CharacterEditor {
     }
 
     public void SetCharacterAsset(Asset characterAsset) => _characterAsset = characterAsset;
-    public void AddAccessory(Asset accessoryAsset) => _accessoryAssets.Add(accessoryAsset);
-    public void RemoveAccessory(int accessoryId) => _accessoryAssets.RemoveAt(accessoryId);
+    public void AddAccessory(Asset accessoryAsset) {
+        _accessoryAssets.Add(accessoryAsset);
+        AccessoriesChanged?.Invoke(_accessoryAssets.ToArray());
+    }
+    public void RemoveAccessory(int accessoryId) {
+        _accessoryAssets.RemoveAt(accessoryId);
+        AccessoriesChanged?.Invoke(_accessoryAssets.ToArray());
+    }
+    public void LoadCharacter(Character character) {
+        _characterAsset = character.Asset;
+        _accessoryAssets.Clear();
+        foreach (Accessory accessory in character.Accessories) {
+            _accessoryAssets.Add(accessory.Asset);
+        }
+        AccessoriesChanged?.Invoke(_accessoryAssets.ToArray());
+    }
 
     public void Render(SpriteBatch spriteBatch) {
         // Works like shit
