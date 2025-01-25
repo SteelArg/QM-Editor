@@ -26,6 +26,10 @@ public struct GridRenderSettings {
         TileHeight = tileHeight;
     }
 
+    public static GridRenderSettings FromAppSettings() {
+        return new GridRenderSettings(AppSettings.RenderOffset.Value.ToVector2(), AppSettings.RenderTileTopSize.Value.ToVector2(), AppSettings.RenderTileHeight.Value);
+    }
+
     public Vector2 CalculateRenderPosition(int[] gridCell, int[] spriteSize) {
         Vector2 pos = CalculateTilePosition(gridCell);
         

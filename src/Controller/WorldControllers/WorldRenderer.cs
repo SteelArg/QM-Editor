@@ -12,6 +12,10 @@ public class WorldRenderer : Singleton<WorldRenderer> {
 
     private GridRenderSettings renderSettings = GridRenderSettings.Default;
 
+    public WorldRenderer() {
+        renderSettings = GridRenderSettings.FromAppSettings();
+    }
+
     public void Render(SpriteBatch spriteBatch, float totalDepth, int frame = 0, bool displayEditor = true) {
         Grid grid = World.Instance.Grid;
         int[] cursorPos = WorldEditor.CursorPositionOnGrid;

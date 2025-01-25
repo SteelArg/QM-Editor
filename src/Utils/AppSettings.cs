@@ -1,3 +1,4 @@
+using Microsoft.Xna.Framework;
 using QMEditor.Model;
 
 namespace QMEditor;
@@ -7,38 +8,63 @@ public class AppSettings : Singleton<AppSettings> {
     private const string SettingsPath = "assets\\settings\\settings.txt";
 
     public static Setting<float> Volume {get => Instance._volume;}
+    public static Setting<TwoFloats> RenderOffset {get => Instance._renderOffset;}
+    public static Setting<TwoFloats> RenderTileTopSize {get => Instance._renderTileTopSize;}
+    public static Setting<int> RenderTileHeight {get => Instance._renderTileHeight;}
 
     private Setting<float> _volume;
+    private Setting<TwoFloats> _renderOffset;
+    private Setting<TwoFloats> _renderTileTopSize;
+    private Setting<int> _renderTileHeight;
     private StringDataParser _dataParser;
 
     public AppSettings() : base() {
         _volume = new Setting<float>("volume", 1f);
+        _renderOffset = new Setting<TwoFloats>("render_offset", TwoFloats.Zero);
+        _renderTileTopSize = new Setting<TwoFloats>("render_tile_top_size", TwoFloats.Zero);
+        _renderTileHeight = new Setting<int>("render_tile_height", 0);
         _dataParser = new StringDataParser(SettingsPath);
         Load();
     }
 
     public void Save() {
-        _dataParser.SetValue("volume", _volume.ToString());
+        _volume.SaveTo(_dataParser);
+        _renderOffset.SaveTo(_dataParser);
+        _renderTileTopSize.SaveTo(_dataParser);
+        _renderTileHeight.SaveTo(_dataParser);
         _dataParser.Save();
     }
 
     public void Load() {
         _dataParser.Load();
         _dataParser.Ensure("volume", 1f.ToString());
-        _volume.SetValue(float.Parse(_dataParser.GetValue("volume")));
+
+        _volume.SetValue(float.Parse(_dataParser.GetValue(_volume.SettingId)));
+        _renderOffset.SetValue(TwoFloats.FromString(_dataParser.GetValue(_renderOffset.SettingId)));
+        _renderTileTopSize.SetValue(TwoFloats.FromString(_dataParser.GetValue(_renderTileTopSize.SettingId)));
+        _renderTileHeight.SetValue(int.Parse(_dataParser.GetValue(_renderTileHeight.SettingId)));
     }
 
 }
 
 public class Setting<T> {
 
+    public T Value {get => _value;}
+    public string SettingId {get => _settingId;}
+
     private string _settingId;
     private T _value;
 
-    public T Value {get => _value;}
-
     public Setting(string settingId, T value) {
         _settingId = settingId;
+        _value = value;
+    }
+
+    public void SaveTo(StringDataParser dataParser) {
+        dataParser.SetValue(_settingId, _value.ToString());
+    }
+
+    public void SetValue(T value) {
         _value = value;
     }
 
@@ -46,8 +72,31 @@ public class Setting<T> {
         return _value.ToString();
     }
 
-    public void SetValue(T value) {
-        _value = value;
+}
+
+public struct TwoFloats {
+
+    public readonly float First;
+    public readonly float Second;
+
+    public static readonly TwoFloats Zero = new TwoFloats(0f, 0f);
+
+    public TwoFloats(float first, float second) {
+        First = first;
+        Second = second;
+    }
+
+    public override string ToString() {
+        return $"{First} {Second}";
+    }
+
+    public Vector2 ToVector2() {
+        return new Vector2(First, Second);
+    }
+
+    public static TwoFloats FromString(string str) {
+        string[] numbers = str.Split(" ");
+        return new TwoFloats(float.Parse(numbers[0]), float.Parse(numbers[1]));
     }
 
 }
