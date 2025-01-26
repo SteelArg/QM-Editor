@@ -13,7 +13,7 @@ Then you can export your artwork as a GIF to use in a chat-game or anywhere else
 ## Status
 **In development...**
 
-Latest avaliable version: **DEMO v.0.1.0**
+Latest avaliable version: **[DEMO v.0.1.0](https://github.com/SteelArg/QM-Editor/releases/tag/demo)**
 
 Release date: 24 Feb 2025
 
