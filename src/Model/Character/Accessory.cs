@@ -7,6 +7,8 @@ public class Accessory {
 
     public Asset Asset { get => _asset; }
 
+    private const int _defaultLift = 6;
+
     private Asset _asset;
 
     public Accessory(Asset asset) {
@@ -18,7 +20,7 @@ public class Accessory {
     }
 
     public void Render(Vector2 centerRenderPos, GridObjectRenderData renderData) {
-        Vector2 renderPos = centerRenderPos - new Vector2(_asset.GetSize()[0]/2, _asset.GetSize()[1]/2);
+        Vector2 renderPos = centerRenderPos + new Vector2(-_asset.GetSize()[0]/2, _defaultLift-_asset.GetSize()[1]);
         
         renderData.SpriteBatch.Draw(
             _asset.GetTexture(renderData.Frame), renderPos, null, renderData.IsHovered ? Palette.HoverColor : Color.White,

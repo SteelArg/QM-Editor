@@ -32,7 +32,7 @@ public class Character : RenderableGridObject {
         base.Render(renderData);
         Vector2 renderPos = GetRenderPos(renderData);
         
-        Vector2 renderCenter = renderPos + new Vector2(_asset.GetSize()[0]/2, _asset.GetSize()[1]/2);
+        Vector2 renderCenter = renderPos + new Vector2(_asset.GetSize()[0]/2, 0f);
         for (int i = 0; i < _accessories.Count; i++) {
             GridObjectRenderData accessoryRenderData = renderData.WithAddedDepth(renderData.RenderSettings.GetDepthFor<Accessory>()+0.01f*i);
             _accessories[i].Render(renderCenter, accessoryRenderData);

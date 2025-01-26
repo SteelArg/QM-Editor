@@ -24,6 +24,8 @@ public class AssetFolder {
         
         foreach (string file in files) {
             Asset asset = _factory.Create($"{_path}\\{file}");
+            if (_assets.ContainsKey(asset.Name)) continue;
+            
             asset.Load();
             _assets.Add(asset.Name, asset);
         }

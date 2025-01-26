@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using QMEditor.Model;
 
@@ -15,7 +12,7 @@ public class CharacterEditor : Singleton<CharacterEditor> {
 
     public CharacterEditor() {}
 
-    public void SetCharacterAsset(Asset characterAsset) => _character = new Character(characterAsset, _character.Accessories);
+    public void SetCharacterAsset(Asset characterAsset) => _character = new Character(characterAsset, _character?.Accessories);
     public void AddAccessory(Asset accessoryAsset) {
         _character.AddAccessory(new Accessory(accessoryAsset));
         AccessoriesChanged?.Invoke(_character.Accessories);
