@@ -22,7 +22,7 @@ public class SceneTab : Tab {
     }
 
     protected override Widget BuildUI() {
-        _sceneTabView.RenderClicked += () => { _worldRenderer.SaveToGif("output\\render.gif", [1024, 512]); };
+        _sceneTabView.RenderClicked += () => { _worldRenderer.SaveToGif("output\\render.gif", [720, 480]); };
         _sceneTabView.FrameLooperView.TogglePauseClicked += _frameLooper.TogglePause;
         _sceneTabView.FrameLooperView.NextFrameClicked += _frameLooper.NextFrame;
         _sceneTabView.FrameLooperView.PrevFrameClicked += _frameLooper.PrevFrame;

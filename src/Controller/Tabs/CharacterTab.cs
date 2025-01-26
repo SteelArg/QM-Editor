@@ -1,6 +1,7 @@
 using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
 using Myra.Graphics2D.UI;
+using QMEditor.Model;
 using QMEditor.View;
 
 namespace QMEditor.Controllers;
@@ -23,7 +24,12 @@ public class CharacterTab : Tab {
     }
 
     public void OnCreateCharacterClicked() {
-        WorldEditor.Instance.SetObjectInCursor(_characterEditor.GetCharacter());
+        Character character = _characterEditor.CreateCharacter();
+        if (character == null) {
+            _manager.SwitchToTab(3);
+            return;
+        }
+        WorldEditor.Instance.SetObjectInCursor(character);
         _manager.SwitchToTab(1);
     }
 

@@ -34,6 +34,6 @@ public class CharacterEditor : Singleton<CharacterEditor> {
         _character.Render(renderData);
     }
 
-    public Character GetCharacter() => (Character)_character.Clone();
+    public Character CreateCharacter() => (Character)_character?.Clone();
 
 }

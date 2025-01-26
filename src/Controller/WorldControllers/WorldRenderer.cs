@@ -50,7 +50,7 @@ public class WorldRenderer : Singleton<WorldRenderer> {
         Global.Game.GraphicsDevice.SetRenderTarget(saveRT);
         Global.Game.GraphicsDevice.Clear(Color.Transparent);
         
-        spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend);
+        spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend, SamplerState.PointClamp, null, null, null, Matrix.CreateScale(4f));
         Render(spriteBatch, 0f, frame, false);
         spriteBatch.End();
 
