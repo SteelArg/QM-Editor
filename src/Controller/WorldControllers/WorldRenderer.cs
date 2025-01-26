@@ -8,8 +8,6 @@ public class WorldRenderer : Singleton<WorldRenderer> {
 
     public static GridRenderSettings RenderSettings { get => Instance.renderSettings; }
 
-    private const int renderFrames = 6;
-
     private GridRenderSettings renderSettings = GridRenderSettings.Default;
 
     public WorldRenderer() {
@@ -37,13 +35,13 @@ public class WorldRenderer : Singleton<WorldRenderer> {
 
     public void SaveToGif(string path, int[] renderSize) {
         var spriteBatch = new SpriteBatch(Global.Game.GraphicsDevice);
-        RenderTarget2D[] saveRTs = new RenderTarget2D[renderFrames];
+        RenderTarget2D[] saveRTs = new RenderTarget2D[AppSettings.RenderFrameCount.Value];
 
-        for (int i = 0; i < renderFrames; i++) {
+        for (int i = 0; i < AppSettings.RenderFrameCount.Value; i++) {
             saveRTs[i] = RenderToTarget(spriteBatch, renderSize, i);
         }
         
-        ServiceLocator.FileService.SaveAsGif(path, saveRTs, renderSize, 200);
+        ServiceLocator.FileService.SaveAsGif(path, saveRTs, renderSize, AppSettings.RenderFrameDuration.Value);
     }
 
     private RenderTarget2D RenderToTarget(SpriteBatch spriteBatch, int[] renderSize, int frame) {

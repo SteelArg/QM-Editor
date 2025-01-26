@@ -3,3 +3,5 @@ volume=1
 render_offset=70 25
 render_tile_top_size=16 9
 render_tile_height=5
+render_frame_count=6
+render_frame_duration=200

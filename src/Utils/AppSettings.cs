@@ -11,11 +11,15 @@ public class AppSettings : Singleton<AppSettings> {
     public static Setting<TwoFloats> RenderOffset {get => Instance._renderOffset;}
     public static Setting<TwoFloats> RenderTileTopSize {get => Instance._renderTileTopSize;}
     public static Setting<int> RenderTileHeight {get => Instance._renderTileHeight;}
+    public static Setting<int> RenderFrameCount {get => Instance._renderFrameCount;}
+    public static Setting<int> RenderFrameDuration {get => Instance._renderFrameDuration;}
 
     private Setting<float> _volume;
     private Setting<TwoFloats> _renderOffset;
     private Setting<TwoFloats> _renderTileTopSize;
     private Setting<int> _renderTileHeight;
+    private Setting<int> _renderFrameCount;
+    private Setting<int> _renderFrameDuration;
     private StringDataParser _dataParser;
 
     public AppSettings() : base() {
@@ -23,6 +27,8 @@ public class AppSettings : Singleton<AppSettings> {
         _renderOffset = new Setting<TwoFloats>("render_offset", TwoFloats.Zero);
         _renderTileTopSize = new Setting<TwoFloats>("render_tile_top_size", TwoFloats.Zero);
         _renderTileHeight = new Setting<int>("render_tile_height", 0);
+        _renderFrameCount = new Setting<int>("render_frame_count", 0);
+        _renderFrameDuration = new Setting<int>("render_frame_duration", 0);
         _dataParser = new StringDataParser(SettingsPath);
         Load();
     }
@@ -32,6 +38,8 @@ public class AppSettings : Singleton<AppSettings> {
         _renderOffset.SaveTo(_dataParser);
         _renderTileTopSize.SaveTo(_dataParser);
         _renderTileHeight.SaveTo(_dataParser);
+        _renderFrameCount.SaveTo(_dataParser);
+        _renderFrameDuration.SaveTo(_dataParser);
         _dataParser.Save();
     }
 
@@ -43,6 +51,8 @@ public class AppSettings : Singleton<AppSettings> {
         _renderOffset.SetValue(TwoFloats.FromString(_dataParser.GetValue(_renderOffset.SettingId)));
         _renderTileTopSize.SetValue(TwoFloats.FromString(_dataParser.GetValue(_renderTileTopSize.SettingId)));
         _renderTileHeight.SetValue(int.Parse(_dataParser.GetValue(_renderTileHeight.SettingId)));
+        _renderFrameCount.SetValue(int.Parse(_dataParser.GetValue(_renderFrameCount.SettingId)));
+        _renderFrameDuration.SetValue(int.Parse(_dataParser.GetValue(_renderFrameDuration.SettingId)));
     }
 
 }
