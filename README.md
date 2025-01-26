@@ -3,7 +3,8 @@
 You have the ability to create and edit a grid of tiles with characters and objects on it.
 Then you can export your artwork as a GIF to use in a chat-game or anywhere else for visuals.
 
-![QMEditorShowcase1](https://github.com/user-attachments/assets/a70570e4-a4ef-4e4e-9c2d-45a857d65785)
+![render](https://github.com/user-attachments/assets/085f7bf3-97ca-414e-b3c3-2ed85653a1bd)
+
 
 ## Features
 * **Custom Assets.** You are be able to drop your own game assets in a folder to use them in the editor.
