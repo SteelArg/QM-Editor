@@ -2,13 +2,15 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using QMEditor.Model;
 
-public class GridObject {
+public abstract class GridObject {
 
     private int[] _gridPosition;
 
     public int[] GridPosition {get => _gridPosition;}
 
     public GridObject() {}
+
+    public abstract GridObject Clone();
 
     public void SetGridPosition(int[] pos) {
         _gridPosition = pos;
@@ -53,10 +55,4 @@ public struct GridObjectRenderData {
         return Color.White;
     }
     
-}
-
-public interface IGridObjectFactory {
-
-    public GridObject Create();
-
 }

@@ -71,15 +71,14 @@ public class AssetsTab : Tab {
     }
 
     public void OnClickedPlaceAsset() {
-
         switch (_selectedAssetFolder) {
             case AssetsFolders.Tiles:
                 _manager.SwitchToTab(1);
-                WorldEditor.Instance.SetObjectInCursor(new TileFactory(_selectedAsset));
+                WorldEditor.Instance.SetObjectInCursor(new Tile(_selectedAsset));
                 return;
             case AssetsFolders.Props:
                 _manager.SwitchToTab(1);
-                WorldEditor.Instance.SetObjectInCursor(new PropFactory(_selectedAsset));
+                WorldEditor.Instance.SetObjectInCursor(new Prop(_selectedAsset));
                 return;
         }
 

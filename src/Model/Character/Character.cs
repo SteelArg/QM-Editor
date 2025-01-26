@@ -9,10 +9,24 @@ public class Character : RenderableGridObject {
 
     private List<Accessory> _accessories = new List<Accessory>();
 
-    public Character(Asset asset) : base(asset) {}
+    public Character(Asset asset, Accessory[] accessories = null) : base(asset) {
+        if (accessories != null)
+            _accessories.AddRange(accessories);
+    }
+
+    public override GridObject Clone() {
+        var character = new Character(_asset);
+        character._accessories = new List<Accessory>();
+        foreach (Accessory accessory in _accessories) {
+            character._accessories.Add(accessory.Clone());
+        }
+        character.SetGridPosition(GridPosition);
+        return character;
+    }
 
     public void AddAccessory(Accessory accessory) => _accessories.Add(accessory);
-    public void RemoveAccessory(Accessory accessory) => _accessories.Remove(accessory);
+    public void RemoveAccessory(int accessoryId) => _accessories.RemoveAt(accessoryId);
+    public void ClearAccessories() => _accessories.Clear();
 
     public override void Render(GridObjectRenderData renderData) {
         base.Render(renderData);
@@ -27,40 +41,6 @@ public class Character : RenderableGridObject {
 
     protected override Vector2 GetRenderPos(GridObjectRenderData renderData) {
         return renderData.RenderSettings.CalculateRenderPosition(GridPosition, _asset.GetSize()) - new Vector2(0f, renderData.CellLift);
-    }
-
-}
-
-public class CharacterFactory : IGridObjectFactory {
-
-    private Asset _asset;
-    private AccessoryFactory[] _accessoryFactories;
-
-    public CharacterFactory(Asset asset, AccessoryFactory[] accessoryFactories = null) {
-        _asset = asset;
-        _accessoryFactories = accessoryFactories;
-    }
-
-    public static CharacterFactory FromCharacter(Character character) {
-        if (character == null || character.Asset == null) return null;
-        AccessoryFactory[] accessoryFactories = new AccessoryFactory[character.Accessories.Length];
-        for (int i = 0; i < character.Accessories.Length; i++) {
-            accessoryFactories[i] = new AccessoryFactory(character.Accessories[i].Asset);
-        }
-        var factory = new CharacterFactory(character.Asset, accessoryFactories);
-        return factory;
-    }
-
-    public GridObject Create() {
-        Character character = new Character(_asset);
-        
-        if (_accessoryFactories != null) {
-            foreach (AccessoryFactory accessoryFactory in _accessoryFactories) {
-                character.AddAccessory(accessoryFactory.Create());
-            }
-        }
-
-        return character;
     }
 
 }

@@ -9,57 +9,34 @@ namespace QMEditor.Controllers;
 
 public class CharacterEditor : Singleton<CharacterEditor> {
 
-    public Action<Asset[]> AccessoriesChanged;
+    public Action<Accessory[]> AccessoriesChanged;
 
-    private Asset _characterAsset;
-    private List<Asset> _accessoryAssets;
+    private Character _character;
 
-    private static readonly Vector2 _offset = new Vector2(20f, 10f);
+    public CharacterEditor() {}
 
-    public CharacterEditor() {
-        _accessoryAssets = new List<Asset>();
-    }
-
-    public void SetCharacterAsset(Asset characterAsset) => _characterAsset = characterAsset;
+    public void SetCharacterAsset(Asset characterAsset) => _character = new Character(characterAsset, _character.Accessories);
     public void AddAccessory(Asset accessoryAsset) {
-        _accessoryAssets.Add(accessoryAsset);
-        AccessoriesChanged?.Invoke(_accessoryAssets.ToArray());
+        _character.AddAccessory(new Accessory(accessoryAsset));
+        AccessoriesChanged?.Invoke(_character.Accessories);
     }
     public void RemoveAccessory(int accessoryId) {
-        _accessoryAssets.RemoveAt(accessoryId);
-        AccessoriesChanged?.Invoke(_accessoryAssets.ToArray());
+        _character.RemoveAccessory(accessoryId);
+        AccessoriesChanged?.Invoke(_character.Accessories);
     }
     public void LoadCharacter(Character character) {
-        _characterAsset = character.Asset;
-        _accessoryAssets.Clear();
-        foreach (Accessory accessory in character.Accessories) {
-            _accessoryAssets.Add(accessory.Asset);
-        }
-        AccessoriesChanged?.Invoke(_accessoryAssets.ToArray());
+        _character = character;
+        AccessoriesChanged?.Invoke(_character.Accessories);
     }
 
     public void Render(SpriteBatch spriteBatch) {
-        // Works like shit
-        
-        if (_characterAsset != null)
-            spriteBatch.Draw(_characterAsset.GetTexture(), _offset, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.2f);
-        
-        // Render accessories
-        for (int i = 0; i < _accessoryAssets.Count; i++) {
-            Asset accessoryAsset = _accessoryAssets[i];
-            spriteBatch.Draw(accessoryAsset.GetTexture(), _offset, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0.3f + i/100f);
-        }
+        if (_character == null) return;
+
+        _character.SetGridPosition([0,0]);
+        var renderData = new GridObjectRenderData(spriteBatch, GridRenderSettings.CharacterEditor, 0f);
+        _character.Render(renderData);
     }
 
-    public CharacterFactory GetCharacterFactory() {
-        if (_characterAsset == null) return null;
-
-        List<AccessoryFactory> accessoryFactories = new List<AccessoryFactory>();
-        foreach (Asset accessoryAsset in _accessoryAssets) {
-            accessoryFactories.Add(new AccessoryFactory(accessoryAsset));
-        }
-
-        return new CharacterFactory(_characterAsset, accessoryFactories.ToArray());
-    }
+    public Character GetCharacter() => (Character)_character.Clone();
 
 }

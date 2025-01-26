@@ -18,12 +18,12 @@ public class CharacterTab : Tab {
     protected override Widget BuildUI() {
         _characterEditorView.CreateCharacterClicked += OnCreateCharacterClicked;
         _characterEditorView.RemoveAccessoryClicked += OnRemoveAccessoryClicked;
-        _characterEditor.AccessoriesChanged += (accessories) => { _characterEditorView.SetAccessories(accessories.Select(a => a.Name).ToArray()); };
+        _characterEditor.AccessoriesChanged += (accessories) => { _characterEditorView.SetAccessories(accessories.Select(a => a.Asset.Name).ToArray()); };
         return _characterEditorView.BuildUI();
     }
 
     public void OnCreateCharacterClicked() {
-        WorldEditor.Instance.SetObjectInCursor(_characterEditor.GetCharacterFactory());
+        WorldEditor.Instance.SetObjectInCursor(_characterEditor.GetCharacter());
         _manager.SwitchToTab(1);
     }
 
