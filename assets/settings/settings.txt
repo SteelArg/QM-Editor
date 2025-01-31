@@ -1,5 +1,5 @@
-mama=dohla
 volume=1
+editor_version=v0.1.1-DEV
 render_offset=80 30
 render_tile_top_size=16 9
 render_tile_height=5

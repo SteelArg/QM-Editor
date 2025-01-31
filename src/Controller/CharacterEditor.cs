@@ -21,6 +21,9 @@ public class CharacterEditor : Singleton<CharacterEditor> {
         _character.RemoveAccessory(accessoryId);
         AccessoriesChanged?.Invoke(_character.Accessories);
     }
+    public void ChangeAccessoryLift(int accessoryId, int lift) {
+        _character.Accessories[accessoryId].SetLift(lift);
+    }
     public void LoadCharacter(Character character) {
         _character = character;
         AccessoriesChanged?.Invoke(_character.Accessories);

@@ -19,7 +19,8 @@ public class CharacterTab : Tab {
     protected override Widget BuildUI() {
         _characterEditorView.CreateCharacterClicked += OnCreateCharacterClicked;
         _characterEditorView.RemoveAccessoryClicked += OnRemoveAccessoryClicked;
-        _characterEditor.AccessoriesChanged += (accessories) => { _characterEditorView.SetAccessories(accessories.Select(a => a.Asset.Name).ToArray()); };
+        _characterEditorView.AccessoryLiftChanged += _characterEditor.ChangeAccessoryLift;
+        _characterEditor.AccessoriesChanged += (accessories) => { _characterEditorView.SetAccessories(accessories.Select(a => (a.Asset.Name, a.Lift)).ToArray()); };
         return _characterEditorView.BuildUI();
     }
 

@@ -6,6 +6,7 @@ public class WorldSaver : Singleton<WorldSaver> {
 
     public void Save(string path = "saves\\default.qmworld") {
         var parser = new StringDataParser(path);
+        parser.SetValue("editor_version", AppSettings.Version.Value);
         
         Grid grid = World.Instance.Grid;
         parser.SetValue("size", $"{grid.Size[0]};{grid.Size[1]}");
@@ -26,14 +27,14 @@ public class WorldSaver : Singleton<WorldSaver> {
                         addData = "";
                         Character character = renderableObj as Character;
                         foreach (Accessory accessory in character.Accessories){
-                            addData += $"{accessory.Asset.Name},";
+                            addData += $"{accessory.Asset.Name},{accessory.Lift}:";
                         }
                         if (addData.Length > 0)
                             addData = addData.Remove(addData.Length-1);
                     }
                 }
                 
-                string objectData = $"{type};{asset}:{addData}";
+                string objectData = $"{type};{asset};{addData}";
                 objects += objectData + "|";
             }
             if (objects.Length > 0)

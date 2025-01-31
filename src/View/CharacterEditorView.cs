@@ -8,6 +8,7 @@ public class CharacterEditorView {
 
     public Action CreateCharacterClicked;
     public Action<int> RemoveAccessoryClicked;
+    public Action<int, int> AccessoryLiftChanged;
 
     private Grid _mainGrid;
     private Button _createButton;
@@ -15,10 +16,10 @@ public class CharacterEditorView {
 
     public CharacterEditorView() {}
 
-    public void SetAccessories(string[] accessoryNames) {
+    public void SetAccessories((string name, int lift)[] accessoriesData) {
         _accessoryStack.Widgets.Clear();
-        for (int i = 0; i< accessoryNames.Length; i++) {
-            _accessoryStack.Widgets.Add(BuildAccessory(accessoryNames[i], i));
+        for (int i = 0; i< accessoriesData.Length; i++) {
+            _accessoryStack.Widgets.Add(BuildAccessory(accessoriesData[i].name, accessoriesData[i].lift, i));
         }
     }
 
@@ -55,7 +56,7 @@ public class CharacterEditorView {
         return _mainGrid;
     }
 
-    private Widget BuildAccessory(string name, int index) {
+    private Widget BuildAccessory(string name, int lift, int index) {
         var panel = new Panel();
 
         var removeButton = new Button() {
@@ -72,9 +73,15 @@ public class CharacterEditorView {
             Text = name, TextAlign = FontStashSharp.RichText.TextHorizontalAlignment.Center,
             HorizontalAlignment = HorizontalAlignment.Left, VerticalAlignment = VerticalAlignment.Center
         };
+
+        var intSelector = new IntSelectorWidget(null, 30, -10, 10, lift) {
+            HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center
+        };
+        intSelector.OnValueChanged += (value) => { AccessoryLiftChanged?.Invoke(index, value); };
         
         panel.Widgets.Add(nameLabel);
         panel.Widgets.Add(removeButton);
+        panel.Widgets.Add(intSelector);
         return panel;
     }
 
