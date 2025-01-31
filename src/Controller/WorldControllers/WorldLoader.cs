@@ -3,7 +3,7 @@ using QMEditor.Model;
 
 namespace QMEditor.Controllers;
 
-public class WorldLoader : Singleton<WorldLoader> {
+public class WorldLoader {
 
     public void Load(string path = "saves\\default.qmworld") {
         var parser = new StringDataParser(path);

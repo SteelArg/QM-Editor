@@ -14,6 +14,10 @@ public class CharacterTab : Tab {
     public CharacterTab() : base() {
         _characterEditor = new CharacterEditor();
         _characterEditorView = new CharacterEditorView();
+        World.Cursor.ObjectChanged += () => {
+            if (World.Cursor.GetObject().GetType() == typeof(Character))
+                _characterEditor.LoadCharacter((Character)World.Cursor.GetCopyOfObject());
+        };
     }
 
     protected override Widget BuildUI() {
@@ -25,22 +29,25 @@ public class CharacterTab : Tab {
     }
 
     public void OnCreateCharacterClicked() {
-        Character character = _characterEditor.CreateCharacter();
+        Character character = _characterEditor.GetCharacter();
         if (character == null) {
-            _manager.SwitchToTab(3);
+            _manager.SwitchToTab<AssetsTab>();
             return;
         }
-        WorldEditor.Instance.SetObjectInCursor(character);
-        _manager.SwitchToTab(1);
+        World.Cursor.SetCopyOfObject(character);
+        _manager.SwitchToTab<SceneTab>();
     }
 
     public void OnRemoveAccessoryClicked(int accessoryId) {
         _characterEditor.RemoveAccessory(accessoryId);
     }
 
+    public void SetCharacterAsset(Asset characterAsset) => _characterEditor.SetCharacterAsset(characterAsset);
+    public void AddAccessoryAsset(Asset accessoryAsset) =>  _characterEditor.AddAccessoryAsset(accessoryAsset);
+
     public override void Open() {}
     public override void Close() {}
-    
+
     public override void Draw(SpriteBatch spriteBatch) {
         _characterEditor.Render(spriteBatch);
     }

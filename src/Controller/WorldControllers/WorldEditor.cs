@@ -1,14 +1,9 @@
-using System;
 using Microsoft.Xna.Framework.Graphics;
 using QMEditor.Model;
 
 namespace QMEditor.Controllers;
 
-public class WorldEditor : Singleton<WorldEditor> {
-
-    public static GridObject ObjectInCursor { get => Instance._objectInCursor; }
-
-    private GridObject _objectInCursor;
+public class WorldEditor {
 
     public static int[] CursorPositionOnGrid {
         get {
@@ -17,13 +12,13 @@ public class WorldEditor : Singleton<WorldEditor> {
         }
     }
 
-    public void PlaceObjectOnCursor() {
-        if (CursorPositionOnGrid == null || _objectInCursor == null) return;
+    public void PlaceObject() {
+        if (CursorPositionOnGrid == null || World.Cursor.IsEmpty) return;
 
-        World.Instance.Grid.PlaceOnGrid(_objectInCursor.Clone(), CursorPositionOnGrid);
+        World.Instance.Grid.PlaceOnGrid(World.Cursor.GetCopyOfObject(), CursorPositionOnGrid);
     }
 
-    public void ClearCellOnCursor(bool withTile = false) {
+    public void ClearCell(bool withTile = false) {
         if (CursorPositionOnGrid == null) return;
 
         Grid grid = World.Instance.Grid;
@@ -35,14 +30,14 @@ public class WorldEditor : Singleton<WorldEditor> {
         }
     }
 
-    public void CopyGridObjectOnCursor(bool copyTile = false) {
+    public void CopyGridObject(bool copyTile = false) {
         if (CursorPositionOnGrid == null) return;
 
         GridCell cell = World.Instance.Grid.GetGridCell(CursorPositionOnGrid);
 
         // Tile
         if (copyTile) {
-            SetObjectInCursor(cell.Tile?.Clone());
+            World.Cursor.SetCopyOfObject(cell.Tile);
             return;
         }
 
@@ -52,21 +47,18 @@ public class WorldEditor : Singleton<WorldEditor> {
             if (gridObject is Character)
                 character = (Character)gridObject;
         }
-        SetObjectInCursor(character?.Clone());
-        if (character != null) CharacterEditor.Instance.LoadCharacter((Character)character?.Clone());
+        World.Cursor.SetCopyOfObject(character);
     }
 
-    public void SetObjectInCursor(GridObject gridObject) => _objectInCursor = gridObject;
-
     public void Render(SpriteBatch spriteBatch) {
-        if (_objectInCursor == null || CursorPositionOnGrid == null) return;
+        if (World.Cursor.IsEmpty || CursorPositionOnGrid == null) return;
         
-        _objectInCursor.SetGridPosition(CursorPositionOnGrid);
+        World.Cursor.GetObject().SetGridPosition(CursorPositionOnGrid);
         var renderData = new GridObjectRenderData(spriteBatch, WorldRenderer.RenderSettings, 100f);
         renderData.CellLift = World.Instance.Grid.GetGridCell(CursorPositionOnGrid).Tile?.GetLift(renderData.RenderSettings) ?? 0;
         renderData.IsPreview = true;
 
-        _objectInCursor.Render(renderData);
+        World.Cursor.GetObject().Render(renderData);
     }
 
 }

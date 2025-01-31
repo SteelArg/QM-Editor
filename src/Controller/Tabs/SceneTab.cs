@@ -22,12 +22,13 @@ public class SceneTab : Tab {
     }
 
     protected override Widget BuildUI() {
+        Widget widget = _sceneTabView.BuildUI();
         _sceneTabView.RenderClicked += () => { _worldRenderer.SaveToGif("output\\render.gif", [720, 480]); };
-        _sceneTabView.FrameLooperView.TogglePauseClicked += _frameLooper.TogglePause;
-        _sceneTabView.FrameLooperView.NextFrameClicked += _frameLooper.NextFrame;
-        _sceneTabView.FrameLooperView.PrevFrameClicked += _frameLooper.PrevFrame;
-        _frameLooper.FrameChanged += _sceneTabView.FrameLooperView.SetCurrentFrame;
-        return _sceneTabView.BuildUI();
+        _sceneTabView.FrameLooper.TogglePauseClicked += _frameLooper.TogglePause;
+        _sceneTabView.FrameLooper.NextFrameClicked += _frameLooper.NextFrame;
+        _sceneTabView.FrameLooper.PrevFrameClicked += _frameLooper.PrevFrame;
+        _frameLooper.FrameChanged += _sceneTabView.FrameLooper.SetCurrentFrame;
+        return widget;
     }
 
     public override void Open() {}
@@ -37,11 +38,11 @@ public class SceneTab : Tab {
         _frameLooper.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
 
         if (Input.MouseButtonClicked(0))
-            _worldEditor.PlaceObjectOnCursor();
+            _worldEditor.PlaceObject();
         if (Input.MouseButtonHeld(1))
-            _worldEditor.ClearCellOnCursor(Input.KeyHeld(Keys.LeftShift));
+            _worldEditor.ClearCell(Input.KeyHeld(Keys.LeftShift));
         if (Input.MouseButtonClicked(2))
-            _worldEditor.CopyGridObjectOnCursor(Input.KeyHeld(Keys.LeftShift));
+            _worldEditor.CopyGridObject(Input.KeyHeld(Keys.LeftShift));
     }
 
     public override void Draw(SpriteBatch spriteBatch) {

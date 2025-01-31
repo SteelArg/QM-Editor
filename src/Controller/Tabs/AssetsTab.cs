@@ -73,22 +73,22 @@ public class AssetsTab : Tab {
     public void OnClickedPlaceAsset() {
         switch (_selectedAssetFolder) {
             case AssetsFolders.Tiles:
-                _manager.SwitchToTab(1);
-                WorldEditor.Instance.SetObjectInCursor(new Tile(_selectedAsset));
+                _manager.SwitchToTab<SceneTab>();
+                World.Cursor.SetObject(new Tile(_selectedAsset));
                 return;
             case AssetsFolders.Props:
-                _manager.SwitchToTab(1);
-                WorldEditor.Instance.SetObjectInCursor(new Prop(_selectedAsset));
+                _manager.SwitchToTab<SceneTab>();
+                World.Cursor.SetObject(new Prop(_selectedAsset));
                 return;
         }
 
-        _manager.SwitchToTab(2);
+        _manager.SwitchToTab<CharacterTab>();
         switch (_selectedAssetFolder) {
             case AssetsFolders.Characters:
-                CharacterEditor.Instance.SetCharacterAsset(_selectedAsset);
+                _manager.GetTab<CharacterTab>().SetCharacterAsset(_selectedAsset);
                 break;
             case AssetsFolders.Accessories:
-                CharacterEditor.Instance.AddAccessory(_selectedAsset);
+                _manager.GetTab<CharacterTab>().AddAccessoryAsset(_selectedAsset);
                 break;
         }
     }

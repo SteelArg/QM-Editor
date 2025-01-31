@@ -1,7 +1,9 @@
 using System;
 using Myra.Graphics2D.UI;
 
-public class FrameLooperView {
+namespace QMEditor.View;
+
+public class FrameLooperWidget : Panel {
 
     public Action TogglePauseClicked;
     public Action NextFrameClicked;
@@ -11,9 +13,15 @@ public class FrameLooperView {
     private Label _frameCount;
     private Button _pauseButton;
 
-    public FrameLooperView() {}
+    public FrameLooperWidget() {
+        BuildUI();
+    }
 
-    public Widget BuildUI() {
+    public void SetCurrentFrame(int currentFrame) {
+        _frameCount.Text = $"Frame: {currentFrame+1}";
+    }
+
+    private void BuildUI() {
         _grid = new Grid{
             DefaultColumnProportion = new Proportion(ProportionType.Auto),
             DefaultRowProportion = new Proportion(ProportionType.Auto)
@@ -35,11 +43,7 @@ public class FrameLooperView {
         _grid.Widgets.Add(BuildButton("Prev", PrevFrameClicked, 1, 1));
         _grid.Widgets.Add(BuildButton("Next", NextFrameClicked, 1, 2));
 
-        return _grid;
-    }
-
-    public void SetCurrentFrame(int currentFrame) {
-        _frameCount.Text = $"Frame: {currentFrame+1}";
+        Widgets.Add(_grid);
     }
 
     private Button BuildButton(string label, Action clickEvent, int row = 0, int column = 0) {

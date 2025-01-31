@@ -1,18 +1,17 @@
 using System;
 using Myra.Graphics2D;
 using Myra.Graphics2D.UI;
+using QMEditor.View;
 
 public class SceneTabView {
 
-    public FrameLooperView FrameLooperView { get => _frameLooperView; }
+    public FrameLooperWidget FrameLooper { get => _frameLooper; }
     public Action RenderClicked;
 
-    private FrameLooperView _frameLooperView;
+    private FrameLooperWidget _frameLooper;
     private VerticalStackPanel _stackPanel;
 
-    public SceneTabView() {
-        _frameLooperView = new FrameLooperView();
-    }
+    public SceneTabView() {}
 
     public Widget BuildUI() {
         _stackPanel = new VerticalStackPanel() {
@@ -20,7 +19,9 @@ public class SceneTabView {
         };
         Grid.SetColumn(_stackPanel, 1);
 
-        _stackPanel.Widgets.Add(_frameLooperView.BuildUI());
+        _frameLooper = new FrameLooperWidget();
+
+        _stackPanel.Widgets.Add(_frameLooper);
         _stackPanel.Widgets.Add(BuildRenderButton());
 
         return _stackPanel;

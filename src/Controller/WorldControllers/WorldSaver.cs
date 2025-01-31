@@ -2,7 +2,7 @@ using QMEditor.Model;
 
 namespace QMEditor.Controllers;
 
-public class WorldSaver : Singleton<WorldSaver> {
+public class WorldSaver {
 
     public void Save(string path = "saves\\default.qmworld") {
         var parser = new StringDataParser(path);

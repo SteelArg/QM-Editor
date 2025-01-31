@@ -4,20 +4,18 @@ using QMEditor.Model;
 
 namespace QMEditor.Controllers;
 
-public class WorldRenderer : Singleton<WorldRenderer> {
+public class WorldRenderer {
 
-    public static GridRenderSettings RenderSettings { get => Instance.renderSettings; }
-
-    private GridRenderSettings renderSettings = GridRenderSettings.Default;
+    public static GridRenderSettings RenderSettings { get; private set; }
 
     public WorldRenderer() {
-        renderSettings = GridRenderSettings.FromAppSettings();
+        RenderSettings = GridRenderSettings.FromAppSettings();
     }
 
     public void Render(SpriteBatch spriteBatch, float totalDepth, int frame = 0, bool displayEditor = true) {
         Grid grid = World.Instance.Grid;
         int[] cursorPos = WorldEditor.CursorPositionOnGrid;
-        GridObjectRenderData defaultRenderData = new GridObjectRenderData(spriteBatch, renderSettings, totalDepth, frame);
+        GridObjectRenderData defaultRenderData = new GridObjectRenderData(spriteBatch, RenderSettings, totalDepth, frame);
 
         LoopThroughPositions.Every((x, y) => {
             float tileDepth = x + y;
@@ -25,7 +23,7 @@ public class WorldRenderer : Singleton<WorldRenderer> {
 
             GridObjectRenderData cellRenderData = defaultRenderData.WithAddedDepth(tileDepth);
             cellRenderData.IsHovered = hovered;
-            cellRenderData.CellLift = grid.GetGridCell([x,y]).Tile?.GetLift(renderSettings) ?? 0;
+            cellRenderData.CellLift = grid.GetGridCell([x,y]).Tile?.GetLift(RenderSettings) ?? 0;
 
             foreach (GridObject obj in grid.GetGridCell([x,y]).Objects) {
                 obj.Render(cellRenderData);

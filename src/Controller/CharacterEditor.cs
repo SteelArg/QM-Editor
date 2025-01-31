@@ -4,7 +4,7 @@ using QMEditor.Model;
 
 namespace QMEditor.Controllers;
 
-public class CharacterEditor : Singleton<CharacterEditor> {
+public class CharacterEditor {
 
     public Action<Accessory[]> AccessoriesChanged;
 
@@ -13,7 +13,7 @@ public class CharacterEditor : Singleton<CharacterEditor> {
     public CharacterEditor() {}
 
     public void SetCharacterAsset(Asset characterAsset) => _character = new Character(characterAsset, _character?.Accessories);
-    public void AddAccessory(Asset accessoryAsset) {
+    public void AddAccessoryAsset(Asset accessoryAsset) {
         _character.AddAccessory(new Accessory(accessoryAsset));
         AccessoriesChanged?.Invoke(_character.Accessories);
     }
@@ -38,5 +38,6 @@ public class CharacterEditor : Singleton<CharacterEditor> {
     }
 
     public Character CreateCharacter() => (Character)_character?.Clone();
+    public Character GetCharacter() => _character;
 
 }
