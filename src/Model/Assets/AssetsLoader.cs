@@ -30,11 +30,11 @@ public class AssetsLoader : Singleton<AssetsLoader> {
         return foundAsset;
     } 
 
-    public List<string> GetAllAssetNames(AssetsFolders foldersToSearch) {
+    public List<string> GetAllAssetNames(AssetsFolders foldersToSearch, string searchString = null) {
         List<string> allAssets = new List<string>();
         foreach (AssetsFolders scannedFolder in _folders.Keys) {
             if (!foldersToSearch.IsFolderSelected(scannedFolder)) continue;
-            foreach (Asset asset in _folders[scannedFolder].GetAssets()) {
+            foreach (Asset asset in _folders[scannedFolder].GetAssetsBySearch(searchString)) {
                 allAssets.Add(asset.Name);
             }
         }

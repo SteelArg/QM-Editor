@@ -37,8 +37,10 @@ public class AssetsTab : Tab {
     }
 
     private void AddAssetsList(string listName, AssetsFolders folder) {
-        AssetsList assetsList = new AssetsList(listName, _loader.GetAllAssetNames(folder), l => l);
+        AssetsList assetsList = new AssetsList(listName, l => l);
+        assetsList.SetAssets(_loader.GetAllAssetNames(folder));
         assetsList.AssetSelected += (string name) => { OnAssetSelected(name, folder); };
+        assetsList.SearchChanged += (string search) => { assetsList.SetAssets(_loader.GetAllAssetNames(folder, search)); } ;
         _assetsLists.Add(folder, assetsList);
     }
 

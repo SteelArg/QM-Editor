@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Myra.Events;
 using Myra.Graphics2D.UI;
 
 namespace QMEditor.View;
@@ -9,6 +8,7 @@ namespace QMEditor.View;
 public class AssetsList {
 
     public Action<string> AssetSelected;
+    public Action<string> SearchChanged;
 
     private List<string> _assets;
     private string _title;
@@ -17,26 +17,35 @@ public class AssetsList {
     private VerticalStackPanel _assetsStack;
     private TextBox _searchBox;
 
-    public AssetsList(string listName, List<string> assets, Func<List<string>, List<string>> sortAssets) {
-        _assets = assets;
+    public AssetsList(string listName, Func<List<string>, List<string>> sortAssets) {
         _title = listName;
         _sortAssets = sortAssets;
+    }
+
+    public void SetAssets(List<string> assets) {
+        _assets = assets;
+
+        if (_assetsStack == null) return;
+
+        _assetsStack.Widgets.Clear();
+
+        List<string> sortedAssets = _sortAssets.Invoke(_assets);
+        foreach (string asset in sortedAssets) {
+            _assetsStack.Widgets.Add(BuildButtonForAsset(asset));
+        }
     }
 
     public Widget BuildUI(int gridColumn = 0) {
         _assetsStack = new VerticalStackPanel() {
             Width = 250
         };
-        
-        List<string> sortedAssets = _sortAssets.Invoke(_assets);
-        foreach (string asset in sortedAssets) {
-            _assetsStack.Widgets.Add(BuildButtonForAsset(asset));
-        }
+
+        SetAssets(_assets);
 
         _searchBox = new TextBox {
             HintText = "Search..."
         };
-        _searchBox.TextChangedByUser += OnSearchTextChanged;
+        _searchBox.TextChangedByUser += (s, e) => { SearchChanged?.Invoke(_searchBox.Text); };
 
         var title = new Label {
             Text = _title,
@@ -65,10 +74,6 @@ public class AssetsList {
         button.Click += (s, a) => { AssetSelected?.Invoke(assetName); };
         
         return button;
-    }
-
-    private void OnSearchTextChanged(object sender, ValueChangedEventArgs<string> newSearch) {
-        // TODO: Search with new text
     }
 
 }
