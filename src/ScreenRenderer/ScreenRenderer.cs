@@ -37,7 +37,7 @@ public class ScreenRenderer : Singleton<ScreenRenderer> {
     }
 
     protected void DrawSprites() {
-        _spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend);
+        _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
         SpriteRenderList.Render(_spriteBatch);
         _spriteBatch.End();
     }

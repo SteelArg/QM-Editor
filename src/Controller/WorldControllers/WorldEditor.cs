@@ -54,11 +54,11 @@ public class WorldEditor {
         if (World.Cursor.IsEmpty || CursorPositionOnGrid == null) return;
         
         World.Cursor.GetObject().SetGridPosition(CursorPositionOnGrid);
-        var renderData = new GridObjectRenderData(spriteBatch, WorldRenderer.RenderSettings, 100f);
+        var renderData = new GridObjectRenderData(WorldRenderer.RenderSettings, 100f);
         renderData.CellLift = World.Instance.Grid.GetGridCell(CursorPositionOnGrid).Tile?.GetLift(renderData.RenderSettings) ?? 0;
         renderData.IsPreview = true;
 
-        World.Cursor.GetObject().Render(renderData);
+        World.Cursor.GetObject().GetRenderCommand(renderData).Execute(spriteBatch);
     }
 
 }

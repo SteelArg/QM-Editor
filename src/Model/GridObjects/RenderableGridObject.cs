@@ -12,14 +12,20 @@ public abstract class RenderableGridObject : GridObject {
         _asset = asset;
     }
 
-    public override void Render(GridObjectRenderData renderData) {
+    public override RenderCommand GetRenderCommand(GridObjectRenderData renderData) {
         float objectDepth = renderData.Depth + renderData.RenderSettings.GetDepthFor(GetType());
         
-        renderData.SpriteBatch.Draw(_asset.GetTexture(renderData.Frame),
-            GetRenderPos(renderData), null, renderData.GetObjectColor(),
-            0f, Vector2.Zero, 1f, SpriteEffects.None, objectDepth/1000f
-        );
+        RenderCommand renderCommand = new SingleRenderCommand(new SpriteRenderData {
+            Texture = _asset.GetTexture(renderData.Frame),
+            Position = GetRenderPos(renderData),
+            Color = renderData.GetObjectColor(),
+            Depth = objectDepth
+        } );
+
+        return renderCommand;
     }
+
+    public void Render(GridObjectRenderData renderData, SpriteBatch spriteBatch) => GetRenderCommand(renderData).Execute(spriteBatch);
 
     protected abstract Vector2 GetRenderPos(GridObjectRenderData renderData);
 

@@ -22,14 +22,20 @@ public class Accessory {
 
     public void SetLift(int lift) => _lift = lift;
 
-    public void Render(Vector2 centerRenderPos, GridObjectRenderData renderData) {
+    public RenderCommand GetRenderCommand(Vector2 centerRenderPos, GridObjectRenderData renderData) {
         Vector2 renderPos = centerRenderPos - new Vector2(_asset.GetSize()[0]/2, _asset.GetSize()[1]);
         renderPos += new Vector2(0f, -_lift);
         
-        renderData.SpriteBatch.Draw(
-            _asset.GetTexture(renderData.Frame), renderPos, null, renderData.IsHovered ? Palette.HoverColor : Color.White,
-            0f, Vector2.Zero, 1f, SpriteEffects.None, renderData.Depth/1000f
-        );
+        var renderCommand = new SingleRenderCommand(new SpriteRenderData {
+            Texture = _asset.GetTexture(renderData.Frame),
+            Position = renderPos,
+            Color = renderData.GetObjectColor(),
+            Depth = renderData.Depth
+        });
+
+        return renderCommand;
     }
+
+    public void Render(Vector2 centerRenderPos, GridObjectRenderData renderData, SpriteBatch spriteBatch) => GetRenderCommand(centerRenderPos, renderData).Execute(spriteBatch);
 
 }

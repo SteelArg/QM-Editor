@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using QMEditor.Model;
@@ -15,7 +16,9 @@ public class WorldRenderer {
     public void Render(SpriteBatch spriteBatch, float totalDepth, int frame = 0, bool displayEditor = true) {
         Grid grid = World.Instance.Grid;
         int[] cursorPos = WorldEditor.CursorPositionOnGrid;
-        GridObjectRenderData defaultRenderData = new GridObjectRenderData(spriteBatch, RenderSettings, totalDepth, frame);
+        GridObjectRenderData defaultRenderData = new GridObjectRenderData(RenderSettings, totalDepth, frame);
+
+        List<RenderCommand> renderCommands = new List<RenderCommand>();
 
         LoopThroughPositions.Every((x, y) => {
             float tileDepth = x + y;
@@ -26,9 +29,12 @@ public class WorldRenderer {
             cellRenderData.CellLift = grid.GetGridCell([x,y]).Tile?.GetLift(RenderSettings) ?? 0;
 
             foreach (GridObject obj in grid.GetGridCell([x,y]).Objects) {
-                obj.Render(cellRenderData);
+                renderCommands.Add(obj.GetRenderCommand(cellRenderData));
             }
         }, grid.Size);
+
+        var worldRenderCommand = new GroupedRenderCommand(renderCommands.ToArray());
+        worldRenderCommand.Execute(spriteBatch);
     }
 
     public void SaveToGif(string path, int[] renderSize) {
@@ -48,7 +54,7 @@ public class WorldRenderer {
         Global.Game.GraphicsDevice.SetRenderTarget(saveRT);
         Global.Game.GraphicsDevice.Clear(Color.Transparent);
         
-        spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend, SamplerState.PointClamp, null, null, null, Matrix.CreateScale(4f));
+        spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, null, null, null, Matrix.CreateScale(4f));
         Render(spriteBatch, 0f, frame, false);
         spriteBatch.End();
 

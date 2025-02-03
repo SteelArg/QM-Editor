@@ -40,8 +40,8 @@ public class FrameLooperWidget : Panel {
             label.Text = label.Text == "Pause" ? "Play" : "Pause";
         }, 1);
         _grid.Widgets.Add(_pauseButton);
-        _grid.Widgets.Add(BuildButton("Prev", PrevFrameClicked, 1, 1));
-        _grid.Widgets.Add(BuildButton("Next", NextFrameClicked, 1, 2));
+        _grid.Widgets.Add(BuildButton("Prev", () => PrevFrameClicked?.Invoke(), 1, 1));
+        _grid.Widgets.Add(BuildButton("Next", () => NextFrameClicked?.Invoke(), 1, 2));
 
         Widgets.Add(_grid);
     }

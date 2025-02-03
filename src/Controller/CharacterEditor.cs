@@ -33,8 +33,8 @@ public class CharacterEditor {
         if (_character == null) return;
 
         _character.SetGridPosition([0,0]);
-        var renderData = new GridObjectRenderData(spriteBatch, GridRenderSettings.CharacterEditor, 0f);
-        _character.Render(renderData);
+        var renderData = new GridObjectRenderData(GridRenderSettings.CharacterEditor, 0f);
+        _character.Render(renderData, spriteBatch);
     }
 
     public Character CreateCharacter() => (Character)_character?.Clone();
