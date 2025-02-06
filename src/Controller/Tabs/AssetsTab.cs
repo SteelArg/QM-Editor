@@ -14,7 +14,7 @@ public class AssetsTab : Tab {
     private Dictionary<AssetsFolders, AssetsList> _assetsLists;
     private AssetView _assetView;
 
-    private Asset _selectedAsset;
+    private AssetBase _selectedAsset;
     private AssetsFolders _selectedAssetFolder;
 
     public AssetsTab() : base() {

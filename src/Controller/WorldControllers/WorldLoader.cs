@@ -26,7 +26,7 @@ public class WorldLoader {
                 string assetString = gridObjectString.Split(';')[1];
                 string[] addDataStrings = gridObjectString.Split(';')[2].Split(':');
 
-                Asset asset = AssetsLoader.Instance.GetAsset(assetString, AssetsFolders.All);
+                AssetBase asset = AssetsLoader.Instance.GetAsset(assetString, AssetsFolders.All);
                 GridObject gridObject = null;
                 if (typeString == typeof(Character).Name) {
                     Character character = new Character(asset);
@@ -34,7 +34,13 @@ public class WorldLoader {
                         if (dataString == string.Empty) continue;
                         string accessoryAssetName = dataString.Split(',')[0];
                         string accessoryLift = dataString.Split(',')[1];
-                        Asset accessoryAsset = AssetsLoader.Instance.GetAsset(accessoryAssetName, AssetsFolders.Accessories); 
+                        
+                        if (accessoryAssetName == "CHARACTER_VARIATION") {
+                            character.SetVariation(accessoryLift);
+                            continue;
+                        } 
+                        
+                        AssetBase accessoryAsset = AssetsLoader.Instance.GetAsset(accessoryAssetName, AssetsFolders.Accessories); 
                         Accessory accessory = new Accessory(accessoryAsset, int.Parse(accessoryLift));
                         character.AddAccessory(accessory);
                     }

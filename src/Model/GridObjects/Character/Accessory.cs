@@ -5,13 +5,13 @@ namespace QMEditor.Model;
 
 public class Accessory {
 
-    public Asset Asset { get => _asset; }
+    public AssetBase Asset { get => _asset; }
     public int Lift { get => _lift; }
 
-    private Asset _asset;
+    private AssetBase _asset;
     private int _lift;
 
-    public Accessory(Asset asset, int lift = 0) {
+    public Accessory(AssetBase asset, int lift = 0) {
         _asset = asset;
         _lift = lift;
     }

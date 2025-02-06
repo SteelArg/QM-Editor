@@ -1,5 +1,4 @@
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using QMEditor.Model;
 
 public abstract class GridObject {
@@ -22,25 +21,31 @@ public abstract class GridObject {
 
 public struct GridObjectRenderData {
 
-    //public readonly SpriteBatch SpriteBatch;
     public readonly GridRenderSettings RenderSettings;
     public float Depth;
     public int Frame;
     public bool IsHovered;
     public bool IsPreview;
     public int CellLift;
+    public string Variation;
 
-    public GridObjectRenderData(GridRenderSettings renderSettings, float depth, int frame = 0, bool isHovered = false, int cellLift = 0, bool isPreview = false) {
+    public GridObjectRenderData(GridRenderSettings renderSettings, float depth, int frame = 0, bool isHovered = false, int cellLift = 0, bool isPreview = false, string variation =  null) {
         RenderSettings = renderSettings;
         Depth = depth;
         Frame = frame;
         IsHovered = isHovered;
         CellLift = cellLift;
         IsPreview = isPreview;
+        Variation = variation;
     }
 
     public GridObjectRenderData WithAddedDepth(float addedDepth) {
         GridObjectRenderData newRenderData = this with { Depth = Depth + addedDepth };
+        return newRenderData;
+    }
+
+    public GridObjectRenderData WithVariation(string variation) {
+        GridObjectRenderData newRenderData = this with { Variation = variation };
         return newRenderData;
     }
 

@@ -5,10 +5,10 @@ namespace QMEditor.Model;
 
 public abstract class RenderableGridObject : GridObject {
 
-    protected Asset _asset;
-    public Asset Asset { get => _asset; }
+    protected AssetBase _asset;
+    public AssetBase Asset { get => _asset; }
 
-    public RenderableGridObject(Asset asset) {
+    public RenderableGridObject(AssetBase asset) {
         _asset = asset;
     }
 
@@ -16,7 +16,7 @@ public abstract class RenderableGridObject : GridObject {
         float objectDepth = renderData.Depth + renderData.RenderSettings.GetDepthFor(GetType());
         
         RenderCommand renderCommand = new SingleRenderCommand(new SpriteRenderData {
-            Texture = _asset.GetTexture(renderData.Frame),
+            Texture = _asset.GetTexture(renderData.Frame, renderData.Variation),
             Position = GetRenderPos(renderData),
             Color = renderData.GetObjectColor(),
             Depth = objectDepth

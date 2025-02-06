@@ -4,7 +4,7 @@ namespace QMEditor.Model;
 
 public class Prop : RenderableGridObject {
 
-    public Prop(Asset asset) : base(asset) {}
+    public Prop(AssetBase asset) : base(asset) {}
 
     public override GridObject Clone() {
         return new Prop(_asset);

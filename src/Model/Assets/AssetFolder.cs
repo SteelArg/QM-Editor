@@ -8,13 +8,13 @@ public class AssetFolder {
 
     private string _path;
     private string _assetsPath { get => $"assets\\{_path}"; }
-    private AssetFactory _factory;
-    private Dictionary<string, Asset> _assets;
+    private GroupedAssetsFactory _factory;
+    private Dictionary<string, AssetBase> _assets;
 
     public AssetFolder(string path) {
         _path = path;
-        _assets = new Dictionary<string, Asset>();
-        _factory = new AssetFactory();
+        _assets = new Dictionary<string, AssetBase>();
+        _factory = new GroupedAssetsFactory();
     }
 
     public void ScanAndLoad() {
@@ -22,22 +22,23 @@ public class AssetFolder {
 
         _assets.Clear();
         string[] files = ServiceLocator.FileService.GetAllFiles(_assetsPath);
-        
+
         foreach (string file in files) {
-            Asset asset = _factory.Create($"{_path}\\{file}");
-            if (_assets.ContainsKey(asset.Name)) continue;
-            
+            _factory.AddAssetPath($"{_path}\\{file}");
+        }
+        
+        foreach (AssetBase asset in _factory.CreateAssets()) {
             asset.Load();
             _assets.Add(asset.Name, asset);
         }
     }
 
-    public Asset GetAsset(string name) => _assets[name];
-    public Asset TryGetAsset(string name) => _assets.ContainsKey(name) ? GetAsset(name) : null;
+    public AssetBase GetAsset(string name) => _assets[name];
+    public AssetBase TryGetAsset(string name) => _assets.ContainsKey(name) ? GetAsset(name) : null;
 
-    public Asset[] GetAssets() => _assets.Values.ToArray();
+    public AssetBase[] GetAssets() => _assets.Values.ToArray();
 
-    public Asset[] GetAssetsBySearch(string search = null) {
+    public AssetBase[] GetAssetsBySearch(string search = null) {
         if (search == null)
             return GetAssets();
 
@@ -49,7 +50,7 @@ public class AssetFolder {
                 searchedAssetNames.Add(assetName);
         }
 
-        List<Asset> searchedAssets = new List<Asset>();
+        List<AssetBase> searchedAssets = new List<AssetBase>();
         foreach (string assetName in searchedAssetNames) {
             searchedAssets.Add(_assets[assetName]);
         }

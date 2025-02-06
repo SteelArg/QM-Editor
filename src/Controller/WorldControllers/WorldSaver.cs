@@ -23,9 +23,8 @@ public class WorldSaver {
                 RenderableGridObject renderableObj = obj as RenderableGridObject;
                 if (renderableObj != null) {
                     asset = renderableObj.Asset.Name;
-                    if (renderableObj is Character) {
-                        addData = "";
-                        Character character = renderableObj as Character;
+                    if (renderableObj is Character character) {
+                        addData = $"CHARACTER_VARIATION,{character.Variation}:";
                         foreach (Accessory accessory in character.Accessories){
                             addData += $"{accessory.Asset.Name},{accessory.Lift}:";
                         }

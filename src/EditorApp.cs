@@ -35,7 +35,7 @@ public class EditorApp : Game {
         _renderer.Load();
         _tabsManager.Load();
         
-        Asset stevenAsset = AssetsLoader.Instance.GetAsset("steven", AssetsFolders.Characters);
+        AssetBase stevenAsset = AssetsLoader.Instance.GetAsset("steven", AssetsFolders.Characters);
         World.Instance.Grid.PlaceOnGrid(new Character(stevenAsset), [2,3]);
 
         var defaultTile = new Tile(AssetsLoader.Instance.GetAsset("default", AssetsFolders.Tiles));

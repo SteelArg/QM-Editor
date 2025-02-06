@@ -7,13 +7,23 @@ namespace QMEditor.Controllers;
 public class CharacterEditor {
 
     public Action<Accessory[]> AccessoriesChanged;
+    public Action<Character> CharacterChanged;
 
     private Character _character;
 
-    public CharacterEditor() {}
+    public CharacterEditor() {
+        World.Cursor.ObjectChanged += () => {
+            Console.WriteLine("zomole");
+            if (World.Cursor.GetObject() is Character)
+                LoadCharacter((Character)World.Cursor.GetCopyOfObject());
+        };
+    }
 
-    public void SetCharacterAsset(Asset characterAsset) => _character = new Character(characterAsset, _character?.Accessories);
-    public void AddAccessoryAsset(Asset accessoryAsset) {
+    public void SetCharacterAsset(AssetBase characterAsset) {
+        _character = new Character(characterAsset, _character?.Accessories);
+        CharacterChanged?.Invoke(_character);
+    }
+    public void AddAccessoryAsset(AssetBase accessoryAsset) {
         _character.AddAccessory(new Accessory(accessoryAsset));
         AccessoriesChanged?.Invoke(_character.Accessories);
     }
@@ -25,8 +35,10 @@ public class CharacterEditor {
         _character.Accessories[accessoryId].SetLift(lift);
     }
     public void LoadCharacter(Character character) {
+        Console.WriteLine("Character loaded");
         _character = character;
         AccessoriesChanged?.Invoke(_character.Accessories);
+        CharacterChanged?.Invoke(_character);
     }
 
     public void Render(SpriteBatch spriteBatch) {

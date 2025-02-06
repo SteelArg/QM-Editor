@@ -9,9 +9,11 @@ public class CharacterEditorView {
     public Action CreateCharacterClicked;
     public Action<int> RemoveAccessoryClicked;
     public Action<int, int> AccessoryLiftChanged;
+    public Action<string> VariationSelected;
 
     private Grid _mainGrid;
     private Button _createButton;
+    private VerticalStackPanel _variationSelectionStack;
     private VerticalStackPanel _accessoryStack;
 
     public CharacterEditorView() {}
@@ -27,6 +29,7 @@ public class CharacterEditorView {
         _mainGrid = new Grid();
         Grid.SetColumnSpan(_mainGrid, 2);
         _mainGrid.RowsProportions.Add(new Proportion(ProportionType.Fill));
+        _mainGrid.RowsProportions.Add(new Proportion(ProportionType.Auto));
         _mainGrid.RowsProportions.Add(new Proportion(ProportionType.Pixels, 200));
         _mainGrid.ColumnsProportions.Add(new Proportion(ProportionType.Fill));
         _mainGrid.ColumnsProportions.Add(new Proportion(ProportionType.Pixels, 500));
@@ -44,16 +47,40 @@ public class CharacterEditorView {
         _createButton.Click += (s, a) => { CreateCharacterClicked?.Invoke(); };
         Grid.SetColumnSpan(_createButton, 2);
         Grid.SetRow(_createButton, 2);
-        _mainGrid.Widgets.Add(_createButton);
+
+        // Create variation selection
+        _variationSelectionStack = new VerticalStackPanel() {
+            Spacing = 5, ShowGridLines = false,
+            HorizontalAlignment = HorizontalAlignment.Center
+        };
+        Grid.SetColumn(_variationSelectionStack, 1);
+        Grid.SetRow(_variationSelectionStack, 1);
 
         // Accessory list
         _accessoryStack = new VerticalStackPanel() {
             Spacing = 10, ShowGridLines = true
         };
-        Grid.SetColumn(_accessoryStack, 2);
-        _mainGrid.Widgets.Add(_accessoryStack);
+        Grid.SetColumn(_accessoryStack, 1);
 
+        _mainGrid.Widgets.Add(_createButton);
+        _mainGrid.Widgets.Add(_accessoryStack);
+        _mainGrid.Widgets.Add(_variationSelectionStack);
         return _mainGrid;
+    }
+
+    public void SetVariations(string[] variations) {
+        _variationSelectionStack.Widgets.Clear();
+        foreach (string variation in variations) {
+            var radioButton = new RadioButton {
+                Content = new Label {
+                    Text = variation, TextAlign = FontStashSharp.RichText.TextHorizontalAlignment.Left,
+                    VerticalAlignment = VerticalAlignment.Center, HorizontalAlignment = HorizontalAlignment.Center,
+                },
+                Width = 200, Height = 30,
+            };
+            radioButton.Click += (s, e) => { VariationSelected?.Invoke(variation); };
+            _variationSelectionStack.Widgets.Add(radioButton);
+        }
     }
 
     private Widget BuildAccessory(string name, int lift, int index) {

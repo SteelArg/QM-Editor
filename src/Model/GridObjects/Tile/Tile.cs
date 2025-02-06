@@ -4,7 +4,7 @@ namespace QMEditor.Model;
 
 public class Tile : RenderableGridObject {
 
-    public Tile(Asset asset) : base(asset) {}
+    public Tile(AssetBase asset) : base(asset) {}
 
     public override GridObject Clone() {
         return new Tile(_asset);
