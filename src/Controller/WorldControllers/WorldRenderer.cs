@@ -15,7 +15,7 @@ public class WorldRenderer {
 
     public void Render(SpriteBatch spriteBatch, float totalDepth, int frame = 0, bool displayEditor = true) {
         Grid grid = World.Instance.Grid;
-        int[] cursorPos = WorldEditor.CursorPositionOnGrid;
+        int[] cursorPos = WorldEditor.CursorGridPosition;
         GridObjectRenderData defaultRenderData = new GridObjectRenderData(RenderSettings, totalDepth, frame);
 
         List<RenderCommand> renderCommands = new List<RenderCommand>();

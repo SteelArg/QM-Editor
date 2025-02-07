@@ -15,7 +15,7 @@ public class CharacterTab : Tab {
         _characterEditor = new CharacterEditor();
         _characterEditorView = new CharacterEditorView();
         World.Cursor.ObjectChanged += () => {
-            if (World.Cursor.GetObject().GetType() == typeof(Character))
+            if (!World.Cursor.IsEmpty && World.Cursor.GetObject().GetType() == typeof(Character))
                 _characterEditor.LoadCharacter((Character)World.Cursor.GetCopyOfObject());
         };
     }

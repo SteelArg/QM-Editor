@@ -12,7 +12,7 @@ public class SharedWorldCursor {
     public SharedWorldCursor() {}
 
     public GridObject GetObject() => _object;
-    public GridObject GetCopyOfObject() => _object.Clone();
+    public GridObject GetCopyOfObject() => _object?.Clone();
     public void SetCopyOfObject(GridObject gridObject) {
         _object = gridObject?.Clone();
         ObjectChanged?.Invoke();

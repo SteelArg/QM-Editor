@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -14,11 +16,20 @@ public class SceneTab : Tab {
     private FrameLooper _frameLooper;
     private SceneTabView _sceneTabView;
 
+    private EditCommandsStack _editStack;
+    private List<EditKeybind> _editKeybinds;
+
     public SceneTab() : base() {
         _worldEditor = new WorldEditor();
         _worldRenderer = new WorldRenderer();
         _frameLooper = new FrameLooper(AppSettings.RenderFrameCount.Value, AppSettings.RenderFrameDuration.Value/1000f);
         _sceneTabView = new SceneTabView();
+        _editStack = new EditCommandsStack();
+        _editKeybinds = new List<EditKeybind> {
+            new EditKeybind(()=>Input.MouseButtonClicked(0), ()=>new PlaceGridObjectCommand(_worldEditor.GetEditContext(), World.Cursor.GetCopyOfObject())),
+            new EditKeybind(()=>Input.MouseButtonClicked(1), ()=>new ClearGridCellCommand(_worldEditor.GetEditContext(), Input.KeyHeld(Keys.LeftShift))),
+            new EditKeybind(()=>Input.MouseButtonClicked(2), ()=>new CopyGridObjectCommand(_worldEditor.GetEditContext(), Input.KeyHeld(Keys.LeftShift)))
+        };
     }
 
     protected override Widget BuildUI() {
@@ -37,16 +48,34 @@ public class SceneTab : Tab {
     public override void Update(GameTime gameTime) {
         _frameLooper.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
 
-        if (Input.MouseButtonClicked(0))
-            _worldEditor.PlaceObject();
-        if (Input.MouseButtonHeld(1))
-            _worldEditor.ClearCell(Input.KeyHeld(Keys.LeftShift));
-        if (Input.MouseButtonClicked(2))
-            _worldEditor.CopyGridObject(Input.KeyHeld(Keys.LeftShift));
+        foreach (EditKeybind keybind in _editKeybinds) {
+            _editStack.AddAndExecuteCommand(keybind.CreateCommandIfKeybindFired());
+        }
+        
+        if (Input.KeyFired(Keys.Z) && Input.KeyHeld(Keys.LeftControl))
+            _editStack.UndoLastCommand();
     }
 
     public override void Draw(SpriteBatch spriteBatch) {
         _worldRenderer.Render(spriteBatch, 1f, _frameLooper.CurrentFrame);
         _worldEditor.Render(spriteBatch);
     }
+
+    private class EditKeybind {
+
+        private Func<bool> _keybind;
+        private Func<IEditCommand> _commandFactory;
+
+        public EditKeybind(Func<bool> keybind, Func<IEditCommand> commandFactory) {
+            _keybind = keybind;
+            _commandFactory = commandFactory;
+        }
+
+        public IEditCommand CreateCommandIfKeybindFired() {
+            if (!_keybind.Invoke()) return null;
+            return _commandFactory.Invoke();
+        }
+
+    }
+
 }

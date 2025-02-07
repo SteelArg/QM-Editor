@@ -12,7 +12,7 @@ public class MouseInput {
         _oldState = Mouse.GetState();
     }
 
-    public bool MouseButtonClicked(int mouseButton) {
+    public bool IsMouseButtonClicked(int mouseButton) {
         MouseState mouseState = Mouse.GetState();
         switch (mouseButton) {
             case 0:
@@ -26,7 +26,7 @@ public class MouseInput {
         }
     }
 
-    public bool MouseButtonHeld(int mouseButton) {
+    public bool IsMouseButtonHeld(int mouseButton) {
         MouseState mouseState = Mouse.GetState();
         switch (mouseButton) {
             case 0:

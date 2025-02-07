@@ -18,15 +18,19 @@ public class Input : Singleton<Input> {
     }
 
     public static bool MouseButtonClicked(int mouseButton = 0) {
-        return Instance._mouse.MouseButtonClicked(mouseButton);
+        return Instance._mouse.IsMouseButtonClicked(mouseButton);
     }
 
     public static bool MouseButtonHeld(int mouseButton = 0) {
-        return Instance._mouse.MouseButtonHeld(mouseButton);
+        return Instance._mouse.IsMouseButtonHeld(mouseButton);
     }
 
     public static bool KeyHeld(Keys key) {
-        return Instance._keyboard.KeyHeld(key);
+        return Instance._keyboard.IsKeyHeld(key);
+    }
+
+    public static bool KeyFired(Keys key) {
+        return Instance._keyboard.IsKeyFired(key);
     }
 
 }

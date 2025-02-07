@@ -12,8 +12,12 @@ public class KeyboardInput {
         _oldState = Keyboard.GetState();
     }
 
-    public bool KeyHeld(Keys key) {
+    public bool IsKeyHeld(Keys key) {
         return Keyboard.GetState().IsKeyDown(key);
+    }
+
+    public bool IsKeyFired(Keys key) {
+        return Keyboard.GetState().IsKeyUp(key) && _oldState.IsKeyDown(key);
     }
 
 }
