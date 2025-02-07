@@ -3,11 +3,11 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace QMEditor.Model;
 
-public abstract class RenderCommand : IComparable<RenderCommand> {
+public abstract class RenderCommandBase : IComparable<RenderCommandBase> {
 
     public float Depth { get => GetDepth(); }
 
-    public int CompareTo(RenderCommand other) {
+    public int CompareTo(RenderCommandBase other) {
         return Depth.CompareTo(other.Depth);
     }
 
@@ -17,7 +17,7 @@ public abstract class RenderCommand : IComparable<RenderCommand> {
 
 }
 
-public class EmptyRenderCommand : RenderCommand {
+public class EmptyRenderCommand : RenderCommandBase {
 
     public EmptyRenderCommand() {}
 

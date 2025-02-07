@@ -22,7 +22,7 @@ public class Accessory {
 
     public void SetLift(int lift) => _lift = lift;
 
-    public RenderCommand GetRenderCommand(Vector2 centerRenderPos, GridObjectRenderData renderData) {
+    public RenderCommandBase GetRenderCommand(Vector2 centerRenderPos, GridObjectRenderData renderData) {
         Vector2 renderPos = centerRenderPos - new Vector2(_asset.GetSize()[0]/2, _asset.GetSize()[1]);
         renderPos += new Vector2(0f, -_lift);
         

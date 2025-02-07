@@ -13,7 +13,6 @@ public class CharacterEditor {
 
     public CharacterEditor() {
         World.Cursor.ObjectChanged += () => {
-            Console.WriteLine("zomole");
             if (World.Cursor.GetObject() is Character)
                 LoadCharacter((Character)World.Cursor.GetCopyOfObject());
         };
@@ -35,7 +34,6 @@ public class CharacterEditor {
         _character.Accessories[accessoryId].SetLift(lift);
     }
     public void LoadCharacter(Character character) {
-        Console.WriteLine("Character loaded");
         _character = character;
         AccessoriesChanged?.Invoke(_character.Accessories);
         CharacterChanged?.Invoke(_character);

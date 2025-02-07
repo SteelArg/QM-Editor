@@ -9,6 +9,8 @@ public class WorldRenderer {
 
     public static GridRenderSettings RenderSettings { get; private set; }
 
+    private Dictionary<(int, int), CellRenderCommands> _cellRenderCommands;
+
     public WorldRenderer() {
         RenderSettings = GridRenderSettings.FromAppSettings();
     }
@@ -18,23 +20,56 @@ public class WorldRenderer {
         int[] cursorPos = WorldEditor.CursorGridPosition;
         GridObjectRenderData defaultRenderData = new GridObjectRenderData(RenderSettings, totalDepth, frame);
 
-        List<RenderCommand> renderCommands = new List<RenderCommand>();
+        _cellRenderCommands = new Dictionary<(int, int), CellRenderCommands>();
 
         LoopThroughPositions.Every((x, y) => {
             float tileDepth = x + y;
             bool hovered = cursorPos != null && cursorPos[0] == x && cursorPos[1] == y && displayEditor;
+            GridCell cell = grid.GetGridCell([x,y]);
 
             GridObjectRenderData cellRenderData = defaultRenderData.WithAddedDepth(tileDepth);
             cellRenderData.IsHovered = hovered;
-            cellRenderData.CellLift = grid.GetGridCell([x,y]).Tile?.GetLift(RenderSettings) ?? 0;
+            cellRenderData.CellLift = cell.Tile?.GetLift(RenderSettings) ?? 0;
 
-            foreach (GridObject obj in grid.GetGridCell([x,y]).Objects) {
-                renderCommands.Add(obj.GetRenderCommand(cellRenderData));
+            List<RenderCommandBase> contentsRenderCommands = new List<RenderCommandBase>();
+            RenderCommandBase tileRenderCommand = null;
+
+            foreach (GridObject obj in cell.Objects) {
+                if (obj is Tile)
+                    tileRenderCommand = obj.GetRenderCommand(cellRenderData);
+                else
+                    contentsRenderCommands.Add(obj.GetRenderCommand(cellRenderData));
             }
+
+            _cellRenderCommands.Add((x,y), new CellRenderCommands(tileRenderCommand, contentsRenderCommands.ToArray(), cellRenderData.CellLift));
         }, grid.Size);
 
-        var worldRenderCommand = new GroupedRenderCommand(renderCommands.ToArray());
-        worldRenderCommand.Execute(spriteBatch);
+        // Execute render commands
+        // PASS 0: Tiles
+        // PASS 1: Characters and contets
+        // PAss 2: Silhouettes
+        for (int layer = 0; layer < grid.Size[0]+grid.Size[1]-1; layer++) {
+            for (int x = 0; x < layer+1; x++) {
+                int y = layer-x;
+                if (!_cellRenderCommands.ContainsKey((x,y))) continue;
+
+                CellRenderCommands cell = _cellRenderCommands[(x,y)];
+                cell.RenderTile(spriteBatch);
+
+                if (_cellRenderCommands.ContainsKey((x+1,y)) && _cellRenderCommands[(x+1,y)].Lift <= cell.Lift) {
+                    if (_cellRenderCommands.ContainsKey((x+1,y-1)))
+                        _cellRenderCommands[(x+1,y-1)].RenderTile(spriteBatch);
+                    _cellRenderCommands[(x+1,y)].RenderTile(spriteBatch);
+                }
+                if (_cellRenderCommands.ContainsKey((x,y+1)) && _cellRenderCommands[(x,y+1)].Lift <= cell.Lift) {
+                    if (_cellRenderCommands.ContainsKey((x-1,y+1)))
+                        _cellRenderCommands[(x-1,y+1)].RenderTile(spriteBatch);
+                    _cellRenderCommands[(x,y+1)].RenderTile(spriteBatch);
+                }
+                
+                cell.RenderContents(spriteBatch);
+            }
+        }
     }
 
     public void SaveToGif(string path, int[] renderSize) {
@@ -60,6 +95,29 @@ public class WorldRenderer {
 
         Global.Game.GraphicsDevice.SetRenderTarget(null);
         return saveRT;
+    }
+
+    private struct CellRenderCommands {
+        
+        public readonly int Lift;
+
+        private readonly RenderCommandBase TileRender;
+        private readonly RenderCommandBase ContentsRender;
+
+        public CellRenderCommands(RenderCommandBase tileRenderCommand, RenderCommandBase[] contentsRenderCommands, int lift) {
+            TileRender = tileRenderCommand;
+            ContentsRender = new GroupedRenderCommand(contentsRenderCommands);
+            Lift = lift;
+        }
+
+        public void RenderTile(SpriteBatch spriteBatch) {
+            TileRender?.Execute(spriteBatch);
+        }
+
+        public void RenderContents(SpriteBatch spriteBatch) {
+            ContentsRender.Execute(spriteBatch);
+        }
+
     }
 
 }

@@ -3,26 +3,27 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace QMEditor.Model;
 
-public class GroupedRenderCommand : RenderCommand {
+public class GroupedRenderCommand : RenderCommandBase {
 
-    public readonly RenderCommand[] RenderCommands;
+    public readonly RenderCommandBase[] RenderCommands;
     private readonly float _depth;
 
-    public GroupedRenderCommand(RenderCommand[] spritesRenderData) {
+    public GroupedRenderCommand(RenderCommandBase[] spritesRenderData) {
         RenderCommands = spritesRenderData;
+        if (RenderCommands.Length < 1) return;
         
         float totalDepth = RenderCommands[0].Depth;
-        foreach (RenderCommand renderCommand in RenderCommands) {
+        foreach (RenderCommandBase renderCommand in RenderCommands) {
             totalDepth = Math.Min(renderCommand.Depth, totalDepth);
         }
         _depth = totalDepth;
 
-        Span<RenderCommand> commandsSpan = new Span<RenderCommand>(RenderCommands);
+        Span<RenderCommandBase> commandsSpan = new Span<RenderCommandBase>(RenderCommands);
         commandsSpan.Sort();
     }
 
     public override void Execute(SpriteBatch spriteBatch) {
-        foreach (RenderCommand renderCommand in RenderCommands) {
+        foreach (RenderCommandBase renderCommand in RenderCommands) {
             renderCommand.Execute(spriteBatch);
         }
     }

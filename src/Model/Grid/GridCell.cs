@@ -4,13 +4,13 @@ namespace QMEditor.Model;
 
 public class GridCell {
 
-    private List<GridObject> _objects;
-    private Tile _tile;
-    private int[] _position;
-
     public int[] Position {get => _position;}
     public GridObject[] Objects {get => _objects.ToArray();}
     public Tile Tile { get => _tile; }
+
+    private List<GridObject> _objects;
+    private Tile _tile;
+    private int[] _position;
     
     public GridCell(int[] pos, List<GridObject> objects = null) {
         _position = pos;

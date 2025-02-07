@@ -32,13 +32,13 @@ public class Character : RenderableGridObject {
     public void ClearAccessories() => _accessories.Clear();
     public void SetVariation(string variation) => _variation = variation == string.Empty ? "base" : variation;
 
-    public override RenderCommand GetRenderCommand(GridObjectRenderData renderData) {
+    public override RenderCommandBase GetRenderCommand(GridObjectRenderData renderData) {
         renderData = renderData.WithVariation(_variation);
 
-        RenderCommand baseRenderCommand = base.GetRenderCommand(renderData);
+        RenderCommandBase baseRenderCommand = base.GetRenderCommand(renderData);
 
         Vector2 renderPos = GetRenderPos(renderData);
-        RenderCommand[] commands = new RenderCommand[_accessories.Count+1];
+        RenderCommandBase[] commands = new RenderCommandBase[_accessories.Count+1];
         commands[0] = baseRenderCommand;
         
         Vector2 renderCenter = renderPos + new Vector2(_asset.GetSize()[0]/2, _asset.GetSize()[1]);

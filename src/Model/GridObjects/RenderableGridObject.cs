@@ -12,10 +12,10 @@ public abstract class RenderableGridObject : GridObject {
         _asset = asset;
     }
 
-    public override RenderCommand GetRenderCommand(GridObjectRenderData renderData) {
+    public override RenderCommandBase GetRenderCommand(GridObjectRenderData renderData) {
         float objectDepth = renderData.Depth + renderData.RenderSettings.GetDepthFor(GetType());
         
-        RenderCommand renderCommand = new SingleRenderCommand(new SpriteRenderData {
+        RenderCommandBase renderCommand = new SingleRenderCommand(new SpriteRenderData {
             Texture = _asset.GetTexture(renderData.Frame, renderData.Variation),
             Position = GetRenderPos(renderData),
             Color = renderData.GetObjectColor(),

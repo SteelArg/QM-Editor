@@ -15,7 +15,7 @@ public abstract class GridObject {
         _gridPosition = pos;
     }
 
-    public virtual RenderCommand GetRenderCommand(GridObjectRenderData renderData) => new EmptyRenderCommand();
+    public virtual RenderCommandBase GetRenderCommand(GridObjectRenderData renderData) => new EmptyRenderCommand();
 
 }
 
