@@ -28,7 +28,16 @@ public class AssetsLoader : Singleton<AssetsLoader> {
                 foundAsset = foundAsset ?? _folders[scannedFolder].TryGetAsset(assetName);
         }
         return foundAsset;
-    } 
+    }
+
+    public AssetBase GetAnyAsset(AssetsFolders foldersToSearch) {
+        foreach (AssetsFolders scannedFolder in _folders.Keys) {
+            if (!foldersToSearch.IsFolderSelected(scannedFolder)) continue;
+            AssetBase[] assets = _folders[AssetsFolders.Tiles].GetAssets();
+            if (assets.Length > 0) return assets[0];
+        }
+        return null;
+    }
 
     public List<string> GetAllAssetNames(AssetsFolders foldersToSearch, string searchString = null) {
         List<string> allAssets = new List<string>();

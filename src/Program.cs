@@ -1,2 +1,2 @@
-﻿using var game = new QMEditor.EditorApp(); 
+﻿using var game = new QMEditor.EditorApp(true); 
 game.Run();

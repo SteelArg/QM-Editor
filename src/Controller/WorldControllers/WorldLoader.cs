@@ -8,10 +8,12 @@ public class WorldLoader {
     public void Load(string path = "saves\\default.qmworld") {
         var parser = new StringDataParser(path);
         parser.Load();
+        try {
         string saveVersion = parser.GetValue("editor_version");
-        if (saveVersion != AppSettings.Version.Value) {
-            Console.WriteLine("Can not open saves from unmatching editor versions");
-            return;
+        if (saveVersion != AppSettings.Version.Value)
+            throw new Exception();
+        } catch {
+            throw new Exception("Can not open saves from unmatching editor versions");
         }
 
         string[] size = parser.GetValue("size").Split(';');

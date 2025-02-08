@@ -1,6 +1,5 @@
 using System;
 using Myra.Graphics2D.UI;
-using Myra.Graphics2D.UI.File;
 
 namespace QMEditor.View;
 
@@ -8,6 +7,7 @@ public class WorldIOManagerView {
 
     public Action ClickedLoad;
     public Action ClickedSave;
+    public Action ClickedNew;
 
     private Grid _grid;
     private Label _saveName;
@@ -24,13 +24,15 @@ public class WorldIOManagerView {
         };
         Grid.SetColumnSpan(_grid, 2);
         
-        // Save/Load buttons
+        // Save/Load/New buttons
         Button loadButton = BuildButton("Load");
         loadButton.Click += (s, a) => { ClickedLoad?.Invoke(); };
 
-        Button saveButton = BuildButton("Save");
+        Button saveButton = BuildButton("Save", column: 1);
         saveButton.Click += (s, a) => { ClickedSave?.Invoke(); };
-        Grid.SetColumn(saveButton, 1);
+
+        Button newButton = BuildButton("New", column: 2);
+        newButton.Click += (s, a) => { ClickedNew?.Invoke(); };
 
         // Save name
         _saveName = new Label() {
@@ -38,12 +40,13 @@ public class WorldIOManagerView {
             TextAlign = FontStashSharp.RichText.TextHorizontalAlignment.Center,
             HorizontalAlignment = HorizontalAlignment.Center
         };
-        Grid.SetColumnSpan(_saveName, 2);
+        Grid.SetColumnSpan(_saveName, 3);
         Grid.SetRow(_saveName, 1);
 
         // Add to grid
         _grid.Widgets.Add(loadButton);
         _grid.Widgets.Add(saveButton);
+        _grid.Widgets.Add(newButton);
         _grid.Widgets.Add(_saveName);
         
         return _grid;
@@ -51,7 +54,7 @@ public class WorldIOManagerView {
 
     public void SetSaveName(string save) => _saveName.Text = save;
 
-    private Button BuildButton(string text, int width = 120, int height = 70) {
+    private Button BuildButton(string text, int width = 120, int height = 70, int column = 0) {
         var button = new Button() {
             Content = new Label () {
                 Text = text, TextAlign = FontStashSharp.RichText.TextHorizontalAlignment.Center,
@@ -59,6 +62,7 @@ public class WorldIOManagerView {
             },
             Width = width, Height = height
         };
+        Grid.SetColumn(button, column);
         return button;
     }
 

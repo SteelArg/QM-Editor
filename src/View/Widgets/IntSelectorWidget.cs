@@ -15,6 +15,9 @@ public class IntSelectorWidget : Panel {
     private int? _maxValue;
 
     public IntSelectorWidget(int? width = null, int? height = null, int? minValue = null, int? maxValue = null, int startValue = 0) {
+        if (maxValue.HasValue && minValue.HasValue && minValue > maxValue)
+            throw new ArgumentException("maxValue cannot be smaller than minValue");
+
         Width = width ?? 100;
         Height = height ?? 40;
 
@@ -40,7 +43,6 @@ public class IntSelectorWidget : Panel {
         _textBox = new TextBox {
             Text = _value.ToString(),
             Width = textBoxWidth, Height = textBoxHeight,
-            TextVerticalAlignment = VerticalAlignment.Center
         };
         _textBox.TextChangedByUser += (s, e) => { OnTextChanged(); };
         Grid.SetRowSpan(_textBox, 2);
@@ -77,7 +79,16 @@ public class IntSelectorWidget : Panel {
     private void ChangeValue(int delta) => SetValue(_value + delta);
 
     private void SetValue(int newValue) {
-        newValue = Math.Clamp(newValue, _minValue??newValue, _maxValue??newValue);
+        int min = _minValue??newValue;
+        int max = _maxValue??newValue;
+        if (max < min) {
+            if (_maxValue.HasValue)
+                min = max-1;
+            else
+                max = min+1;
+        }
+
+        newValue = Math.Clamp(newValue, min, max);
         if (newValue == _value) return;
 
         _value = newValue;
@@ -87,20 +98,18 @@ public class IntSelectorWidget : Panel {
 
     private void OnTextChanged() {
         string text = _textBox.Text;
-        string numbersOnlyText = string.Empty;
+        string numbersOnlyText = "0";
 
         foreach (char c in text) {
             if (char.IsDigit(c))
                 numbersOnlyText += c;
         }
 
-        if (numbersOnlyText == string.Empty) numbersOnlyText = "0";
-
-        if (numbersOnlyText != text) {
-            _textBox.Text = numbersOnlyText;
-        }
+        if (Value == 0 && numbersOnlyText.Length > 1 && numbersOnlyText[numbersOnlyText.Length-1] == '0')
+            numbersOnlyText = numbersOnlyText.Remove(numbersOnlyText.Length-1);
 
         SetValue(int.Parse(numbersOnlyText));
+        _textBox.Text = Value.ToString();
     }
 
 }

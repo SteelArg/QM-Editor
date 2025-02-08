@@ -11,10 +11,10 @@ public class EditorApp : Game {
     private ScreenRenderer _renderer;
     private TabsManager _tabsManager;
 
-    public EditorApp() {
+    public EditorApp(bool launchSmall = false) {
         Global.SetGame(this);
 
-        _renderer = new SeperatedScreenRenderer(Resolution.Pick(Resolution.HD), 6f);
+        _renderer = new SeperatedScreenRenderer(Resolution.Pick(launchSmall ? Resolution.Small : Resolution.HD), launchSmall ? 3f : 6f);
         IsMouseVisible = true;
         
         new World(WorldSettings.Default);
@@ -34,11 +34,8 @@ public class EditorApp : Game {
     protected override void LoadContent() {
         _renderer.Load();
         _tabsManager.Load();
-        
-        AssetBase stevenAsset = AssetsLoader.Instance.GetAsset("steven", AssetsFolders.Characters);
-        World.Instance.Grid.PlaceOnGrid(new Character(stevenAsset), [2,3]);
 
-        var defaultTile = new Tile(AssetsLoader.Instance.GetAsset("default", AssetsFolders.Tiles));
+        var defaultTile = new Tile(AssetsLoader.Instance.GetAsset("default", AssetsFolders.Tiles) ?? AssetsLoader.Instance.GetAnyAsset(AssetsFolders.Tiles));
         var tileFactory = new TileFactory(defaultTile);
         tileFactory.FillGrid(World.Instance.Grid);
     }

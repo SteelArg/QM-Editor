@@ -28,6 +28,10 @@ public class TileFactory {
         _tile = tile;
     }
 
+    public TileFactory(AssetBase asset) {
+        _tile = new Tile(asset);
+    }
+
     public Tile Create() => (Tile)_tile.Clone();
 
     public void FillGrid(Grid grid) {
