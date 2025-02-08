@@ -14,6 +14,8 @@ public class AppSettings : Singleton<AppSettings> {
     public static Setting<int> RenderTileHeight {get => Instance._renderTileHeight;}
     public static Setting<int> RenderFrameCount {get => Instance._renderFrameCount;}
     public static Setting<int> RenderFrameDuration {get => Instance._renderFrameDuration;}
+    public static Setting<TwoFloats> RenderOutputSize {get => Instance._renderOutputSize;}
+    public static Setting<int> RenderOutputUpscaling {get => Instance._renderOutputUpscaling;}
 
     private Setting<float> _volume;
     private Setting<string> _version;
@@ -22,6 +24,8 @@ public class AppSettings : Singleton<AppSettings> {
     private Setting<int> _renderTileHeight;
     private Setting<int> _renderFrameCount;
     private Setting<int> _renderFrameDuration;
+    private Setting<TwoFloats> _renderOutputSize;
+    private Setting<int> _renderOutputUpscaling;
     private StringDataParser _dataParser;
 
     public AppSettings() : base() {
@@ -32,6 +36,8 @@ public class AppSettings : Singleton<AppSettings> {
         _renderTileHeight = new Setting<int>("render_tile_height", 0);
         _renderFrameCount = new Setting<int>("render_frame_count", 0);
         _renderFrameDuration = new Setting<int>("render_frame_duration", 0);
+        _renderOutputSize = new Setting<TwoFloats>("render_output_size", TwoFloats.Zero);
+        _renderOutputUpscaling = new Setting<int>("render_output_upscaling", 0);
         _dataParser = new StringDataParser(SettingsPath);
         Load();
     }
@@ -44,6 +50,8 @@ public class AppSettings : Singleton<AppSettings> {
         _renderTileHeight.SaveTo(_dataParser);
         _renderFrameCount.SaveTo(_dataParser);
         _renderFrameDuration.SaveTo(_dataParser);
+        _renderOutputSize.SaveTo(_dataParser);
+        _renderOutputUpscaling.SaveTo(_dataParser);
         _dataParser.Save();
     }
 
@@ -58,6 +66,8 @@ public class AppSettings : Singleton<AppSettings> {
         _renderTileHeight.SetValue(int.Parse(_dataParser.GetValue(_renderTileHeight.SettingId)));
         _renderFrameCount.SetValue(int.Parse(_dataParser.GetValue(_renderFrameCount.SettingId)));
         _renderFrameDuration.SetValue(int.Parse(_dataParser.GetValue(_renderFrameDuration.SettingId)));
+        _renderOutputSize.SetValue(TwoFloats.FromString(_dataParser.GetValue(_renderOutputSize.SettingId)));
+        _renderOutputUpscaling.SetValue(int.Parse(_dataParser.GetValue(_renderOutputUpscaling.SettingId)));
     }
 
 }
@@ -105,13 +115,12 @@ public struct TwoFloats {
         return $"{First} {Second}";
     }
 
-    public Vector2 ToVector2() {
-        return new Vector2(First, Second);
-    }
-
     public static TwoFloats FromString(string str) {
         string[] numbers = str.Split(" ");
         return new TwoFloats(float.Parse(numbers[0]), float.Parse(numbers[1]));
     }
+
+    public Vector2 ToVector2() => new Vector2(First, Second);
+    public int[] ToIntArray() => [(int)First, (int)Second];
 
 }

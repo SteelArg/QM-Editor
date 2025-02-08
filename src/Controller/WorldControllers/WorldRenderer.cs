@@ -12,7 +12,7 @@ public class WorldRenderer {
     private Dictionary<(int, int), CellRenderCommands> _cellRenderCommands;
 
     public WorldRenderer() {
-        RenderSettings = GridRenderSettings.FromAppSettings();
+        UpdateRenderSettings();
     }
 
     public void Render(SpriteBatch spriteBatch, float totalDepth, int frame = 0, bool displayEditor = true) {
@@ -72,24 +72,28 @@ public class WorldRenderer {
         }
     }
 
-    public void SaveToGif(string path, int[] renderSize) {
+    public void SaveToGif(string path, int[] renderSize, int upscaling) {
         var spriteBatch = new SpriteBatch(Global.Game.GraphicsDevice);
         RenderTarget2D[] saveRTs = new RenderTarget2D[AppSettings.RenderFrameCount.Value];
 
         for (int i = 0; i < AppSettings.RenderFrameCount.Value; i++) {
-            saveRTs[i] = RenderToTarget(spriteBatch, renderSize, i);
+            saveRTs[i] = RenderToTarget(spriteBatch, renderSize, i, upscaling);
         }
         
         ServiceLocator.FileService.SaveAsGif(path, saveRTs, renderSize, AppSettings.RenderFrameDuration.Value);
     }
 
-    private RenderTarget2D RenderToTarget(SpriteBatch spriteBatch, int[] renderSize, int frame) {
+    public void UpdateRenderSettings() {
+        RenderSettings = GridRenderSettings.FromAppSettings();
+    }
+
+    private RenderTarget2D RenderToTarget(SpriteBatch spriteBatch, int[] renderSize, int frame, float scale) {
         var saveRT = new RenderTarget2D(Global.Game.GraphicsDevice, renderSize[0], renderSize[1]);
         
         Global.Game.GraphicsDevice.SetRenderTarget(saveRT);
         Global.Game.GraphicsDevice.Clear(Color.Transparent);
         
-        spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, null, null, null, Matrix.CreateScale(4f));
+        spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, null, null, null, Matrix.CreateScale(scale));
         Render(spriteBatch, 0f, frame, false);
         spriteBatch.End();
 

@@ -7,6 +7,7 @@ public class SceneTabView {
 
     public FrameLooperWidget FrameLooper { get => _frameLooper; }
     public Action RenderClicked;
+    public Action RenderSettingsClicked;
 
     private FrameLooperWidget _frameLooper;
     private VerticalStackPanel _stackPanel;
@@ -14,32 +15,39 @@ public class SceneTabView {
     public SceneTabView() {}
 
     public Widget BuildUI() {
-        _stackPanel = new VerticalStackPanel() {
+        _stackPanel = new VerticalStackPanel {
             Spacing = 20, VerticalAlignment = VerticalAlignment.Bottom
         };
         Grid.SetColumn(_stackPanel, 1);
 
         _frameLooper = new FrameLooperWidget();
 
+        var renderButtons = new HorizontalStackPanel {
+            Spacing = 5, ShowGridLines = false,
+            HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(20)
+        };
+        renderButtons.Widgets.Add(BuildButton("Render", ()=>RenderClicked?.Invoke()));
+        renderButtons.Widgets.Add(BuildButton("...", ()=>RenderSettingsClicked?.Invoke(), 80, 80));
+
         _stackPanel.Widgets.Add(_frameLooper);
-        _stackPanel.Widgets.Add(BuildRenderButton());
+        _stackPanel.Widgets.Add(renderButtons);
 
         return _stackPanel;
     }
 
-    private Widget BuildRenderButton() {
-        var renderButton = new Button() {
+    private Button BuildButton(string text, Action clickHandler, int width = 160, int height = 80) {
+        var button = new Button() {
             Content = new Label() {
-                Text = "Render", TextAlign = FontStashSharp.RichText.TextHorizontalAlignment.Center,
+                Text = text, TextAlign = FontStashSharp.RichText.TextHorizontalAlignment.Center,
                 HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center
             },
             HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Bottom,
-            Width = 200, Height = 120,
-            Margin = new Thickness(20)
+            Width = width, Height = height
         };
-        renderButton.Click += (s, e) => { RenderClicked?.Invoke(); };
+        button.Click += (s, e) => clickHandler();
         
-        return renderButton;
+        return button;
     }
 
 }

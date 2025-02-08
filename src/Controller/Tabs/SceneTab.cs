@@ -22,7 +22,7 @@ public class SceneTab : Tab {
     public SceneTab() : base() {
         _worldEditor = new WorldEditor();
         _worldRenderer = new WorldRenderer();
-        _frameLooper = new FrameLooper(AppSettings.RenderFrameCount.Value, AppSettings.RenderFrameDuration.Value/1000f);
+        _frameLooper = FrameLooper.FromAppSettings();
         _sceneTabView = new SceneTabView();
         _editStack = new EditCommandsStack();
         _editKeybinds = new List<EditKeybind> {
@@ -34,12 +34,37 @@ public class SceneTab : Tab {
 
     protected override Widget BuildUI() {
         Widget widget = _sceneTabView.BuildUI();
-        _sceneTabView.RenderClicked += () => { _worldRenderer.SaveToGif("output\\render.gif", [720, 480]); };
+        _sceneTabView.RenderClicked += () => { _worldRenderer.SaveToGif("output\\render.gif", AppSettings.RenderOutputSize.Value.ToIntArray(), AppSettings.RenderOutputUpscaling.Value); };
+        _sceneTabView.RenderSettingsClicked += OpenRenderSettingsDialog;
         _sceneTabView.FrameLooper.TogglePauseClicked += _frameLooper.TogglePause;
         _sceneTabView.FrameLooper.NextFrameClicked += _frameLooper.NextFrame;
         _sceneTabView.FrameLooper.PrevFrameClicked += _frameLooper.PrevFrame;
         _frameLooper.FrameChanged += _sceneTabView.FrameLooper.SetCurrentFrame;
         return widget;
+    }
+
+    public void OpenRenderSettingsDialog() {
+        var renderSettingsWidget = new RenderSettingsWidget();
+        var dialog = new Dialog {
+            Title = "Render Settings",
+            Content = renderSettingsWidget
+        };
+        dialog.Closed += (s, e) => {
+            if (!dialog.Result) return;
+            AppSettings.RenderOffset.SetValue(renderSettingsWidget.GetRenderOffset());
+            AppSettings.RenderFrameDuration.SetValue(renderSettingsWidget.GetFrameDuration());
+            AppSettings.RenderFrameCount.SetValue(renderSettingsWidget.GetFrameCount());
+            AppSettings.RenderOutputSize.SetValue(renderSettingsWidget.GetOutputSize());
+            AppSettings.RenderOutputUpscaling.SetValue(renderSettingsWidget.GetOutputUpscaling());
+            AppSettings.Instance.Save();
+            _worldRenderer.UpdateRenderSettings();
+            _frameLooper = FrameLooper.FromAppSettings();
+            _sceneTabView.FrameLooper.TogglePauseClicked += _frameLooper.TogglePause;
+            _sceneTabView.FrameLooper.NextFrameClicked += _frameLooper.NextFrame;
+            _sceneTabView.FrameLooper.PrevFrameClicked += _frameLooper.PrevFrame;
+            _frameLooper.FrameChanged += _sceneTabView.FrameLooper.SetCurrentFrame;
+        };
+        dialog.ShowModal(Global.Desktop);
     }
 
     public override void Open() {}

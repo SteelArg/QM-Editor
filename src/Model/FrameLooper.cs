@@ -20,6 +20,8 @@ public class FrameLooper {
         _currentFrame = 0;
     }
 
+    public static FrameLooper FromAppSettings() => new FrameLooper(AppSettings.RenderFrameCount.Value, AppSettings.RenderFrameDuration.Value/1000f);
+
     public void Update(float secondsElapsed) {
         if (_paused) return;
 

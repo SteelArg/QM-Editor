@@ -105,7 +105,7 @@ public class IntSelectorWidget : Panel {
                 numbersOnlyText += c;
         }
 
-        if (Value == 0 && numbersOnlyText.Length > 1 && numbersOnlyText[numbersOnlyText.Length-1] == '0')
+        if (_minValue.HasValue && _minValue < 10 && Value == _minValue && numbersOnlyText.Length > 1 && numbersOnlyText[numbersOnlyText.Length-1] == _minValue.ToString()[0])
             numbersOnlyText = numbersOnlyText.Remove(numbersOnlyText.Length-1);
 
         SetValue(int.Parse(numbersOnlyText));
