@@ -30,6 +30,8 @@ public class VariatedAsset : AssetBase {
 
     protected override Texture2D SelectTexture(int frame, string variation) {
         variation = variation ?? "base";
+        if (!variations.ContainsKey(variation))
+            variation = "base";
         return variations[variation].GetTexture(frame);
     }
 

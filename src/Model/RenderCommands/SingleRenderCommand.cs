@@ -18,7 +18,7 @@ public class SingleRenderCommand : RenderCommandBase {
 
     public override void Execute(SpriteBatch spriteBatch) {
         if (_wasExecuted) return;
-        spriteBatch.Draw(SpriteRenderData.Texture, SpriteRenderData.Position, null, SpriteRenderData.Color);
+        spriteBatch.Draw(SpriteRenderData.Texture, SpriteRenderData.Position, null, SpriteRenderData.Color, 0f, Vector2.Zero, 1f, SpriteRenderData.GetSpriteEffects(), 0f);
         _wasExecuted = true;
     }
 
@@ -32,9 +32,14 @@ public struct SpriteRenderData : IComparable<SpriteRenderData> {
     public Vector2 Position;
     public Color Color;
     public float Depth;
+    public bool Flip;
 
     public int CompareTo(SpriteRenderData other) {
         return Depth.CompareTo(other.Depth);
+    }
+
+    public SpriteEffects GetSpriteEffects() {
+        return Flip ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
     }
 
 }

@@ -27,9 +27,9 @@ public class WorldRenderer {
             bool hovered = cursorPos != null && cursorPos[0] == x && cursorPos[1] == y && displayEditor;
             GridCell cell = grid.GetGridCell([x,y]);
 
-            GridObjectRenderData cellRenderData = defaultRenderData.WithAddedDepth(tileDepth);
-            cellRenderData.IsHovered = hovered;
-            cellRenderData.CellLift = cell.Tile?.GetLift(RenderSettings) ?? 0;
+            GridObjectRenderData cellRenderData = defaultRenderData.WithAddedDepth(tileDepth) with { 
+                IsHovered = hovered, CellLift = cell.Tile?.GetLift(RenderSettings) ?? 0
+            };
 
             List<RenderCommandBase> contentsRenderCommands = new List<RenderCommandBase>();
             RenderCommandBase tileRenderCommand = null;
@@ -45,9 +45,6 @@ public class WorldRenderer {
         }, grid.Size);
 
         // Execute render commands
-        // PASS 0: Tiles
-        // PASS 1: Characters and contets
-        // PAss 2: Silhouettes
         for (int layer = 0; layer < grid.Size[0]+grid.Size[1]-1; layer++) {
             for (int x = 0; x < layer+1; x++) {
                 int y = layer-x;

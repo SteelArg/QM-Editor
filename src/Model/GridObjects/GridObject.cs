@@ -1,13 +1,16 @@
 using Microsoft.Xna.Framework;
 using QMEditor.Model;
 
-public abstract class GridObject {
-
-    private int[] _gridPosition;
+public abstract class GridObject : IInspectable {
 
     public int[] GridPosition {get => _gridPosition;}
 
-    public GridObject() {}
+    private int[] _gridPosition;
+    private InspectionData _inspectionData;
+
+    public GridObject() {
+        _inspectionData = new InspectionData(this);
+    }
 
     public abstract GridObject Clone();
 
@@ -16,37 +19,22 @@ public abstract class GridObject {
     }
 
     public virtual RenderCommandBase GetRenderCommand(GridObjectRenderData renderData) => new EmptyRenderCommand();
+    public InspectionData GetInspectionData() => _inspectionData;
 
 }
 
-public struct GridObjectRenderData {
-
-    public readonly GridRenderSettings RenderSettings;
-    public float Depth;
-    public int Frame;
-    public bool IsHovered;
-    public bool IsPreview;
-    public int CellLift;
-    public string Variation;
-
-    public GridObjectRenderData(GridRenderSettings renderSettings, float depth, int frame = 0, bool isHovered = false, int cellLift = 0, bool isPreview = false, string variation =  null) {
-        RenderSettings = renderSettings;
-        Depth = depth;
-        Frame = frame;
-        IsHovered = isHovered;
-        CellLift = cellLift;
-        IsPreview = isPreview;
-        Variation = variation;
-    }
+public record GridObjectRenderData(
+    GridRenderSettings RenderSettings, float Depth = 0f, int Frame = 0, bool IsHovered = false,
+    bool IsPreview = false, int CellLift = 0, bool Flip = false, string Variation = null
+) {
 
     public GridObjectRenderData WithAddedDepth(float addedDepth) {
         GridObjectRenderData newRenderData = this with { Depth = Depth + addedDepth };
         return newRenderData;
     }
 
-    public GridObjectRenderData WithVariation(string variation) {
-        GridObjectRenderData newRenderData = this with { Variation = variation };
-        return newRenderData;
+    public GridObjectRenderData WithOffsetFrame(int frameOffset) {
+        return this with { Frame = Frame + frameOffset };
     }
 
     public Color GetObjectColor() {

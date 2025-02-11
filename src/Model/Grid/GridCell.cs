@@ -2,19 +2,25 @@ using System.Collections.Generic;
 
 namespace QMEditor.Model;
 
-public class GridCell {
+public class GridCell : IInspectable {
 
-    public int[] Position {get => _position;}
-    public GridObject[] Objects {get => _objects.ToArray();}
+    [AddToInspection(InspectionProperty.PropertyType.GridPosition, AddToInspectionAttribute.AccessMode.ReadOnly)]
+    public int[] Position { get => _position; }
+    
+    [AddToInspection(InspectionProperty.PropertyType.InspectablesLinkArray)]
+    public GridObject[] Objects { get => _objects.ToArray(); }
+    
     public Tile Tile { get => _tile; }
 
     private List<GridObject> _objects;
     private Tile _tile;
     private int[] _position;
-    
+    private InspectionData _inspectionData;
+ 
     public GridCell(int[] pos, List<GridObject> objects = null) {
         _position = pos;
         _objects = new List<GridObject>();
+        _inspectionData = new InspectionData(this);
         if (objects == null) return;
         foreach (GridObject obj in objects) {
             AddObject(obj);
@@ -35,5 +41,7 @@ public class GridCell {
         _objects.Remove(placedObject);
         if (_tile == placedObject) _tile = null;
     }
+
+    public InspectionData GetInspectionData() => _inspectionData;
 
 }

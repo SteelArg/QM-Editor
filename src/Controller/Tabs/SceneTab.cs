@@ -15,6 +15,7 @@ public class SceneTab : Tab {
     private WorldRenderer _worldRenderer;
     private FrameLooper _frameLooper;
     private SceneTabView _sceneTabView;
+    private Inspector _inspector;
 
     private EditCommandsStack _editStack;
     private List<EditKeybind> _editKeybinds;
@@ -24,6 +25,8 @@ public class SceneTab : Tab {
         _worldRenderer = new WorldRenderer();
         _frameLooper = FrameLooper.FromAppSettings();
         _sceneTabView = new SceneTabView();
+        _inspector = new Inspector();
+
         _editStack = new EditCommandsStack();
         _editKeybinds = new List<EditKeybind> {
             new EditKeybind(()=>Input.MouseButtonClicked(0), ()=>new PlaceGridObjectCommand(_worldEditor.GetEditContext(), World.Cursor.GetCopyOfObject())),
@@ -33,14 +36,21 @@ public class SceneTab : Tab {
     }
 
     protected override Widget BuildUI() {
-        Widget widget = _sceneTabView.BuildUI();
+        var mainGrid = new Myra.Graphics2D.UI.Grid();
+        mainGrid.RowsProportions.Add(Proportion.Fill);
+        mainGrid.RowsProportions.Add(Proportion.Auto);
+        Myra.Graphics2D.UI.Grid.SetColumn(mainGrid, 1);
+        mainGrid.Widgets.Add(_inspector.BuildUI());
+        mainGrid.Widgets.Add(_sceneTabView.BuildUI());
+
         _sceneTabView.RenderClicked += () => { _worldRenderer.SaveToGif("output\\render.gif", AppSettings.RenderOutputSize.Value.ToIntArray(), AppSettings.RenderOutputUpscaling.Value); };
         _sceneTabView.RenderSettingsClicked += OpenRenderSettingsDialog;
         _sceneTabView.FrameLooper.TogglePauseClicked += _frameLooper.TogglePause;
         _sceneTabView.FrameLooper.NextFrameClicked += _frameLooper.NextFrame;
         _sceneTabView.FrameLooper.PrevFrameClicked += _frameLooper.PrevFrame;
         _frameLooper.FrameChanged += _sceneTabView.FrameLooper.SetCurrentFrame;
-        return widget;
+
+        return mainGrid;
     }
 
     public void OpenRenderSettingsDialog() {
@@ -73,12 +83,19 @@ public class SceneTab : Tab {
     public override void Update(GameTime gameTime) {
         _frameLooper.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
 
+        EditContext ctx = _worldEditor.GetEditContext();
+
         foreach (EditKeybind keybind in _editKeybinds) {
             _editStack.AddAndExecuteCommand(keybind.CreateCommandIfKeybindFired());
         }
         
         if (Input.KeyFired(Keys.Z) && Input.KeyHeld(Keys.LeftControl))
             _editStack.UndoLastCommand();
+
+        if (Input.MouseButtonClicked(0) && World.Cursor.IsEmpty && ctx.CursorGridPosition != null) {
+            GridCell cell = World.Instance.Grid.GetGridCell(ctx.CursorGridPosition);
+            _inspector.Inspect(cell);
+        }
     }
 
     public override void Draw(SpriteBatch spriteBatch) {

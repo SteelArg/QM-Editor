@@ -6,7 +6,7 @@ namespace QMEditor.View;
 public class IntSelectorWidget : Panel {
 
     public int Value { get { return _value; } }
-    public Action<int> OnValueChanged;
+    public Action<int> ValueChanged;
 
     private TextBox _textBox;
 
@@ -93,7 +93,7 @@ public class IntSelectorWidget : Panel {
 
         _value = newValue;
         _textBox.Text = _value.ToString();
-        OnValueChanged?.Invoke(newValue);
+        ValueChanged?.Invoke(newValue);
     }
 
     private void OnTextChanged() {

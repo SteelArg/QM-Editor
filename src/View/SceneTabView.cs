@@ -1,7 +1,8 @@
 using System;
 using Myra.Graphics2D;
 using Myra.Graphics2D.UI;
-using QMEditor.View;
+
+namespace QMEditor.View;
 
 public class SceneTabView {
 
@@ -18,7 +19,7 @@ public class SceneTabView {
         _stackPanel = new VerticalStackPanel {
             Spacing = 20, VerticalAlignment = VerticalAlignment.Bottom
         };
-        Grid.SetColumn(_stackPanel, 1);
+        Grid.SetRow(_stackPanel, 1);
 
         _frameLooper = new FrameLooperWidget();
 

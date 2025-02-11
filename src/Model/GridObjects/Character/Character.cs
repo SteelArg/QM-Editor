@@ -6,7 +6,9 @@ namespace QMEditor.Model;
 public class Character : RenderableGridObject {
 
     public Accessory[] Accessories { get => _accessories.ToArray(); }
-    public string Variation { get => _variation; }
+    
+    [AddToInspection(InspectionProperty.PropertyType.String)]
+    public string Variation { get { return _variation; } set { _variation = value == string.Empty ? "base" : value; } }
 
     private List<Accessory> _accessories = new List<Accessory>();
     private string _variation;
@@ -30,10 +32,9 @@ public class Character : RenderableGridObject {
     public void AddAccessory(Accessory accessory) => _accessories.Add(accessory);
     public void RemoveAccessory(int accessoryId) => _accessories.RemoveAt(accessoryId);
     public void ClearAccessories() => _accessories.Clear();
-    public void SetVariation(string variation) => _variation = variation == string.Empty ? "base" : variation;
 
     public override RenderCommandBase GetRenderCommand(GridObjectRenderData renderData) {
-        renderData = renderData.WithVariation(_variation);
+        renderData = renderData with { Variation = _variation };
 
         RenderCommandBase baseRenderCommand = base.GetRenderCommand(renderData);
 
@@ -43,7 +44,7 @@ public class Character : RenderableGridObject {
         
         Vector2 renderCenter = renderPos + new Vector2(_asset.GetSize()[0]/2, _asset.GetSize()[1]);
         for (int i = 0; i < _accessories.Count; i++) {
-            GridObjectRenderData accessoryRenderData = renderData.WithAddedDepth(renderData.RenderSettings.GetDepthFor<Accessory>()+0.01f*i);
+            GridObjectRenderData accessoryRenderData = renderData.WithAddedDepth(renderData.RenderSettings.GetDepthFor<Accessory>()+0.01f*i) with { Flip = Flip };
             commands[i+1] = _accessories[i].GetRenderCommand(renderCenter, accessoryRenderData);
         }
 

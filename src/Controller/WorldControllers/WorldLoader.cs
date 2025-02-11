@@ -38,7 +38,7 @@ public class WorldLoader {
                         string accessoryLift = dataString.Split(',')[1];
                         
                         if (accessoryAssetName == "CHARACTER_VARIATION") {
-                            character.SetVariation(accessoryLift);
+                            character.Variation = accessoryLift;
                             continue;
                         } 
                         

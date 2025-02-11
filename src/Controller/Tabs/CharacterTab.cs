@@ -24,7 +24,7 @@ public class CharacterTab : Tab {
         _characterEditorView.CreateCharacterClicked += OnCreateCharacterClicked;
         _characterEditorView.RemoveAccessoryClicked += OnRemoveAccessoryClicked;
         _characterEditorView.AccessoryLiftChanged += _characterEditor.ChangeAccessoryLift;
-        _characterEditorView.VariationSelected += (v) => { _characterEditor.GetCharacter().SetVariation(v); };
+        _characterEditorView.VariationSelected += (v) => { _characterEditor.GetCharacter().Variation = v; };
         _characterEditor.AccessoriesChanged += (accessories) => { _characterEditorView.SetAccessories(accessories.Select(a => (a.Asset.Name, a.Lift)).ToArray()); };
         _characterEditor.CharacterChanged += (Character c) => { _characterEditorView.SetVariations(c.GetPossibleVariations()); };
         return _characterEditorView.BuildUI();

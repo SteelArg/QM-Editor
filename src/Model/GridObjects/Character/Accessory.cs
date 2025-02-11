@@ -30,7 +30,8 @@ public class Accessory {
             Texture = _asset.GetTexture(renderData.Frame),
             Position = renderPos,
             Color = renderData.GetObjectColor(),
-            Depth = renderData.Depth
+            Depth = renderData.Depth,
+            Flip = renderData.Flip
         });
 
         return renderCommand;

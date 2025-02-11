@@ -5,6 +5,10 @@ namespace QMEditor.Model;
 
 public abstract class RenderableGridObject : GridObject {
 
+    [AddToInspection(InspectionProperty.PropertyType.Check)]
+    public bool Flip { get {return _flip;} set {_flip = value;} }
+
+    private bool _flip;
     protected AssetBase _asset;
     public AssetBase Asset { get => _asset; }
 
@@ -19,7 +23,8 @@ public abstract class RenderableGridObject : GridObject {
             Texture = _asset.GetTexture(renderData.Frame, renderData.Variation),
             Position = GetRenderPos(renderData),
             Color = renderData.GetObjectColor(),
-            Depth = objectDepth
+            Depth = objectDepth,
+            Flip = _flip
         } );
 
         return renderCommand;
