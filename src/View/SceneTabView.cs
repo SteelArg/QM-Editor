@@ -15,7 +15,13 @@ public class SceneTabView {
 
     public SceneTabView() {}
 
-    public Widget BuildUI() {
+    public Widget BuildUI(Widget inspectorWidget) {
+        var mainGrid = new Grid() {
+            DefaultRowProportion = Proportion.Fill
+        };
+        mainGrid.RowsProportions.Add(Proportion.Auto);
+        Grid.SetColumn(mainGrid, 1);
+
         _stackPanel = new VerticalStackPanel {
             Spacing = 20, VerticalAlignment = VerticalAlignment.Bottom
         };
@@ -33,8 +39,10 @@ public class SceneTabView {
 
         _stackPanel.Widgets.Add(_frameLooper);
         _stackPanel.Widgets.Add(renderButtons);
+        mainGrid.Widgets.Add(inspectorWidget);
+        mainGrid.Widgets.Add(_stackPanel);
 
-        return _stackPanel;
+        return mainGrid;
     }
 
     private Button BuildButton(string text, Action clickHandler, int width = 160, int height = 80) {

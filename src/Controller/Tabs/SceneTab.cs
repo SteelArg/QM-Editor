@@ -36,21 +36,13 @@ public class SceneTab : Tab {
     }
 
     protected override Widget BuildUI() {
-        var mainGrid = new Myra.Graphics2D.UI.Grid();
-        mainGrid.RowsProportions.Add(Proportion.Fill);
-        mainGrid.RowsProportions.Add(Proportion.Auto);
-        Myra.Graphics2D.UI.Grid.SetColumn(mainGrid, 1);
-        mainGrid.Widgets.Add(_inspector.BuildUI());
-        mainGrid.Widgets.Add(_sceneTabView.BuildUI());
+        Widget widget = _sceneTabView.BuildUI(_inspector.BuildUI());
 
         _sceneTabView.RenderClicked += () => { _worldRenderer.SaveToGif("output\\render.gif", AppSettings.RenderOutputSize.Get(), AppSettings.RenderOutputUpscaling.Get()); };
         _sceneTabView.RenderSettingsClicked += OpenRenderSettingsDialog;
-        _sceneTabView.FrameLooper.TogglePauseClicked += _frameLooper.TogglePause;
-        _sceneTabView.FrameLooper.NextFrameClicked += _frameLooper.NextFrame;
-        _sceneTabView.FrameLooper.PrevFrameClicked += _frameLooper.PrevFrame;
-        _frameLooper.FrameChanged += _sceneTabView.FrameLooper.SetCurrentFrame;
+        SetEventsForFrameLooper();
 
-        return mainGrid;
+        return widget;
     }
 
     public void OpenRenderSettingsDialog() {
@@ -59,22 +51,23 @@ public class SceneTab : Tab {
             Title = "Render Settings",
             Content = renderSettingsWidget
         };
+
         dialog.Closed += (s, e) => {
             if (!dialog.Result) return;
-            AppSettings.RenderOffset.Set(renderSettingsWidget.GetRenderOffset());
-            AppSettings.RenderFrameDuration.Set(renderSettingsWidget.GetFrameDuration());
-            AppSettings.RenderFrameCount.Set(renderSettingsWidget.GetFrameCount());
-            AppSettings.RenderOutputSize.Set(renderSettingsWidget.GetOutputSize());
-            AppSettings.RenderOutputUpscaling.Set(renderSettingsWidget.GetOutputUpscaling());
-            AppSettings.Instance.Save();
+            renderSettingsWidget.WriteToAppSettings();
             _worldRenderer.UpdateRenderSettings();
             _frameLooper = FrameLooper.FromAppSettings();
-            _sceneTabView.FrameLooper.TogglePauseClicked += _frameLooper.TogglePause;
-            _sceneTabView.FrameLooper.NextFrameClicked += _frameLooper.NextFrame;
-            _sceneTabView.FrameLooper.PrevFrameClicked += _frameLooper.PrevFrame;
-            _frameLooper.FrameChanged += _sceneTabView.FrameLooper.SetCurrentFrame;
+            SetEventsForFrameLooper();
         };
+        
         dialog.ShowModal(Global.Desktop);
+    }
+
+    private void SetEventsForFrameLooper() {
+        _sceneTabView.FrameLooper.TogglePauseClicked += _frameLooper.TogglePause;
+        _sceneTabView.FrameLooper.NextFrameClicked += _frameLooper.NextFrame;
+        _sceneTabView.FrameLooper.PrevFrameClicked += _frameLooper.PrevFrame;
+        _frameLooper.FrameChanged += _sceneTabView.FrameLooper.SetCurrentFrame;
     }
 
     public override void Open() {}

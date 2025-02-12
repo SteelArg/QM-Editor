@@ -20,6 +20,17 @@ public class RenderSettingsWidget : Grid {
     public int GetFrameCount() => _frameCount.Value;
     public int GetOutputUpscaling() => _outputUpscaling.Value;
 
+    public void WriteToAppSettings(bool save = true) {
+        AppSettings.RenderOffset.Set(GetRenderOffset());
+        AppSettings.RenderFrameDuration.Set(GetFrameDuration());
+        AppSettings.RenderFrameCount.Set(GetFrameCount());
+        AppSettings.RenderOutputSize.Set(GetOutputSize());
+        AppSettings.RenderOutputUpscaling.Set(GetOutputUpscaling());
+        
+        if (save)
+            AppSettings.Instance.Save();
+    }
+
     private void BuildUI() {
         DefaultColumnProportion = Proportion.Auto;
         DefaultRowProportion = new Proportion(ProportionType.Pixels, 50);
