@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -15,6 +16,7 @@ public abstract class RenderableGridObject : GridObject {
     public RenderableGridObject(AssetBase asset) {
         _asset = asset;
     }
+    public RenderableGridObject() {}
 
     public override RenderCommandBase GetRenderCommand(GridObjectRenderData renderData) {
         float objectDepth = renderData.Depth + renderData.RenderSettings.GetDepthFor(GetType());
@@ -33,5 +35,18 @@ public abstract class RenderableGridObject : GridObject {
     public void Render(GridObjectRenderData renderData, SpriteBatch spriteBatch) => GetRenderCommand(renderData).Execute(spriteBatch);
 
     protected abstract Vector2 GetRenderPos(GridObjectRenderData renderData);
+
+    public override Dictionary<string, string> SaveToString(Dictionary<string, string> existingData = null) {
+        existingData = base.SaveToString(existingData);
+        existingData.Add("AssetName", _asset.Name);
+        existingData.Add("Flip", _flip.ToString());
+        return existingData;
+    }
+
+    protected override void LoadFromString(Dictionary<string, string> stringData) {
+        base.LoadFromString(stringData);
+        _asset = AssetsLoader.Instance.GetAsset(stringData.GetValueOrDefault("AssetName"), AssetsFoldersHelper.FoldersByObjectType(this));
+        _flip = bool.Parse(stringData.GetValueOrDefault("Flip") ?? "False");
+    }
 
 }

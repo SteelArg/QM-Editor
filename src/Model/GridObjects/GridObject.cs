@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using QMEditor.Model;
 
@@ -20,6 +21,17 @@ public abstract class GridObject : IInspectable {
 
     public virtual RenderCommandBase GetRenderCommand(GridObjectRenderData renderData) => new EmptyRenderCommand();
     public InspectionData GetInspectionData() => _inspectionData;
+
+    public virtual Dictionary<string, string> SaveToString(Dictionary<string, string> existingData = null) {
+        if (existingData == null)
+            existingData = new Dictionary<string, string>();
+        existingData.Add("Type", GetType().Name);
+        return existingData;
+    }
+
+    protected virtual void LoadFromString(Dictionary<string, string> stringData) {
+        // noop
+    }
 
 }
 

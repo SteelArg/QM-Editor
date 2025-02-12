@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using QMEditor.Model;
 
 namespace QMEditor.Controllers;
@@ -24,38 +25,33 @@ public class WorldLoader {
             string cellName = $"grid_objects_{x}_{y}";
             foreach (string gridObjectString in parser.GetValue(cellName).Split("|")) {
                 if (gridObjectString == string.Empty) continue;
-                string typeString = gridObjectString.Split(';')[0];
-                string assetString = gridObjectString.Split(';')[1];
-                string[] addDataStrings = gridObjectString.Split(';')[2].Split(':');
 
-                AssetBase asset = AssetsLoader.Instance.GetAsset(assetString, AssetsFolders.All);
+                Dictionary<string, string> objectData = new();
+
+                foreach (string keyValuePair in gridObjectString.Split(';')) {
+                    if (keyValuePair == string.Empty) continue;
+                    string key = keyValuePair.Split(':')[0];
+                    string value = keyValuePair.Split(':')[1];
+                    objectData[key] = value;
+                }
+
+                string typeName = objectData["Type"];
+
                 GridObject gridObject = null;
-                if (typeString == typeof(Character).Name) {
-                    Character character = new Character(asset);
-                    foreach (string dataString in addDataStrings) {
-                        if (dataString == string.Empty) continue;
-                        string accessoryAssetName = dataString.Split(',')[0];
-                        string accessoryLift = dataString.Split(',')[1];
-                        
-                        if (accessoryAssetName == "CHARACTER_VARIATION") {
-                            character.Variation = accessoryLift;
-                            continue;
-                        } 
-                        
-                        AssetBase accessoryAsset = AssetsLoader.Instance.GetAsset(accessoryAssetName, AssetsFolders.Accessories); 
-                        Accessory accessory = new Accessory(accessoryAsset, int.Parse(accessoryLift));
-                        character.AddAccessory(accessory);
-                    }
-                    gridObject = character;
-                }
-                else if (typeString == typeof(Tile).Name) {
-                    gridObject = new Tile(asset);
-                }
-                else if (typeString == typeof(Prop).Name) {
-                    gridObject = new Prop(asset);
+
+                switch (typeName) {
+                    case "Character":
+                        gridObject = new Character(objectData);
+                        break;
+                    case "Tile":
+                        gridObject = new Tile(objectData);
+                        break;
+                    case "Prop":
+                        gridObject = new Prop(objectData);
+                        break;
                 }
 
-                World.Instance.Grid.PlaceOnGrid(gridObject, [x,y]);
+                World.Instance.Grid.PlaceOnGrid(gridObject, [x,y]);                
             }
         }, worldSettings.Size);
     }

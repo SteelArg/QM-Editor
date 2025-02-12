@@ -19,6 +19,10 @@ public class Character : RenderableGridObject {
         _variation = variation ?? "base";
     }
 
+    public Character(Dictionary<string, string> stringData) {
+        LoadFromString(stringData);
+    }
+
     public override GridObject Clone() {
         var character = new Character(_asset, null, _variation);
         character._accessories = new List<Accessory>();
@@ -60,6 +64,34 @@ public class Character : RenderableGridObject {
             return variatedAsset.GetPossibleVariations();
         }
         return ["base"];
+    }
+
+    public override Dictionary<string, string> SaveToString(Dictionary<string, string> existingData = null) {
+        existingData = base.SaveToString(existingData);
+        existingData.Add("Variation", _variation);
+        
+        // Save accessories
+        string accessoriesData = "";
+        foreach (Accessory accessory in _accessories) {
+            accessoriesData += $"{accessory.Asset.Name}#{accessory.Lift},";
+        }
+        if (accessoriesData.Length > 0)
+            accessoriesData = accessoriesData.Remove(accessoriesData.Length-1);
+        existingData.Add("Accessories", accessoriesData);
+
+        return existingData;
+    }
+
+    protected override void LoadFromString(Dictionary<string, string> stringData) {
+        base.LoadFromString(stringData);
+        Variation = stringData.GetValueOrDefault("Variation") ?? string.Empty;
+
+        foreach (string accessoryString in stringData.GetValueOrDefault("Accessories")?.Split(',') ?? [string.Empty]) {
+            if (accessoryString == string.Empty) continue;
+            string accessoryAssetName = accessoryString.Split('#')[0];
+            int accessoryLift = int.Parse(accessoryString.Split('#')[1]);
+            _accessories.Add(new Accessory(AssetsLoader.Instance.GetAsset(accessoryAssetName, AssetsFolders.Accessories), accessoryLift));
+        }
     }
 
 }

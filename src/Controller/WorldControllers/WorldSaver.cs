@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using QMEditor.Model;
 
 namespace QMEditor.Controllers;
@@ -16,25 +17,16 @@ public class WorldSaver {
             string objects = "";
 
             foreach (GridObject obj in cell.Objects) {
-                string type = obj.GetType().Name;
-                string asset = "none";
-                string addData = "none";
+                Dictionary<string, string> objData = obj.SaveToString();
 
-                RenderableGridObject renderableObj = obj as RenderableGridObject;
-                if (renderableObj != null) {
-                    asset = renderableObj.Asset.Name;
-                    if (renderableObj is Character character) {
-                        addData = $"CHARACTER_VARIATION,{character.Variation}:";
-                        foreach (Accessory accessory in character.Accessories){
-                            addData += $"{accessory.Asset.Name},{accessory.Lift}:";
-                        }
-                        if (addData.Length > 0)
-                            addData = addData.Remove(addData.Length-1);
-                    }
+                string stringData = "";
+                foreach (string key in objData.Keys) {
+                    stringData += $"{key}:{objData[key]};";
                 }
+                if (stringData.Length > 0)
+                    stringData = stringData.Remove(stringData.Length-1);
                 
-                string objectData = $"{type};{asset};{addData}";
-                objects += objectData + "|";
+                objects += stringData + "|";
             }
             if (objects.Length > 0)
                 objects = objects.Remove(objects.Length-1);
