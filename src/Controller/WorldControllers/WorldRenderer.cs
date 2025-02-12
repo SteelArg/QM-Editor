@@ -71,13 +71,13 @@ public class WorldRenderer {
 
     public void SaveToGif(string path, int[] renderSize, int upscaling) {
         var spriteBatch = new SpriteBatch(Global.Game.GraphicsDevice);
-        RenderTarget2D[] saveRTs = new RenderTarget2D[AppSettings.RenderFrameCount.Value];
+        RenderTarget2D[] saveRTs = new RenderTarget2D[AppSettings.RenderFrameCount.Get()];
 
-        for (int i = 0; i < AppSettings.RenderFrameCount.Value; i++) {
+        for (int i = 0; i < AppSettings.RenderFrameCount.Get(); i++) {
             saveRTs[i] = RenderToTarget(spriteBatch, renderSize, i, upscaling);
         }
         
-        ServiceLocator.FileService.SaveAsGif(path, saveRTs, renderSize, AppSettings.RenderFrameDuration.Value);
+        ServiceLocator.FileService.SaveAsGif(path, saveRTs, renderSize, AppSettings.RenderFrameDuration.Get());
     }
 
     public void UpdateRenderSettings() {

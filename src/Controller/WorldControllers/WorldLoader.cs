@@ -11,7 +11,7 @@ public class WorldLoader {
         parser.Load();
         try {
         string saveVersion = parser.GetValue("editor_version");
-        if (saveVersion != AppSettings.Version.Value)
+        if (saveVersion != AppSettings.Version.Get())
             throw new Exception();
         } catch {
             throw new Exception("Can not open saves from unmatching editor versions");

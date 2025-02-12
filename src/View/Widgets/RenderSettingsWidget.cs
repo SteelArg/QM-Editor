@@ -14,8 +14,8 @@ public class RenderSettingsWidget : Grid {
         BuildUI();
     }
 
-    public TwoFloats GetRenderOffset() => new TwoFloats(_renderOffset[0].Value, _renderOffset[1].Value);
-    public TwoFloats GetOutputSize() => new TwoFloats(_outputSize[0].Value, _outputSize[1].Value);
+    public int[] GetRenderOffset() => [_renderOffset[0].Value, _renderOffset[1].Value];
+    public int[] GetOutputSize() => [_outputSize[0].Value, _outputSize[1].Value];
     public int GetFrameDuration() => _frameDuration.Value;
     public int GetFrameCount() => _frameCount.Value;
     public int GetOutputUpscaling() => _outputUpscaling.Value;
@@ -25,29 +25,29 @@ public class RenderSettingsWidget : Grid {
         DefaultRowProportion = new Proportion(ProportionType.Pixels, 50);
 
         // Render Offset
-        (Widget renderOffsetWidget, _renderOffset) = BuildTwoFloatSelector(AppSettings.RenderOffset.Value);
+        (Widget renderOffsetWidget, _renderOffset) = BuildIntArraySelector(AppSettings.RenderOffset.Get());
         Widgets.Add(renderOffsetWidget);
 
         // Frame Count
-        (Widget frameCountWidget, _frameCount) = BuildSingleIntSelector(AppSettings.RenderFrameCount.Value, "Frame Count", 1, 1);
+        (Widget frameCountWidget, _frameCount) = BuildSingleIntSelector(AppSettings.RenderFrameCount.Get(), "Frame Count", 1, 1);
         Widgets.Add(frameCountWidget);
 
         // Frame Duration
-        (Widget frameDurationWidget, _frameDuration) = BuildSingleIntSelector(AppSettings.RenderFrameDuration.Value, "Frame Duration", 2, 0);
+        (Widget frameDurationWidget, _frameDuration) = BuildSingleIntSelector(AppSettings.RenderFrameDuration.Get(), "Frame Duration", 2, 0);
         Widgets.Add(frameDurationWidget);
 
         // Render Size
-        (Widget renderSizeWidget, _outputSize) = BuildTwoFloatSelector(AppSettings.RenderOutputSize.Value, 3, 1);
+        (Widget renderSizeWidget, _outputSize) = BuildIntArraySelector(AppSettings.RenderOutputSize.Get(), 3, 1);
         Widgets.Add(renderSizeWidget);
 
         // Render Upscaling
-        (Widget renderUpscalingWidget, _outputUpscaling) = BuildSingleIntSelector(AppSettings.RenderOutputUpscaling.Value, "Output Upscaling", 4, 1);
+        (Widget renderUpscalingWidget, _outputUpscaling) = BuildSingleIntSelector(AppSettings.RenderOutputUpscaling.Get(), "Output Upscaling", 4, 1);
         Widgets.Add(renderUpscalingWidget);
     }
 
-    private (Widget, IntSelectorWidget[]) BuildTwoFloatSelector(TwoFloats defaultValue, int row = 0, int? minValue = null) {
-        var xSelector = new IntSelectorWidget(100, 40, minValue, null, (int)defaultValue.First);
-        var ySelector = new IntSelectorWidget(100, 40, minValue, null, (int)defaultValue.Second);        
+    private (Widget, IntSelectorWidget[]) BuildIntArraySelector(int[] defaultValue, int row = 0, int? minValue = null) {
+        var xSelector = new IntSelectorWidget(100, 40, minValue, null, defaultValue[0]);
+        var ySelector = new IntSelectorWidget(100, 40, minValue, null, defaultValue[1]);        
         var stack = new HorizontalStackPanel {
             Spacing = 5, ShowGridLines = false,
             HorizontalAlignment = HorizontalAlignment.Left, VerticalAlignment = VerticalAlignment.Center

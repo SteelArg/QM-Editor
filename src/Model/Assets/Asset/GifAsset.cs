@@ -14,7 +14,7 @@ public class GifAsset : StaticAsset {
     }
 
     protected override Texture2D SelectTexture(int frame, string variation = null) {
-        int totalFrames = AppSettings.RenderFrameCount.Value;
+        int totalFrames = AppSettings.RenderFrameCount.Get();
         if (_frames.Length*2 <= totalFrames)
             frame = frame % _frames.Length;
         else

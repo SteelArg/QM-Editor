@@ -43,7 +43,7 @@ public class SceneTab : Tab {
         mainGrid.Widgets.Add(_inspector.BuildUI());
         mainGrid.Widgets.Add(_sceneTabView.BuildUI());
 
-        _sceneTabView.RenderClicked += () => { _worldRenderer.SaveToGif("output\\render.gif", AppSettings.RenderOutputSize.Value.ToIntArray(), AppSettings.RenderOutputUpscaling.Value); };
+        _sceneTabView.RenderClicked += () => { _worldRenderer.SaveToGif("output\\render.gif", AppSettings.RenderOutputSize.Get(), AppSettings.RenderOutputUpscaling.Get()); };
         _sceneTabView.RenderSettingsClicked += OpenRenderSettingsDialog;
         _sceneTabView.FrameLooper.TogglePauseClicked += _frameLooper.TogglePause;
         _sceneTabView.FrameLooper.NextFrameClicked += _frameLooper.NextFrame;
@@ -61,11 +61,11 @@ public class SceneTab : Tab {
         };
         dialog.Closed += (s, e) => {
             if (!dialog.Result) return;
-            AppSettings.RenderOffset.SetValue(renderSettingsWidget.GetRenderOffset());
-            AppSettings.RenderFrameDuration.SetValue(renderSettingsWidget.GetFrameDuration());
-            AppSettings.RenderFrameCount.SetValue(renderSettingsWidget.GetFrameCount());
-            AppSettings.RenderOutputSize.SetValue(renderSettingsWidget.GetOutputSize());
-            AppSettings.RenderOutputUpscaling.SetValue(renderSettingsWidget.GetOutputUpscaling());
+            AppSettings.RenderOffset.Set(renderSettingsWidget.GetRenderOffset());
+            AppSettings.RenderFrameDuration.Set(renderSettingsWidget.GetFrameDuration());
+            AppSettings.RenderFrameCount.Set(renderSettingsWidget.GetFrameCount());
+            AppSettings.RenderOutputSize.Set(renderSettingsWidget.GetOutputSize());
+            AppSettings.RenderOutputUpscaling.Set(renderSettingsWidget.GetOutputUpscaling());
             AppSettings.Instance.Save();
             _worldRenderer.UpdateRenderSettings();
             _frameLooper = FrameLooper.FromAppSettings();

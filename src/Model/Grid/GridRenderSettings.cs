@@ -28,7 +28,7 @@ public struct GridRenderSettings {
     }
 
     public static GridRenderSettings FromAppSettings() {
-        return new GridRenderSettings(AppSettings.RenderOffset.Value.ToVector2(), AppSettings.RenderTileTopSize.Value.ToVector2(), AppSettings.RenderTileHeight.Value);
+        return new GridRenderSettings(AppSettings.RenderOffset.ToVector2(), AppSettings.RenderTileTopSize.ToVector2(), AppSettings.RenderTileHeight.Get());
     }
 
     public Vector2 CalculateRenderPosition(int[] gridCell, int[] spriteSize) {
