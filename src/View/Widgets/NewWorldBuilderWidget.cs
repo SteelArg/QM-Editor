@@ -37,7 +37,8 @@ public class NewWorldBuilderWidget : Grid {
                 VerticalAlignment = VerticalAlignment.Center
             },
             VerticalAlignment = VerticalAlignment.Center,
-            Height = 40
+            Height = 40,
+            IsChecked = true
         };
         SetRow(_fillCheckButton, 1);
 

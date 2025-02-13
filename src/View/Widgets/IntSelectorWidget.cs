@@ -78,7 +78,7 @@ public class IntSelectorWidget : Panel {
     private void DecreaseValue() => ChangeValue(-1);
     private void ChangeValue(int delta) => SetValue(_value + delta);
 
-    private void SetValue(int newValue) {
+    public void SetValue(int newValue) {
         int min = _minValue??newValue;
         int max = _maxValue??newValue;
         if (max < min) {

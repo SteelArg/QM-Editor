@@ -56,6 +56,15 @@ public struct GridRenderSettings {
         return tileHeight-TileHeight-(int)TileTopSize.Y;
     }
 
+    public int[] CalculateGridSizeInPixels(int[] gridSize) {
+        int[] pixels = [0, 0];
+        Vector2 stepXTotal = StepX * gridSize[0];
+        Vector2 stepYTotal = StepY * gridSize[1];
+        pixels[0] = (int)(stepXTotal.X - stepYTotal.X);
+        pixels[1] = (int)(stepXTotal.Y + stepYTotal.Y);
+        return pixels;
+    }
+
     public int[] ScreenPositionToGrid(Vector2 screen) {
         Vector2 localPos = screen - Offset;
         

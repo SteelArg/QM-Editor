@@ -1,8 +1,11 @@
+using System;
 using Myra.Graphics2D.UI;
+using QMEditor.Controllers;
+using QMEditor.Model;
 
 namespace QMEditor.View;
 
-public class RenderSettingsWidget : Grid {
+public class RenderSettingsWidget : Myra.Graphics2D.UI.Grid {
 
     private IntSelectorWidget[] _renderOffset;
     private IntSelectorWidget[] _outputSize;
@@ -54,6 +57,18 @@ public class RenderSettingsWidget : Grid {
         // Render Upscaling
         (Widget renderUpscalingWidget, _outputUpscaling) = BuildSingleIntSelector(AppSettings.RenderOutputUpscaling.Get(), "Output Upscaling", 4, 1);
         Widgets.Add(renderUpscalingWidget);
+
+        // Center button
+        var centerButton = new Button {
+            Content = new Label {
+                Text="Center", TextAlign = FontStashSharp.RichText.TextHorizontalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center
+            },
+            HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Width = 80, Height = 30
+        };
+        centerButton.Click += (s, e) => { CenterWorldRender(); };
+        SetRow(centerButton, 5);
+        Widgets.Add(centerButton);
     }
 
     private (Widget, IntSelectorWidget[]) BuildIntArraySelector(int[] defaultValue, int row = 0, int? minValue = null) {
@@ -81,6 +96,23 @@ public class RenderSettingsWidget : Grid {
         stack.Widgets.Add(selector);
         SetRow(stack, row);
         return (stack, selector);
+    }
+
+    private void CenterWorldRender() {
+        int[] worldSize = WorldRenderer.RenderSettings.CalculateGridSizeInPixels(World.Instance.Grid.Size);
+
+        int upscaling = GetOutputUpscaling();
+        int[] scaledWorldSize = [worldSize[0] * upscaling, worldSize[1] * upscaling];
+
+        int[] outputSize = GetOutputSize();
+
+        int doubleUpscaling = upscaling * 2;
+
+        int[] offset = [(outputSize[0] - scaledWorldSize[0])/doubleUpscaling, (outputSize[1] - scaledWorldSize[1])/doubleUpscaling];
+        offset[0] += (int)((World.Instance.Grid.Size[1]-1) * WorldRenderer.RenderSettings.StepX.X);
+
+        _renderOffset[0].SetValue(offset[0]);
+        _renderOffset[1].SetValue(offset[1]);
     }
 
 }
