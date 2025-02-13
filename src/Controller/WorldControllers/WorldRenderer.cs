@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -16,6 +17,8 @@ public class WorldRenderer {
     }
 
     public void Render(SpriteBatch spriteBatch, float totalDepth, int frame = 0, bool displayEditor = true) {
+        DebugTimer debugTimer = new DebugTimer();
+
         Grid grid = World.Instance.Grid;
         int[] cursorPos = WorldEditor.CursorGridPosition;
         GridObjectRenderData defaultRenderData = new GridObjectRenderData(RenderSettings, totalDepth, frame);
@@ -78,6 +81,7 @@ public class WorldRenderer {
         }
         
         ServiceLocator.FileService.SaveAsGif(path, saveRTs, renderSize, AppSettings.RenderFrameDuration.Get());
+        ServiceLocator.MessageWindowsService.InfoWindow($"Finished rendering.\nGIF saved to {path}.");
     }
 
     public void UpdateRenderSettings() {

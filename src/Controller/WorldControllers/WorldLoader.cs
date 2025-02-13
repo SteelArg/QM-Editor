@@ -14,7 +14,8 @@ public class WorldLoader {
         if (saveVersion != AppSettings.Version.Get())
             throw new Exception();
         } catch {
-            throw new Exception("Can not open saves from unmatching editor versions");
+            ServiceLocator.MessageWindowsService.ErrorWindow($"Can not open save from different QM Editor versions.\nCurrent version: {AppSettings.Version.Get()}.");
+            return;
         }
 
         string[] size = parser.GetValue("size").Split(';');

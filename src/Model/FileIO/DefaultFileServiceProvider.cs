@@ -1,7 +1,9 @@
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace QMEditor.Model.IO;
@@ -65,16 +67,33 @@ public class DefaultFileServiceProvider : IFileService {
     public void SaveAsGif(string path, RenderTarget2D[] renderTargets, int[] gifSize, int frameDelay) {
         Directory.CreateDirectory(Path.GetDirectoryName(path));
 
+        var debugTimer = new DebugTimer();
+
         using (var gif = AnimatedGif.AnimatedGif.Create(path, frameDelay)) {
-            for (int i = 0; i < renderTargets.Length; i++) {
+            Image[] images = new Image[renderTargets.Length];
+
+            // ParallelLoopResult parallelResult = Parallel.For(0, renderTargets.Length, (i, state) => {
+            for (int i = 0; i < images.Length; i++) {
                 var pngStream = new MemoryStream();
                 renderTargets[i].SaveAsPng(pngStream, gifSize[0], gifSize[1]);
+
                 pngStream.Seek(0, SeekOrigin.Begin);
                 var pngImage = Image.FromStream(pngStream);
                 pngStream.Close();
-                gif.AddFrame(pngImage, delay: frameDelay, quality: AnimatedGif.GifQuality.Bit8);
+
+                // lock (images)
+                images[i] = pngImage;
             }
+            // });
+
+            // while (!parallelResult.IsCompleted) {}
+
+            foreach (Image image in images)
+                gif.AddFrame(image, delay: frameDelay, quality: AnimatedGif.GifQuality.Bit8);
         }
+
+        debugTimer.Timestamp("Create GIF");
+        debugTimer.LogAll(false);
     }
 
 }
