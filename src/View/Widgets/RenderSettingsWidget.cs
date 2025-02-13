@@ -58,17 +58,20 @@ public class RenderSettingsWidget : Myra.Graphics2D.UI.Grid {
         (Widget renderUpscalingWidget, _outputUpscaling) = BuildSingleIntSelector(AppSettings.RenderOutputUpscaling.Get(), "Output Upscaling", 4, 1);
         Widgets.Add(renderUpscalingWidget);
 
-        // Center button
-        var centerButton = new Button {
-            Content = new Label {
-                Text="Center", TextAlign = FontStashSharp.RichText.TextHorizontalAlignment.Center,
-                HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center
-            },
-            HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Width = 80, Height = 30
-        };
+        // Center and Default button
+        Button centerButton = BuildButton("Center");
         centerButton.Click += (s, e) => { CenterWorldRender(); };
-        SetRow(centerButton, 5);
-        Widgets.Add(centerButton);
+
+        Button defaultButton = BuildButton("Set to Default", 120);
+        defaultButton.Click += (s, e) => { SetDefaultSettings(); };
+        
+        var buttonsStack = new HorizontalStackPanel {
+            HorizontalAlignment = HorizontalAlignment.Center, Spacing = 20
+        };
+        buttonsStack.Widgets.Add(centerButton);
+        buttonsStack.Widgets.Add(defaultButton);
+        SetRow(buttonsStack, 5);
+        Widgets.Add(buttonsStack);
     }
 
     private (Widget, IntSelectorWidget[]) BuildIntArraySelector(int[] defaultValue, int row = 0, int? minValue = null) {
@@ -98,6 +101,17 @@ public class RenderSettingsWidget : Myra.Graphics2D.UI.Grid {
         return (stack, selector);
     }
 
+    private Button BuildButton(string label, int width = 80) {
+        var button = new Button {
+            Content = new Label {
+                Text=label, TextAlign = FontStashSharp.RichText.TextHorizontalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center
+            },
+            HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Width = width, Height = 30
+        };
+        return button;
+    }
+
     private void CenterWorldRender() {
         int[] worldSize = WorldRenderer.RenderSettings.CalculateGridSizeInPixels(World.Instance.Grid.Size);
 
@@ -113,6 +127,16 @@ public class RenderSettingsWidget : Myra.Graphics2D.UI.Grid {
 
         _renderOffset[0].SetValue(offset[0]);
         _renderOffset[1].SetValue(offset[1]);
+    }
+
+    private void SetDefaultSettings() {
+        _renderOffset[0].SetValue(82);
+        _renderOffset[1].SetValue(28);
+        _outputSize[0].SetValue(720);
+        _outputSize[1].SetValue(480);
+        _frameDuration.SetValue(200);
+        _frameCount.SetValue(6);
+        _outputUpscaling.SetValue(4);
     }
 
 }
