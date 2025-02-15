@@ -22,9 +22,9 @@ public class GroupedRenderCommand : RenderCommandBase {
         commandsSpan.Sort();
     }
 
-    public override void Execute(SpriteBatch spriteBatch) {
+    protected override void OnRender(SpriteBatch spriteBatch, int pass = 0) {
         foreach (RenderCommandBase renderCommand in RenderCommands) {
-            renderCommand.Execute(spriteBatch);
+            renderCommand.Execute(spriteBatch, pass);
         }
     }
 

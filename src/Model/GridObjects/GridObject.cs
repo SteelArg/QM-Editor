@@ -37,7 +37,7 @@ public abstract class GridObject : IInspectable {
 
 public record GridObjectRenderData(
     GridRenderSettings RenderSettings, float Depth = 0f, int Frame = 0, bool IsHovered = false,
-    bool IsPreview = false, int CellLift = 0, bool Flip = false, string Variation = null
+    bool IsPreview = false, float Alpha = 1f, int CellLift = 0, bool Flip = false, string Variation = null
 ) {
 
     public GridObjectRenderData WithAddedDepth(float addedDepth) {
@@ -50,11 +50,15 @@ public record GridObjectRenderData(
     }
 
     public Color GetObjectColor() {
+        float[] color = [1f, 1f, 1f, 1f];
         if (IsPreview)
-            return Palette.PlacingColor;
+            color = (float[])Palette.PlacingColor.Clone();
         if (IsHovered)
-            return Palette.HoverColor;
-        return Color.White;
+            color = (float[])Palette.HoverColor.Clone();
+
+        color[3] *= Alpha;
+
+        return Palette.ToColor(color);
     }
     
 }

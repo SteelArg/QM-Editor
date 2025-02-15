@@ -11,12 +11,12 @@ public abstract class RenderableGridObject : GridObject {
 
     private bool _flip;
     protected AssetBase _asset;
-    public AssetBase Asset { get => _asset; }
+    public AssetBase Asset { get => _asset; private set { _asset = value; GetInspectionData()?.SetName(_asset.Name);} }
 
-    public RenderableGridObject(AssetBase asset) {
-        _asset = asset;
+    public RenderableGridObject(AssetBase asset) : base() {
+        Asset = asset;
     }
-    public RenderableGridObject() {}
+    public RenderableGridObject() : base() {}
 
     public override RenderCommandBase GetRenderCommand(GridObjectRenderData renderData) {
         float objectDepth = renderData.Depth + renderData.RenderSettings.GetDepthFor(GetType());
@@ -27,7 +27,7 @@ public abstract class RenderableGridObject : GridObject {
             Color = renderData.GetObjectColor(),
             Depth = objectDepth,
             Flip = _flip
-        } );
+        }, 0);
 
         return renderCommand;
     }
@@ -45,7 +45,7 @@ public abstract class RenderableGridObject : GridObject {
 
     protected override void LoadFromString(Dictionary<string, string> stringData) {
         base.LoadFromString(stringData);
-        _asset = AssetsLoader.Instance.GetAsset(stringData.GetValueOrDefault("AssetName"), AssetsFoldersHelper.FoldersByObjectType(this));
+        Asset = AssetsLoader.Instance.GetAsset(stringData.GetValueOrDefault("AssetName"), AssetsFoldersHelper.FoldersByObjectType(this));
         _flip = bool.Parse(stringData.GetValueOrDefault("Flip") ?? "False");
     }
 

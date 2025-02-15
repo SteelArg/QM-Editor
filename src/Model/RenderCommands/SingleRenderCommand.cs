@@ -4,22 +4,18 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace QMEditor.Model;
 
-public class SingleRenderCommand : RenderCommandBase {
+public class SingleRenderCommand : OneTimeRenderCommandBase {
 
     public readonly SpriteRenderData SpriteRenderData;
     private readonly float _depth;
 
-    private bool _wasExecuted;
-
-    public SingleRenderCommand(SpriteRenderData spriteRenderData) {
+    public SingleRenderCommand(SpriteRenderData spriteRenderData, int? pass = null) : base(pass) {
         SpriteRenderData = spriteRenderData;
         _depth = spriteRenderData.Depth;
     }
 
-    public override void Execute(SpriteBatch spriteBatch) {
-        if (_wasExecuted) return;
+    protected override void OnOneTimeRender(SpriteBatch spriteBatch) {
         spriteBatch.Draw(SpriteRenderData.Texture, SpriteRenderData.Position, null, SpriteRenderData.Color, 0f, Vector2.Zero, 1f, SpriteRenderData.GetSpriteEffects(), 0f);
-        _wasExecuted = true;
     }
 
     protected override float GetDepth() => _depth;

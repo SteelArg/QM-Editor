@@ -18,7 +18,8 @@ public class WorldEditor {
         if (World.Cursor.IsEmpty || CursorGridPosition == null) return;
         
         World.Cursor.GetObject().SetGridPosition(CursorGridPosition);
-        var renderData = new GridObjectRenderData(WorldRenderer.RenderSettings, 100f, 0) {
+        var renderData = new GridObjectRenderData(WorldRenderer.RenderSettings) {
+            Depth = 100f,
             CellLift = World.Instance.Grid.GetGridCell(CursorGridPosition).Tile?.GetLift(WorldRenderer.RenderSettings) ?? 0,
             IsPreview = true
         };

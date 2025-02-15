@@ -26,11 +26,11 @@ public class SeperatedScreenRenderer : ScreenRenderer {
         Global.Game.GraphicsDevice.SetRenderTarget(null);
         
         // UI
-        Global.Game.GraphicsDevice.Clear(Color.Black);
+        Global.Game.GraphicsDevice.Clear(Color.Transparent);
         DrawUI();
 
         // All sprites onto the screen
-        _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+        _spriteBatch.Begin(blendState: BlendState.AlphaBlend, samplerState: SamplerState.PointClamp);
         _spriteBatch.Draw(_spritesRenderTarget, AppLayout.DrawPos, AppLayout.DrawSize, Color.White, 0f, Vector2.Zero, _scale, SpriteEffects.None, 0f);
         _spriteBatch.End();
     }

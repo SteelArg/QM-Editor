@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
@@ -10,8 +11,12 @@ public class Character : RenderableGridObject {
     [AddToInspection(InspectionProperty.PropertyType.String)]
     public string Variation { get { return _variation; } set { _variation = value == string.Empty ? "base" : value; } }
 
+    [AddToInspection(InspectionProperty.PropertyType.Check)]
+    public bool DrawSilhouette { get {return _drawSilhouette; } set { _drawSilhouette = value; } }
+
     private List<Accessory> _accessories = new List<Accessory>();
     private string _variation;
+    private bool _drawSilhouette;
 
     public Character(AssetBase asset, Accessory[] accessories = null, string variation = null) : base(asset) {
         if (accessories != null)
@@ -40,19 +45,26 @@ public class Character : RenderableGridObject {
     public override RenderCommandBase GetRenderCommand(GridObjectRenderData renderData) {
         renderData = renderData with { Variation = _variation };
 
-        RenderCommandBase baseRenderCommand = base.GetRenderCommand(renderData);
+        // Base render command
+        RenderCommandBase baseRenderCommand = base.GetRenderCommand(renderData);        
+        List<RenderCommandBase> commands = [baseRenderCommand];
 
-        Vector2 renderPos = GetRenderPos(renderData);
-        RenderCommandBase[] commands = new RenderCommandBase[_accessories.Count+1];
-        commands[0] = baseRenderCommand;
+        // Silhouette render command
+        if (_drawSilhouette) {
+            RenderCommandBase silhouetteRenderCommand = base.GetRenderCommand(renderData.WithAddedDepth(10f) with { Alpha = 0.3f });
+            silhouetteRenderCommand.SetPass(1);
+            commands.Add(silhouetteRenderCommand);
+        }
         
+        // Accessories render commands
+        Vector2 renderPos = GetRenderPos(renderData);
         Vector2 renderCenter = renderPos + new Vector2(_asset.GetSize()[0]/2, _asset.GetSize()[1]);
         for (int i = 0; i < _accessories.Count; i++) {
             GridObjectRenderData accessoryRenderData = renderData.WithAddedDepth(renderData.RenderSettings.GetDepthFor<Accessory>()+0.01f*i) with { Flip = Flip };
-            commands[i+1] = _accessories[i].GetRenderCommand(renderCenter, accessoryRenderData);
+            commands.Add(_accessories[i].GetRenderCommand(renderCenter, accessoryRenderData));
         }
 
-        return new GroupedRenderCommand(commands);
+        return new GroupedRenderCommand(commands.ToArray());
     }
 
     protected override Vector2 GetRenderPos(GridObjectRenderData renderData) {
@@ -69,6 +81,7 @@ public class Character : RenderableGridObject {
     public override Dictionary<string, string> SaveToString(Dictionary<string, string> existingData = null) {
         existingData = base.SaveToString(existingData);
         existingData.Add("Variation", _variation);
+        existingData.Add("Sihlouette", _drawSilhouette.ToString());
         
         // Save accessories
         string accessoriesData = "";
@@ -85,6 +98,7 @@ public class Character : RenderableGridObject {
     protected override void LoadFromString(Dictionary<string, string> stringData) {
         base.LoadFromString(stringData);
         Variation = stringData.GetValueOrDefault("Variation") ?? string.Empty;
+        DrawSilhouette = bool.Parse(stringData.GetValueOrDefault("Sihlouette") ?? "False");
 
         foreach (string accessoryString in stringData.GetValueOrDefault("Accessories")?.Split(',') ?? [string.Empty]) {
             if (accessoryString == string.Empty) continue;

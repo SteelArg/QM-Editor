@@ -48,28 +48,56 @@ public class WorldRenderer {
         }, grid.Size);
 
         // Execute render commands
+        // PASS 0: Default
+        // PASS 1: Silhouettes
+        for (int pass = 0; pass < 2; pass++) {
+            ExecuteRenderCommandsPass(spriteBatch, pass);
+        }
+    }
+
+    private void ExecuteRenderCommandsPass(SpriteBatch spriteBatch, int pass) {
+        Grid grid = World.Instance.Grid;
+
         for (int layer = 0; layer < grid.Size[0]+grid.Size[1]-1; layer++) {
             for (int x = 0; x < layer+1; x++) {
                 int y = layer-x;
-                if (!_cellRenderCommands.ContainsKey((x,y))) continue;
-
-                CellRenderCommands cell = _cellRenderCommands[(x,y)];
-                cell.RenderTile(spriteBatch);
-
-                if (_cellRenderCommands.ContainsKey((x+1,y)) && _cellRenderCommands[(x+1,y)].Lift <= cell.Lift) {
-                    if (_cellRenderCommands.ContainsKey((x+1,y-1)))
-                        _cellRenderCommands[(x+1,y-1)].RenderTile(spriteBatch);
-                    _cellRenderCommands[(x+1,y)].RenderTile(spriteBatch);
-                }
-                if (_cellRenderCommands.ContainsKey((x,y+1)) && _cellRenderCommands[(x,y+1)].Lift <= cell.Lift) {
-                    if (_cellRenderCommands.ContainsKey((x-1,y+1)))
-                        _cellRenderCommands[(x-1,y+1)].RenderTile(spriteBatch);
-                    _cellRenderCommands[(x,y+1)].RenderTile(spriteBatch);
-                }
-                
-                cell.RenderContents(spriteBatch);
+                ExecuteGridCellRenderCommand(x, y, true, spriteBatch, pass);
             }
         }
+    }
+
+    private void ExecuteGridCellRenderCommand(int x, int y, bool recursive, SpriteBatch spriteBatch, int pass) {
+        if (!_cellRenderCommands.ContainsKey((x,y))) return;
+
+        CellRenderCommands cell = _cellRenderCommands[(x,y)];
+        if (pass == 0 && cell.RenderedContents) return;
+
+        if (pass != 0) {
+            cell.RenderContents(spriteBatch, pass);
+            return;
+        }
+
+        if (_cellRenderCommands.TryGetValue((x-1,y), out CellRenderCommands nCell)) {
+            if (!nCell.PreparingToRenderContents) ExecuteGridCellRenderCommand(x-1, y, true, spriteBatch, pass);
+        }
+        if (_cellRenderCommands.TryGetValue((x,y-1), out CellRenderCommands n2Cell)) {
+            if (!n2Cell.PreparingToRenderContents) ExecuteGridCellRenderCommand(x, y-1, true, spriteBatch, pass);
+        }
+
+        cell.RenderTile(spriteBatch);
+
+        if (!recursive) return;
+
+
+        cell.PrepareToRenderContents();
+        if (_cellRenderCommands.TryGetValue((x,y+1), out CellRenderCommands dCell)) {
+            if (!dCell.RenderedContents && dCell.Lift <= cell.Lift) ExecuteGridCellRenderCommand(x, y+1, false, spriteBatch, pass);
+        }
+        if (_cellRenderCommands.TryGetValue((x+1,y), out CellRenderCommands d2Cell)) {
+            if (!d2Cell.RenderedContents && d2Cell.Lift <= cell.Lift) ExecuteGridCellRenderCommand(x+1, y, false, spriteBatch, pass);
+        }
+        
+        cell.RenderContents(spriteBatch, pass);
     }
 
     public void SaveToGif(string path, int[] renderSize, int upscaling) {
@@ -102,12 +130,19 @@ public class WorldRenderer {
         return saveRT;
     }
 
-    private struct CellRenderCommands {
+    private class CellRenderCommands {
         
         public readonly int Lift;
+        public bool RenderedTile { get => _renderedTile; }
+        public bool RenderedContents { get => _renderedContents; }
+        public bool PreparingToRenderContents { get => _preparingToRenderContents; }
 
         private readonly RenderCommandBase TileRender;
         private readonly RenderCommandBase ContentsRender;
+
+        private bool _renderedTile;
+        private bool _renderedContents;
+        private bool _preparingToRenderContents;
 
         public CellRenderCommands(RenderCommandBase tileRenderCommand, RenderCommandBase[] contentsRenderCommands, int lift) {
             TileRender = tileRenderCommand;
@@ -117,11 +152,15 @@ public class WorldRenderer {
 
         public void RenderTile(SpriteBatch spriteBatch) {
             TileRender?.Execute(spriteBatch);
+            _renderedTile = true;
         }
 
-        public void RenderContents(SpriteBatch spriteBatch) {
-            ContentsRender.Execute(spriteBatch);
+        public void RenderContents(SpriteBatch spriteBatch, int pass) {
+            ContentsRender.Execute(spriteBatch, pass);
+            _renderedContents = true;
         }
+
+        public void PrepareToRenderContents() => _preparingToRenderContents = true;
 
     }
 
