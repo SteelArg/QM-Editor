@@ -22,7 +22,7 @@ public abstract class RenderCommandBase : IComparable<RenderCommandBase> {
         OnRender(spriteBatch, pass);
     }
 
-    public void SetPass(int? pass) => _pass = pass;
+    public virtual void SetPass(int? pass) => _pass = pass;
 
     protected abstract void OnRender(SpriteBatch spriteBatch, int pass = 0);
     protected abstract float GetDepth();

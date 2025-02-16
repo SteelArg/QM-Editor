@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Globalization;
 using Microsoft.Xna.Framework;
 using QMEditor.Model;
 
@@ -16,6 +17,7 @@ public class AppSettings : Singleton<AppSettings> {
     public static IntSetting RenderFrameDuration {get => (IntSetting)Instance._settings["render_frame_duration"]; }
     public static IntArraySetting RenderOutputSize {get => (IntArraySetting)Instance._settings["render_output_size"]; }
     public static IntSetting RenderOutputUpscaling {get => (IntSetting)Instance._settings["render_output_upscaling"]; }
+    public static FloatSetting SilhouetteAlpha {get => (FloatSetting)Instance._settings["silhouette_alpha"]; }
 
     private Dictionary<string, Setting> _settings;
     private StringDataParser _dataParser;
@@ -31,7 +33,8 @@ public class AppSettings : Singleton<AppSettings> {
             new IntSetting("render_frame_count"),
             new IntSetting("render_frame_duration"),
             new IntArraySetting("render_output_size"),
-            new IntSetting("render_output_upscaling")
+            new IntSetting("render_output_upscaling"),
+            new FloatSetting("silhouette_alpha")
         ]);
         
         _dataParser = new StringDataParser(SettingsPath);
@@ -98,6 +101,19 @@ public class StringSetting : Setting {
     }
     public string Get() => _value;
     public void Set(string value) => _value = value;
+}
+
+public class FloatSetting : Setting {
+    private float _value;
+    public FloatSetting(string settingId) : base(settingId) {}
+    public override void SetStringValue(string str) {
+        _value = float.Parse(str.Replace(',', '.'), NumberStyles.Any, CultureInfo.InvariantCulture);
+    }
+    protected override string GetStringValue() {
+        return _value.ToString();
+    }
+    public float Get() => _value;
+    public void Set(float value) => _value = value;
 }
 
 public class IntSetting : Setting {

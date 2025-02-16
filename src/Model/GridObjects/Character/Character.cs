@@ -45,17 +45,23 @@ public class Character : RenderableGridObject {
     public override RenderCommandBase GetRenderCommand(GridObjectRenderData renderData) {
         renderData = renderData with { Variation = _variation };
 
+        List<RenderCommandBase> commands = [GetCharacterRenderCommand(renderData)];
+
+        // Silhouette
+        if (_drawSilhouette) {
+            RenderCommandBase silhouetteRenderCommand = GetCharacterRenderCommand(renderData.WithAddedDepth(10f) with { Alpha = AppSettings.SilhouetteAlpha.Get() });
+            silhouetteRenderCommand.SetPass(1);
+            commands.Add(silhouetteRenderCommand);
+        }
+
+        return new GroupedRenderCommand(commands.ToArray());
+    }
+
+    private RenderCommandBase GetCharacterRenderCommand(GridObjectRenderData renderData) {
         // Base render command
         RenderCommandBase baseRenderCommand = base.GetRenderCommand(renderData);        
         List<RenderCommandBase> commands = [baseRenderCommand];
 
-        // Silhouette render command
-        if (_drawSilhouette) {
-            RenderCommandBase silhouetteRenderCommand = base.GetRenderCommand(renderData.WithAddedDepth(10f) with { Alpha = 0.3f });
-            silhouetteRenderCommand.SetPass(1);
-            commands.Add(silhouetteRenderCommand);
-        }
-        
         // Accessories render commands
         Vector2 renderPos = GetRenderPos(renderData);
         Vector2 renderCenter = renderPos + new Vector2(_asset.GetSize()[0]/2, _asset.GetSize()[1]);

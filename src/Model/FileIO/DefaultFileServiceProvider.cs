@@ -1,10 +1,7 @@
 using System;
-using System.Diagnostics;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
+using ImageMagick;
 
 namespace QMEditor.Model.IO;
 
@@ -38,59 +35,58 @@ public class DefaultFileServiceProvider : IFileService {
         return Texture2D.FromStream(Global.Game.GraphicsDevice, fileStream);
     }
 
-    [System.Runtime.Versioning.SupportedOSPlatform("windows")]
     public Texture2D[] LoadGif(string path) {
         if (Path.GetExtension(path).ToLower() != ".gif") {
             Console.WriteLine("TRIED TO LOAD GIF FROM A FILE THAT IS NOT A GIF");
             return null;
         }
 
-        Image gifImage = Image.FromFile(path);
-        int frames = gifImage.GetFrameCount(FrameDimension.Time);
+        using var framesCollection = new MagickImageCollection(path, MagickFormat.Gif);
+        framesCollection.Coalesce();
+
+        int frames = framesCollection.Count;
         Texture2D[] loadedFrames = new Texture2D[frames];
         
         for (int i = 0; i < frames; i++) {
             // Get frame
-            gifImage.SelectActiveFrame(FrameDimension.Time, i);
-            Image frameImage = (Image)gifImage.Clone();
+            IMagickImage frame = framesCollection[i];
+            using var frameStream = new MemoryStream();
+            frame.Write(frameStream);
             
             // Load to texture
-            var stream = new MemoryStream();
-            frameImage.Save(stream, ImageFormat.Png);
-            stream.Seek(0, SeekOrigin.Begin);
-            loadedFrames[i] = Texture2D.FromStream(Global.Game.GraphicsDevice, stream);
+            frameStream.Seek(0, SeekOrigin.Begin);
+            loadedFrames[i] = Texture2D.FromStream(Global.Game.GraphicsDevice, frameStream);
         }
         return loadedFrames;
     }
     
-    [System.Runtime.Versioning.SupportedOSPlatform("windows")]
     public void SaveAsGif(string path, RenderTarget2D[] renderTargets, int[] gifSize, int frameDelay) {
         Directory.CreateDirectory(Path.GetDirectoryName(path));
+        Directory.CreateDirectory(Path.GetDirectoryName(path) + "\\temp");
 
         var debugTimer = new DebugTimer();
 
-        using (var gif = AnimatedGif.AnimatedGif.Create(path, frameDelay)) {
-            Image[] images = new Image[renderTargets.Length];
+        var gifCollection = new MagickImageCollection();
+        // For some FUCKING reason ImageMagick has 10x of the frame delay in the GIF
+        uint gifFrameDelay = (uint)frameDelay/10;
 
-            // ParallelLoopResult parallelResult = Parallel.For(0, renderTargets.Length, (i, state) => {
-            for (int i = 0; i < images.Length; i++) {
-                var pngStream = new MemoryStream();
-                renderTargets[i].SaveAsPng(pngStream, gifSize[0], gifSize[1]);
+        for (int i = 0; i < renderTargets.Length; i++) {
+            var pngStream = new MemoryStream();
+            renderTargets[i].SaveAsPng(pngStream, renderTargets[i].Width, renderTargets[i].Height);
+            pngStream.Seek(0, SeekOrigin.Begin);
+            using FileStream fileStream = File.Create($"{Path.GetDirectoryName(path)}\\temp\\frame{i}.png");
+                pngStream.CopyTo(fileStream);
+            pngStream.Seek(0, SeekOrigin.Begin);
 
-                pngStream.Seek(0, SeekOrigin.Begin);
-                var pngImage = Image.FromStream(pngStream);
-                pngStream.Close();
-
-                // lock (images)
-                images[i] = pngImage;
-            }
-            // });
-
-            // while (!parallelResult.IsCompleted) {}
-
-            foreach (Image image in images)
-                gif.AddFrame(image, delay: frameDelay, quality: AnimatedGif.GifQuality.Bit8);
+            var frame = new MagickImage(pngStream) {
+                AnimationDelay = gifFrameDelay, GifDisposeMethod = GifDisposeMethod.Background
+            };
+            gifCollection.Add(frame);
+            pngStream.Dispose();
         }
+
+        gifCollection.Write(path);
+        gifCollection.Dispose();
 
         debugTimer.Timestamp("Create GIF");
         debugTimer.LogAll(false);

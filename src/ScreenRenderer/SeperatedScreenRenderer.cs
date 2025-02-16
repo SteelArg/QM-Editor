@@ -30,7 +30,7 @@ public class SeperatedScreenRenderer : ScreenRenderer {
         DrawUI();
 
         // All sprites onto the screen
-        _spriteBatch.Begin(blendState: BlendState.AlphaBlend, samplerState: SamplerState.PointClamp);
+        _spriteBatch.Begin(blendState: BlendState.Additive, samplerState: SamplerState.PointClamp);
         _spriteBatch.Draw(_spritesRenderTarget, AppLayout.DrawPos, AppLayout.DrawSize, Color.White, 0f, Vector2.Zero, _scale, SpriteEffects.None, 0f);
         _spriteBatch.End();
     }

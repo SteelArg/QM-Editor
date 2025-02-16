@@ -30,4 +30,11 @@ public class GroupedRenderCommand : RenderCommandBase {
 
     protected override float GetDepth() => _depth;
 
+    public override void SetPass(int? pass) {
+        base.SetPass(pass);
+        foreach (RenderCommandBase renderCommand in RenderCommands) {
+            renderCommand.SetPass(pass);
+        }
+    }
+
 }

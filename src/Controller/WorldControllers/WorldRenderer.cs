@@ -117,17 +117,23 @@ public class WorldRenderer {
     }
 
     private RenderTarget2D RenderToTarget(SpriteBatch spriteBatch, int[] renderSize, int frame, float scale) {
-        var saveRT = new RenderTarget2D(Global.Game.GraphicsDevice, renderSize[0], renderSize[1]);
+        var renderRT = new RenderTarget2D(Global.Game.GraphicsDevice, renderSize[0], renderSize[1], false, SurfaceFormat.Rgba64, DepthFormat.None);
         
-        Global.Game.GraphicsDevice.SetRenderTarget(saveRT);
+        Global.Game.GraphicsDevice.SetRenderTarget(renderRT);
         Global.Game.GraphicsDevice.Clear(Color.Transparent);
         
-        spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, null, null, null, Matrix.CreateScale(scale));
+        var bs = new BlendState();
+        bs.ColorSourceBlend = Blend.SourceAlpha;
+        bs.AlphaSourceBlend = Blend.One;
+        bs.ColorDestinationBlend = Blend.InverseSourceAlpha;
+        bs.AlphaDestinationBlend = Blend.InverseSourceAlpha;
+
+        spriteBatch.Begin(SpriteSortMode.Immediate, bs, SamplerState.PointClamp, null, null, null, Matrix.CreateScale(scale));
         Render(spriteBatch, 0f, frame, false);
         spriteBatch.End();
 
         Global.Game.GraphicsDevice.SetRenderTarget(null);
-        return saveRT;
+        return renderRT;
     }
 
     private class CellRenderCommands {

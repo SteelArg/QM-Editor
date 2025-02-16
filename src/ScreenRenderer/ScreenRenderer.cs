@@ -39,7 +39,7 @@ public class ScreenRenderer : Singleton<ScreenRenderer> {
     protected void DrawSprites() {
         var bs = new BlendState();
         bs.ColorSourceBlend = Blend.SourceAlpha;
-        bs.AlphaSourceBlend = Blend.SourceAlpha;
+        bs.AlphaSourceBlend = Blend.One;
         bs.ColorDestinationBlend = Blend.InverseSourceAlpha;
         bs.AlphaDestinationBlend = Blend.InverseSourceAlpha;
         _spriteBatch.Begin(SpriteSortMode.Immediate, bs);
