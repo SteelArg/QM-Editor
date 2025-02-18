@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -9,7 +8,7 @@ using QMEditor.View;
 
 namespace QMEditor.Controllers;
 
-public class SceneTab : Tab {
+public partial class SceneTab : Tab {
 
     private WorldEditor _worldEditor;
     private WorldRenderer _worldRenderer;
@@ -18,6 +17,7 @@ public class SceneTab : Tab {
     private Inspector _inspector;
 
     private EditCommandsStack _editStack;
+    private IEditKeybindsGenerator _editKeybindsGenerator;
     private List<EditKeybind> _editKeybinds;
 
     public SceneTab() : base() {
@@ -28,11 +28,8 @@ public class SceneTab : Tab {
         _inspector = new Inspector();
 
         _editStack = new EditCommandsStack();
-        _editKeybinds = new List<EditKeybind> {
-            new EditKeybind(()=>Input.MouseButtonClicked(0), ()=>new PlaceGridObjectCommand(_worldEditor.GetEditContext(), World.Cursor.GetCopyOfObject())),
-            new EditKeybind(()=>Input.MouseButtonClicked(1), ()=>new ClearGridCellCommand(_worldEditor.GetEditContext(), Input.KeyHeld(Keys.LeftShift))),
-            new EditKeybind(()=>Input.MouseButtonClicked(2), ()=>new CopyGridObjectCommand(_worldEditor.GetEditContext(), Input.KeyHeld(Keys.LeftShift)))
-        };
+        _editKeybindsGenerator = new DefaultEditKeybindsGenerator(_worldEditor);
+        _editKeybinds = _editKeybindsGenerator.Generate();
     }
 
     protected override Widget BuildUI() {
@@ -94,23 +91,6 @@ public class SceneTab : Tab {
     public override void Draw(SpriteBatch spriteBatch) {
         _worldRenderer.Render(spriteBatch, 1f, _frameLooper.CurrentFrame);
         _worldEditor.Render(spriteBatch);
-    }
-
-    private class EditKeybind {
-
-        private Func<bool> _keybind;
-        private Func<IEditCommand> _commandFactory;
-
-        public EditKeybind(Func<bool> keybind, Func<IEditCommand> commandFactory) {
-            _keybind = keybind;
-            _commandFactory = commandFactory;
-        }
-
-        public IEditCommand CreateCommandIfKeybindFired() {
-            if (!_keybind.Invoke()) return null;
-            return _commandFactory.Invoke();
-        }
-
     }
 
 }

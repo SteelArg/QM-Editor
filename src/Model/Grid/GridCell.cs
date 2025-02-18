@@ -27,6 +27,13 @@ public class GridCell : IInspectable {
         }
     }
 
+    public void SetPosition(int[] pos) {
+        _position = pos;
+        foreach (GridObject obj in _objects) {
+            obj.SetGridPosition(pos);
+        }
+    }
+
     public void AddObject(GridObject placedObject) {
         _objects.Add(placedObject);
         placedObject.SetGridPosition(_position);
