@@ -7,10 +7,12 @@ namespace QMEditor.View;
 public class SceneTabView {
 
     public FrameLooperWidget FrameLooper { get => _frameLooper; }
+    public ShaderSelectionWidget ShaderSelection { get => _shaderSelection; }
     public Action RenderClicked;
     public Action RenderSettingsClicked;
 
     private FrameLooperWidget _frameLooper;
+    private ShaderSelectionWidget _shaderSelection;
     private VerticalStackPanel _stackPanel;
 
     public SceneTabView() {}
@@ -27,7 +29,12 @@ public class SceneTabView {
         };
         Grid.SetRow(_stackPanel, 1);
 
+        var frameLooperAndShaderButtonStack = new HorizontalStackPanel() { Spacing = 20 };
+
         _frameLooper = new FrameLooperWidget();
+        _shaderSelection = new ShaderSelectionWidget();
+        frameLooperAndShaderButtonStack.Widgets.Add(_frameLooper);
+        frameLooperAndShaderButtonStack.Widgets.Add(_shaderSelection);
 
         var renderButtons = new HorizontalStackPanel {
             Spacing = 5, ShowGridLines = false,
@@ -37,7 +44,7 @@ public class SceneTabView {
         renderButtons.Widgets.Add(BuildButton("Render", ()=>RenderClicked?.Invoke()));
         renderButtons.Widgets.Add(BuildButton("...", ()=>RenderSettingsClicked?.Invoke(), 80, 80));
 
-        _stackPanel.Widgets.Add(_frameLooper);
+        _stackPanel.Widgets.Add(frameLooperAndShaderButtonStack);
         _stackPanel.Widgets.Add(renderButtons);
         mainGrid.Widgets.Add(inspectorWidget);
         mainGrid.Widgets.Add(_stackPanel);

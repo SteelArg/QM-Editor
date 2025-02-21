@@ -128,7 +128,7 @@ public class WorldRenderer {
         bs.ColorDestinationBlend = Blend.InverseSourceAlpha;
         bs.AlphaDestinationBlend = Blend.InverseSourceAlpha;
 
-        spriteBatch.Begin(SpriteSortMode.Immediate, bs, SamplerState.PointClamp, null, null, null, Matrix.CreateScale(scale));
+        spriteBatch.Begin(SpriteSortMode.Immediate, bs, SamplerState.PointClamp, null, null, WorldEffectManager.CurrentEffect, Matrix.CreateScale(scale));
         Render(spriteBatch, 0f, frame, false);
         spriteBatch.End();
 

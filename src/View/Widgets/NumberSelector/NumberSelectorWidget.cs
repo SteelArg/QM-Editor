@@ -3,18 +3,17 @@ using Myra.Graphics2D.UI;
 
 namespace QMEditor.View;
 
-public class IntSelectorWidget : Panel {
+public abstract class NumberSelectorWidget : Panel {
 
-    public int Value { get { return _value; } }
-    public Action<int> ValueChanged;
+    public Action<float> ValueChanged;
 
     private TextBox _textBox;
 
-    private int _value;
-    private int? _minValue;
-    private int? _maxValue;
+    protected float _value;
+    protected float? _minValue;
+    protected float? _maxValue;
 
-    public IntSelectorWidget(int? width = null, int? height = null, int? minValue = null, int? maxValue = null, int startValue = 0) {
+    public NumberSelectorWidget(int? width = null, int? height = null, float? minValue = null, float? maxValue = null, float startValue = 0) {
         if (maxValue.HasValue && minValue.HasValue && minValue > maxValue)
             throw new ArgumentException("maxValue cannot be smaller than minValue");
 
@@ -76,40 +75,33 @@ public class IntSelectorWidget : Panel {
 
     private void IncreaseValue() => ChangeValue(1);
     private void DecreaseValue() => ChangeValue(-1);
-    private void ChangeValue(int delta) => SetValue(_value + delta);
+    private void ChangeValue(float delta) => SetValue(_value + delta);
 
-    public void SetValue(int newValue) {
-        int min = _minValue??newValue;
-        int max = _maxValue??newValue;
-        if (max < min) {
-            if (_maxValue.HasValue)
-                min = max-1;
-            else
-                max = min+1;
-        }
+    public void SetValue(float newValue) {
+        newValue = Math.Max(newValue, (float)(_minValue ?? newValue));
+        newValue = Math.Min(newValue, (float)(_maxValue ?? newValue));
 
-        newValue = Math.Clamp(newValue, min, max);
         if (newValue == _value) return;
 
         _value = newValue;
-        _textBox.Text = _value.ToString();
+        _textBox.Text = ValueToString(_value);
         ValueChanged?.Invoke(newValue);
     }
 
     private void OnTextChanged() {
         string text = _textBox.Text;
-        string numbersOnlyText = "0";
+        string numbersOnlyText = GetNumbersOnlyText(text);
 
-        foreach (char c in text) {
-            if (char.IsDigit(c))
-                numbersOnlyText += c;
-        }
+        numbersOnlyText = BackspaceEdgeCase(numbersOnlyText);
 
-        if (_minValue.HasValue && _minValue < 10 && Value == _minValue && numbersOnlyText.Length > 1 && numbersOnlyText[numbersOnlyText.Length-1] == _minValue.ToString()[0])
-            numbersOnlyText = numbersOnlyText.Remove(numbersOnlyText.Length-1);
-
-        SetValue(int.Parse(numbersOnlyText));
-        _textBox.Text = Value.ToString();
+        SetValue(float.Parse(numbersOnlyText.Replace('.', ',')));
+        _textBox.Text = _value.ToString();
     }
+
+    protected abstract string GetNumbersOnlyText(string text);
+    
+    protected abstract string BackspaceEdgeCase(string text);
+
+    protected abstract string ValueToString(float value);
 
 }

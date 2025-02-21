@@ -37,6 +37,10 @@ public partial class SceneTab : Tab {
 
         _sceneTabView.RenderClicked += () => { _worldRenderer.SaveToGif("output\\render.gif", AppSettings.RenderOutputSize.Get(), AppSettings.RenderOutputUpscaling.Get()); };
         _sceneTabView.RenderSettingsClicked += OpenRenderSettingsDialog;
+
+        _sceneTabView.ShaderSelection.ShaderSelected += WorldEffectManager.LoadEffect;
+        _sceneTabView.ShaderSelection.ShaderUserVariableSelected += (userVariable) => { WorldEffectManager.CurrentEffect?.SetUserVariable(userVariable); };
+
         SetEventsForFrameLooper();
 
         return widget;

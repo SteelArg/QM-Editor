@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using QMEditor.Model;
 
 namespace QMEditor;
 
@@ -30,7 +31,7 @@ public class SeperatedScreenRenderer : ScreenRenderer {
         DrawUI();
 
         // All sprites onto the screen
-        _spriteBatch.Begin(blendState: BlendState.Additive, samplerState: SamplerState.PointClamp);
+        _spriteBatch.Begin(blendState: BlendState.Additive, samplerState: SamplerState.PointClamp, effect: WorldEffectManager.CurrentEffect);
         _spriteBatch.Draw(_spritesRenderTarget, AppLayout.DrawPos, AppLayout.DrawSize, Color.White, 0f, Vector2.Zero, _scale, SpriteEffects.None, 0f);
         _spriteBatch.End();
     }

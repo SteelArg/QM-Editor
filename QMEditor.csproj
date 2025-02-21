@@ -6,6 +6,7 @@
     <PublishReadyToRun>false</PublishReadyToRun>
     <TieredCompilation>false</TieredCompilation>
   </PropertyGroup>
+  
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
@@ -22,15 +23,22 @@
       <LogicalName>Icon.bmp</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
+  
   <ItemGroup>
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.2.1105" />
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.2.1105" />
     <PackageReference Include="Myra" Version="1.5.9" />
     <PackageReference Include="Magick.NET-Q8-x64" Version="14.4.0" />
   </ItemGroup>
+  
   <ItemGroup>
     <Content Include="assets\**\*.*" CopyToOutputDirectory="Always" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Include="lib\*.dll" CopyToOutputDirectory="Always" Link="%(RecursiveDir)\%(Filename)%(Extension)" />
+  </ItemGroup>
+  
   <Target Name="RestoreDotnetTools" BeforeTargets="Restore">
     <Message Text="Restoring dotnet tools" Importance="High" />
     <Exec Command="dotnet tool restore" />

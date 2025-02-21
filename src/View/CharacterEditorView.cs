@@ -104,7 +104,7 @@ public class CharacterEditorView {
         var intSelector = new IntSelectorWidget(null, 30, -10, 10, lift) {
             HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center
         };
-        intSelector.ValueChanged += (value) => { AccessoryLiftChanged?.Invoke(index, value); };
+        intSelector.ValueChanged += (value) => { AccessoryLiftChanged?.Invoke(index, (int)value); };
         
         panel.Widgets.Add(nameLabel);
         panel.Widgets.Add(removeButton);

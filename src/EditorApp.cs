@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using QMEditor.Controllers;
 using QMEditor.Model;
@@ -18,6 +19,7 @@ public class EditorApp : Game {
         IsMouseVisible = true;
         
         new World(WorldSettings.Default);
+        new WorldEffectManager();
         new AppSettings();
         new Input();
 
