@@ -69,6 +69,7 @@ public class SettingsTab : Tab {
         _currentSavePath = null;
         
         new World(new WorldSettings(size));
+        WorldEffectManager.ClearEffect();
 
         // Fill Grid
         if (!fillGrid) return;

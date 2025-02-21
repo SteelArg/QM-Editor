@@ -38,8 +38,9 @@ public partial class SceneTab : Tab {
         _sceneTabView.RenderClicked += () => { _worldRenderer.SaveToGif("output\\render.gif", AppSettings.RenderOutputSize.Get(), AppSettings.RenderOutputUpscaling.Get()); };
         _sceneTabView.RenderSettingsClicked += OpenRenderSettingsDialog;
 
-        _sceneTabView.ShaderSelection.ShaderSelected += WorldEffectManager.LoadEffect;
+        _sceneTabView.ShaderSelection.ShaderSelected += (p) => WorldEffectManager.LoadEffect(p);
         _sceneTabView.ShaderSelection.ShaderUserVariableSelected += (userVariable) => { WorldEffectManager.CurrentEffect?.SetUserVariable(userVariable); };
+        WorldEffectManager.EffectChanged += (WorldEffect we) => { _sceneTabView.ShaderSelection.SetEffectNameByPath(we?.GetShaderPath()); _sceneTabView.ShaderSelection.SetEffectUserVariable(we?.GetUserVariable() ?? 0f); };
 
         SetEventsForFrameLooper();
 

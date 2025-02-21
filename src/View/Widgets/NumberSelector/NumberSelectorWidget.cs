@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using Myra.Graphics2D.UI;
 
 namespace QMEditor.View;
@@ -94,7 +95,11 @@ public abstract class NumberSelectorWidget : Panel {
 
         numbersOnlyText = BackspaceEdgeCase(numbersOnlyText);
 
-        SetValue(float.Parse(numbersOnlyText.Replace('.', ',')));
+        float val = 0f;
+        try {
+            val = float.Parse(numbersOnlyText.Replace(',', '.'), NumberStyles.Any, CultureInfo.InvariantCulture);
+        } catch {}
+        SetValue(val);
         _textBox.Text = _value.ToString();
     }
 

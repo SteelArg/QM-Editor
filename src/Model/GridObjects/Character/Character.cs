@@ -35,6 +35,7 @@ public class Character : RenderableGridObject {
             character._accessories.Add(accessory.Clone());
         }
         character.SetGridPosition(GridPosition);
+        character.DrawSilhouette = DrawSilhouette;
         return character;
     }
 

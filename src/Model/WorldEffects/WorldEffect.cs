@@ -7,16 +7,23 @@ namespace QMEditor.Model;
 public class WorldEffect : Effect {
     
     private float _userVariable;
+    private readonly string _shaderPath;
 
-    public WorldEffect(byte[] byteCode, float defaultUserVariable=0f) : base(Global.Game.GraphicsDevice, byteCode) {
+    public WorldEffect(string shaderPath, byte[] byteCode, float defaultUserVariable=0f) : base(Global.Game.GraphicsDevice, byteCode) {
+        _shaderPath = shaderPath;
         _userVariable = defaultUserVariable;
         SetUserVariable(defaultUserVariable);
+        // SetParameter("MatrixTransform", Matrix.CreateOrthographicOffCenter(0, Resolution.Current[0], Resolution.Current[1], 0, -2000.0f, 2000.0f));
     }
 
     public void SetUserVariable(float userVariable) {
         _userVariable = userVariable;
-        SetParameter<float>("UserVariable", userVariable);
+        SetParameter("UserVariable", userVariable);
     }
+
+    public float GetUserVariable() => _userVariable;
+
+    public string GetShaderPath() => _shaderPath;
 
     public void SetParameter<T>(string name, T value) {
         EffectParameter parameter = Parameters[name];

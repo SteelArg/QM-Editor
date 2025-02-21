@@ -58,7 +58,7 @@ float4 MainPS(VertexShaderOutput input) : COLOR {
     float3 tempColor = TemperatureToColor(UserVariable);
 
     float blendFactor = 0.4;
-    float3 blendedColor = saturate(lerp(texColor, texColor.rgb * tempColor, blendFactor));
+    float3 blendedColor = saturate(lerp(texColor.rgb, texColor.rgb * tempColor, blendFactor));
     return float4(blendedColor.rgb, texColor.a);
 }
 

@@ -15,7 +15,7 @@ public class FloatSelectorWidget : NumberSelectorWidget {
         string numbersOnlyText = "0";
 
         foreach (char c in text) {
-            if (char.IsDigit(c) || c == '.')
+            if (char.IsDigit(c) || c == '.' || c == ',') {}
                 numbersOnlyText += c;
         }
         return numbersOnlyText;

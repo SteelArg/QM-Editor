@@ -8,7 +8,14 @@ public class WorldSaver {
     public void Save(string path = "saves\\default.qmworld") {
         var parser = new StringDataParser(path);
         parser.SetValue("editor_version", AppSettings.Version.Get());
-        
+
+        // Shader
+        if (WorldEffectManager.CurrentEffect != null) {
+            parser.SetValue("shader_path", WorldEffectManager.CurrentEffect.GetShaderPath());
+            parser.SetValue("shader_user_variable", WorldEffectManager.CurrentEffect.GetUserVariable().ToString());
+        }
+
+        // Grid
         Grid grid = World.Instance.Grid;
         parser.SetValue("size", $"{grid.Size[0]};{grid.Size[1]}");
         

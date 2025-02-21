@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using QMEditor.Model;
 
 namespace QMEditor.Controllers;
@@ -18,6 +19,16 @@ public class WorldLoader {
             return;
         }
 
+        // Shader
+        WorldEffectManager.ClearEffect();
+        try {
+            string shaderPath = parser.GetValue("shader_path");
+            string shaderUserVariable = parser.GetValue("shader_user_variable");
+            float userVariable = float.Parse(shaderUserVariable.Replace(',', '.'), NumberStyles.Any, CultureInfo.InvariantCulture);
+            WorldEffectManager.LoadEffect(shaderPath, userVariable);
+        } catch {}
+
+        // Grid
         string[] size = parser.GetValue("size").Split(';');
         var worldSettings = new WorldSettings([int.Parse(size[0]), int.Parse(size[1])]);
         new World(worldSettings);

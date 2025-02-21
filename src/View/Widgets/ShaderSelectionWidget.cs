@@ -11,6 +11,7 @@ public class ShaderSelectionWidget : Grid {
     public Action<float> ShaderUserVariableSelected;
 
     private Button _shaderSelectButton;
+    private FloatSelectorWidget _userVariableSelector;
 
     public ShaderSelectionWidget() {
         BuildUI();
@@ -30,7 +31,7 @@ public class ShaderSelectionWidget : Grid {
                 Text = "None", TextAlign = FontStashSharp.RichText.TextHorizontalAlignment.Center,
                 HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center
             },
-            Width = 100, Height = 40
+            Width = 200, Height = 40
         };
 
         _shaderSelectButton.Click += (s, e) => { SelectShader(); };
@@ -42,10 +43,10 @@ public class ShaderSelectionWidget : Grid {
         userVariableStack.Widgets.Add(new Label() {
             Text = "Effect Parameter", Height=40
         });
-        var userVariableSelector = new FloatSelectorWidget(100, 40);
+        _userVariableSelector = new FloatSelectorWidget(100, 40);
 
-        userVariableSelector.ValueChanged += (v) => { ShaderUserVariableSelected?.Invoke(v); };
-        userVariableStack.Widgets.Add(userVariableSelector);
+        _userVariableSelector.ValueChanged += (v) => { ShaderUserVariableSelected?.Invoke(v); };
+        userVariableStack.Widgets.Add(_userVariableSelector);
 
         Widgets.Add(shaderStack);
         SetRow(userVariableStack, 1);
@@ -59,11 +60,18 @@ public class ShaderSelectionWidget : Grid {
         };
         fileDialog.Closed += (s, e) => {
             if (!fileDialog.Result) return;
-            var shaderName = (Label)_shaderSelectButton.Content;
-            shaderName.Text = Path.GetFileNameWithoutExtension(fileDialog.FilePath);
             ShaderSelected?.Invoke(fileDialog.FilePath);
         };
         fileDialog.ShowModal(Global.Desktop);
+    }
+
+    public void SetEffectNameByPath(string effectPath) {
+        var shaderName = (Label)_shaderSelectButton.Content;
+        shaderName.Text = Path.GetFileNameWithoutExtension(effectPath) ?? "None";
+    }
+
+    public void SetEffectUserVariable(float userVariable) {
+        _userVariableSelector.SetValue(userVariable);
     }
 
 }
