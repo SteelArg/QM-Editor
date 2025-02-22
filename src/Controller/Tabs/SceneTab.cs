@@ -32,10 +32,15 @@ public partial class SceneTab : Tab {
         _editKeybinds = _editKeybindsGenerator.Generate();
     }
 
+    public override void Load() {
+        base.Load();
+        _worldRenderer.Load();
+    }
+
     protected override Widget BuildUI() {
         Widget widget = _sceneTabView.BuildUI(_inspector.BuildUI());
 
-        _sceneTabView.RenderClicked += () => { _worldRenderer.SaveToGif("output\\render.gif", AppSettings.RenderOutputSize.Get(), AppSettings.RenderOutputUpscaling.Get()); };
+        _sceneTabView.RenderClicked += () => { _worldRenderer.SaveToGif("output\\render.gif"); };
         _sceneTabView.RenderSettingsClicked += OpenRenderSettingsDialog;
 
         _sceneTabView.ShaderSelection.ShaderSelected += (p) => WorldEffectManager.LoadEffect(p);
@@ -93,9 +98,14 @@ public partial class SceneTab : Tab {
         }
     }
 
-    public override void Draw(SpriteBatch spriteBatch) {
-        _worldRenderer.Render(spriteBatch, 1f, _frameLooper.CurrentFrame);
+    public override RenderTarget2D Draw(SpriteBatch spriteBatch) {
+        RenderTarget2D worldRT = _worldRenderer.RenderToTarget(_frameLooper.CurrentFrame, null, null, true);
+        
+        spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp);
         _worldEditor.Render(spriteBatch);
+        spriteBatch.End();
+        
+        return worldRT;
     }
 
 }

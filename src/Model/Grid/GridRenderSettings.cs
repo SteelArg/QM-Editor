@@ -66,7 +66,8 @@ public struct GridRenderSettings {
     }
 
     public int[] ScreenPositionToGrid(Vector2 screen) {
-        Vector2 localPos = screen - Offset;
+        Vector2 localPos = screen / AppSettings.RenderOutputUpscaling.Get();
+        localPos -= Offset;
         
         float x1 = localPos.X - StepX.X;
         float y1 = localPos.Y * StepY.X/StepY.Y;

@@ -1,46 +1,41 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using QMEditor.Model;
 
 namespace QMEditor;
 
 public class SeperatedScreenRenderer : ScreenRenderer {
 
-    private RenderTarget2D _spritesRenderTarget;
-
-    private float _scale;
-
-    public SeperatedScreenRenderer(int[] windowSize, float scale = 1f) : base(windowSize) {
-        _scale = scale;
-    }
-
-    public override void Load() {
-        base.Load();
-        _spritesRenderTarget = new RenderTarget2D(Global.Game.GraphicsDevice, _windowSize[0], _windowSize[1]);
-    }
+    public SeperatedScreenRenderer(int[] windowSize) : base(windowSize) {}
 
     public override void Draw(GameTime gameTime) {
-        // Sprites to seperate render target
-        Global.Game.GraphicsDevice.SetRenderTarget(_spritesRenderTarget);
-        Global.Game.GraphicsDevice.Clear(Color.Transparent);
-        DrawSprites();
-        Global.Game.GraphicsDevice.SetRenderTarget(null);
+        // Render all sprites
+        RenderTarget2D spritesRT = SpriteRenderList.RenderToTarget(AppSettings.RenderOutputSize.Get());
         
         // UI
+        Global.Game.GraphicsDevice.SetRenderTarget(null);
         Global.Game.GraphicsDevice.Clear(Color.Transparent);
-        DrawUI();
+        UIRenderList.Render();
 
-        // All sprites onto the screen
-        _spriteBatch.Begin(blendState: BlendState.Additive, samplerState: SamplerState.PointClamp, effect: WorldEffectManager.CurrentEffect);
-        _spriteBatch.Draw(_spritesRenderTarget, AppLayout.DrawPos, AppLayout.DrawSize, Color.White, 0f, Vector2.Zero, _scale, SpriteEffects.None, 0f);
+        // All sprites fit into empty space
+        _spriteBatch.Begin(SpriteSortMode.Immediate, blendState: BlendState.Additive, samplerState: SamplerState.PointClamp);
+        _spriteBatch.Draw(spritesRT, AppLayout.DrawPos, null, Color.White, 0f, Vector2.Zero, CalculateScale(), SpriteEffects.None, 0f);
         _spriteBatch.End();
+
+        spritesRT.Dispose();
     }
 
     public override Vector2 GetMousePosition() {
         Vector2 pos =  base.GetMousePosition();
         pos -= new Vector2(0f, AppLayout.TabSelectHeight);
-        pos /= _scale;
+        pos /= CalculateScale();
         return pos;
+    }
+
+    private float CalculateScale() {
+        float originalXSize = AppSettings.RenderOutputSize.Get()[0];
+        float currentXSize = AppLayout.DrawSize.X;
+        float scale = currentXSize / originalXSize;
+        return scale;
     }
 
 }

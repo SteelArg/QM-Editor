@@ -79,7 +79,7 @@ public class SettingsTab : Tab {
         defaultTileFactory.FillGrid(World.Instance.Grid);
     }
     
-    public override void Draw(SpriteBatch spriteBatch) {
-        // noop
+    public override RenderTarget2D Draw(SpriteBatch spriteBatch) {
+        return null;
     }
 }

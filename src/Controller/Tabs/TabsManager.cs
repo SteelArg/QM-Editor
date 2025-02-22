@@ -63,8 +63,8 @@ public class TabsManager : Singleton<TabsManager> {
         CurrentTab.Update(gameTime);
     }
 
-    public void Render(SpriteBatch spriteBatch) {
-        CurrentTab.Draw(spriteBatch);
+    public RenderTarget2D Render(SpriteBatch spriteBatch) {
+        return CurrentTab.Draw(spriteBatch);
     }
 
     public void DrawUI() {

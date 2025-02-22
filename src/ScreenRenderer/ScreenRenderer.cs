@@ -7,8 +7,8 @@ namespace QMEditor;
 
 public class ScreenRenderer : Singleton<ScreenRenderer> {
 
-    public RenderList UIRenderList = new RenderList();
-    public RenderList SpriteRenderList = new RenderList();
+    public RenderList UIRenderList;
+    public RenderList SpriteRenderList;
 
     private GraphicsDeviceManager _graphics;
     protected SpriteBatch _spriteBatch;
@@ -24,6 +24,8 @@ public class ScreenRenderer : Singleton<ScreenRenderer> {
         _graphics.PreferredBackBufferWidth = _windowSize[0];
         _graphics.PreferredBackBufferHeight = _windowSize[1];
         _graphics.ApplyChanges();
+        UIRenderList = new RenderList();
+        SpriteRenderList = new RenderList();
     }
 
     public virtual void Load() {
@@ -31,24 +33,23 @@ public class ScreenRenderer : Singleton<ScreenRenderer> {
     }
 
     public virtual void Draw(GameTime gameTime) {
+        RenderTarget2D spritesRT = SpriteRenderList.RenderToTarget(AppSettings.RenderOutputSize.Get());
+        Global.Game.GraphicsDevice.SetRenderTarget(null);
         Global.Game.GraphicsDevice.Clear(Color.Black);
-        DrawUI();
-        DrawSprites();
-    }
+        
+        UIRenderList.Render();
 
-    protected void DrawSprites() {
         var bs = new BlendState();
         bs.ColorSourceBlend = Blend.SourceAlpha;
         bs.AlphaSourceBlend = Blend.One;
         bs.ColorDestinationBlend = Blend.InverseSourceAlpha;
         bs.AlphaDestinationBlend = Blend.InverseSourceAlpha;
-        _spriteBatch.Begin(SpriteSortMode.Immediate, bs);
-        SpriteRenderList.Render(_spriteBatch);
+        
+        _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+        _spriteBatch.Draw(spritesRT, AppLayout.DrawPos, Color.White);
         _spriteBatch.End();
-    }
 
-    protected void DrawUI() {
-        UIRenderList.Render();
+        spritesRT.Dispose();
     }
 
     public virtual Vector2 GetMousePosition() {

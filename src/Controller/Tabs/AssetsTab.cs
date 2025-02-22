@@ -62,8 +62,8 @@ public class AssetsTab : Tab {
     public override void Open() {}
     public override void Close() {}
     
-    public override void Draw(SpriteBatch spriteBatch) {
-        // noop
+    public override RenderTarget2D Draw(SpriteBatch spriteBatch) {
+        return null;
     }
 
     public void OnAssetSelected(string assetName, AssetsFolders folder) {

@@ -11,8 +11,9 @@ public class DelegateRenderer : Renderer {
         _render = render;
     }
 
-    public override void Render(SpriteBatch spriteBatch) {
+    public override RenderTarget2D Render(SpriteBatch spriteBatch) {
         _render(spriteBatch);
+        return null;
     }
 
 }

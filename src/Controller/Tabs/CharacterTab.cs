@@ -50,7 +50,10 @@ public class CharacterTab : Tab {
     public override void Open() {}
     public override void Close() {}
 
-    public override void Draw(SpriteBatch spriteBatch) {
+    public override RenderTarget2D Draw(SpriteBatch spriteBatch) {
+        spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp);
         _characterEditor.Render(spriteBatch);
+        spriteBatch.End();
+        return null;
     }
 }

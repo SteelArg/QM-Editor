@@ -29,6 +29,6 @@ public abstract class Tab {
         // noop
     }
 
-    public abstract void Draw(SpriteBatch spritebatch);
+    public abstract RenderTarget2D Draw(SpriteBatch spritebatch);
 
 }
