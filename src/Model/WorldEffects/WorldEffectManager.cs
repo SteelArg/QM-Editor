@@ -19,6 +19,7 @@ public class WorldEffectManager : Singleton<WorldEffectManager> {
     public static void LoadEffect(string path, float userVariable = 0f) {
         if (!Path.Exists(path)) {
             ServiceLocator.MessageWindowsService.ErrorWindow($"Failed to load shader.\nFile {path} does not exist.");
+            ServiceLocator.LoggerService.Warning($"Failed to load shader.\nFile {path} does not exist.");
             return;
         }
         
@@ -48,7 +49,7 @@ public class WorldEffectManager : Singleton<WorldEffectManager> {
 
         string compiledShaderPath = $"{Path.GetDirectoryName(shaderPath)}\\{Path.GetFileNameWithoutExtension(shaderPath)}_compiled.txt";
         object output = mgfxc.EntryPoint.Invoke(null, [new string [] {shaderPath, compiledShaderPath, "/Profile:OpenGL", "/Debug"}]);
-        Console.WriteLine(output);
+        ServiceLocator.LoggerService.Log($"Shader compilation result:\n{shaderPath}\n{output}");
 
         return File.ReadAllBytes(compiledShaderPath);
     }

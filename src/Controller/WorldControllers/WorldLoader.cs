@@ -10,12 +10,15 @@ public class WorldLoader {
     public void Load(string path = "saves\\default.qmworld") {
         var parser = new StringDataParser(path);
         parser.Load();
+
+        string saveVersion = "Version not written in save file";
         try {
-            string saveVersion = parser.GetValue("editor_version");
+            saveVersion = parser.GetValue("editor_version");
             if (saveVersion != AppSettings.Version.Get())
                 throw new Exception();
         } catch {
             ServiceLocator.MessageWindowsService.ErrorWindow($"Can not open save from different QM Editor versions.\nCurrent version: {AppSettings.Version.Get()}.");
+            ServiceLocator.LoggerService.Error($"Failed to open save {path}:\nSave version - {saveVersion}\nEditor version - {AppSettings.Version.Get()}");
             return;
         }
 
@@ -66,6 +69,8 @@ public class WorldLoader {
                 World.Instance.Grid.PlaceOnGrid(gridObject, [x,y]);                
             }
         }, worldSettings.Size);
+
+        ServiceLocator.LoggerService.Log($"Loaded save file {path}");
     }
  
 }

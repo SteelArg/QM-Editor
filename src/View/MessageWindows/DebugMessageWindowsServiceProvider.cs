@@ -1,5 +1,3 @@
-using System;
-
 namespace QMEditor.View;
 
 public class DebugMessageWindowsServiceProvider : IMessageWindowsService {
@@ -11,12 +9,12 @@ public class DebugMessageWindowsServiceProvider : IMessageWindowsService {
     }
 
     public void InfoWindow(string infoText) {
-        Console.WriteLine($"INFO: {infoText}");
+        ServiceLocator.LoggerService.Log($"Message window INFO:\n{infoText}");
         _wrappedService.InfoWindow(infoText);
     }
 
     public void ErrorWindow(string errorText) {
-        Console.WriteLine($"ERROR: {errorText}");
+        ServiceLocator.LoggerService.Log($"Message window ERROR:\n{errorText}");
         _wrappedService.ErrorWindow(errorText);
     }
 

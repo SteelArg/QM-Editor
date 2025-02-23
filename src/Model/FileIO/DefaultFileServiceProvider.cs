@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using Microsoft.Xna.Framework.Graphics;
 using ImageMagick;
@@ -37,7 +36,7 @@ public class DefaultFileServiceProvider : IFileService {
 
     public Texture2D[] LoadGif(string path) {
         if (Path.GetExtension(path).ToLower() != ".gif") {
-            Console.WriteLine("TRIED TO LOAD GIF FROM A FILE THAT IS NOT A GIF");
+            ServiceLocator.LoggerService.Warning("Tried to load a GIF from a file that is not a .gif");
             return null;
         }
 

@@ -33,11 +33,11 @@ public class DebugTimer {
     public void LogAll(bool logTotal = true) {
         DateTime prevDateTime = creationDateTime;
         foreach (TimestampLog timestamp in _timestamps) {
-            Console.WriteLine($"Section {timestamp.Info} completed in {timestamp.DateTime - prevDateTime}");
+            ServiceLocator.LoggerService.Log($"Section {timestamp.Info} completed in {timestamp.DateTime - prevDateTime}.");
             prevDateTime = timestamp.DateTime;
         }
         if (logTotal)
-            Console.WriteLine($"Total exec time: {prevDateTime-creationDateTime}");
+            ServiceLocator.LoggerService.Log($"Total execution time: {prevDateTime-creationDateTime}.");
     }
 
     public class TimestampLog {
@@ -48,7 +48,7 @@ public class DebugTimer {
             Info = timestampInfo;
         }
         public void Log() {
-            Console.WriteLine($"{Info}: {DateTime}");
+            ServiceLocator.LoggerService.Log($"{Info}: {DateTime}");
         }
     }
 

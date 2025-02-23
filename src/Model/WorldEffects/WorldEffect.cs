@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using System.Reflection;
 using Microsoft.Xna.Framework.Graphics;
@@ -31,7 +30,7 @@ public class WorldEffect : Effect {
     public void SetParameter<T>(string name, T value) {
         EffectParameter parameter = Parameters[name];
         if (parameter == null) {
-            Console.WriteLine($"Parameter {name} does not exists in this effect.");
+            ServiceLocator.LoggerService.Warning($"Parameter {name} does not exists in this effect.");
             return;
         }
 

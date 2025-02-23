@@ -26,6 +26,8 @@ public class EditorApp : Game {
         new FontLoader();
 
         _tabsManager = new TabsManager([new SettingsTab(), new SceneTab(), new CharacterTab(), new AssetsTab()]);
+
+        ServiceLocator.LoggerService.Log("Application started.");
     }
 
     protected override void Initialize() {
