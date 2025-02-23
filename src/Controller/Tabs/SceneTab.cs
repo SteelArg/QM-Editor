@@ -101,7 +101,7 @@ public partial class SceneTab : Tab {
     public override RenderTarget2D Draw(SpriteBatch spriteBatch) {
         RenderTarget2D worldRT = _worldRenderer.RenderToTarget(_frameLooper.CurrentFrame, null, null, true);
         
-        spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp);
+        spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, null, null, null, Matrix.CreateScale(AppSettings.RenderOutputUpscaling.Get()));
         _worldEditor.Render(spriteBatch);
         spriteBatch.End();
         

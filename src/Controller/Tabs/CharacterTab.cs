@@ -1,4 +1,5 @@
 using System.Linq;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Myra.Graphics2D.UI;
 using QMEditor.Model;
@@ -51,9 +52,14 @@ public class CharacterTab : Tab {
     public override void Close() {}
 
     public override RenderTarget2D Draw(SpriteBatch spriteBatch) {
-        spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp);
+        int[] renderSize = AppSettings.RenderOutputSize.Get();
+        RenderTarget2D rt = new RenderTarget2D(Global.Game.GraphicsDevice, renderSize[0], renderSize[1]);
+        Global.Game.GraphicsDevice.SetRenderTarget(rt);
+
+        spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, null, null, null, Matrix.CreateScale(6f));
         _characterEditor.Render(spriteBatch);
         spriteBatch.End();
-        return null;
+        
+        return rt;
     }
 }

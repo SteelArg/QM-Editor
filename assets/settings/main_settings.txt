@@ -1,0 +1,10 @@
+volume=1
+editor_version=v1.0.0-preview
+render_offset=82 28
+render_tile_top_size=16 9
+render_tile_height=5
+render_frame_count=6
+render_frame_duration=200
+render_output_size=720 480
+render_output_upscaling=4
+silhouette_alpha=0.3

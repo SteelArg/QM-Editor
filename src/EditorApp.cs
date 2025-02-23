@@ -33,7 +33,6 @@ public class EditorApp : Game {
         _renderer.Init();
         _renderer.UIRenderList.AddRenderer(new TabsUIRenderer(_tabsManager));
         _renderer.SpriteRenderList.AddRenderer(new TabsSpriteRenderer(_tabsManager));
-        // _renderer.SpriteRenderList.AddRenderer(new DelegateRenderer( (sb) => { if (_testTexture == null) return; sb.Draw(_testTexture, Vector2.Zero, Color.White); }));
     }
 
     protected override void LoadContent() {
