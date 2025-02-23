@@ -1,3 +1,5 @@
+// QMEDITOR USER VARIABLE 0.0 1.0
+
 // Defines
 #if OPENGL
 	#define SV_POSITION POSITION
@@ -10,6 +12,8 @@
 
 // Global variables
 Texture2D SpriteTexture;
+
+extern float UserVariable;
 
 sampler2D SpriteTextureSampler = sampler_state {
 	Texture = <SpriteTexture>;
@@ -24,7 +28,7 @@ struct VertexShaderOutput {
 
 // Fragment shader
 float4 MainPS(VertexShaderOutput input) : COLOR {
-	float brightness = 0.7;
+	float brightness = 1 - UserVariable;
 	float3 darkenedColor = pow(input.Color.rgb, 2) * brightness;
 	return tex2D(SpriteTextureSampler,input.TextureCoordinates) * float4(darkenedColor.rgb, input.Color.a);
 }

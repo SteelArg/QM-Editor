@@ -51,31 +51,16 @@ public class WorldRenderer : Singleton<WorldRenderer> {
         renderSize = renderSize ?? AppSettings.RenderOutputSize.Get();
 
         var renderRT = new RenderTarget2D(_graphicsDevice, renderSize[0], renderSize[1]);
-
-        // RenderTarget2D prevRT = null;
-        // if (Global.Game.GraphicsDevice.GetRenderTargets().Length > 0)
-        //     prevRT = (RenderTarget2D)Global.Game.GraphicsDevice.GetRenderTargets()[0].RenderTarget;
         
         _graphicsDevice.SetRenderTarget(renderRT);
         _graphicsDevice.Clear(Color.Transparent);
+
+        Render(0f, frame, scale.Value, displayEditor);
         
-        var bs = new BlendState();
-        bs.ColorSourceBlend = Blend.SourceAlpha;
-        bs.AlphaSourceBlend = Blend.One;
-        bs.ColorDestinationBlend = Blend.InverseSourceAlpha;
-        bs.AlphaDestinationBlend = Blend.InverseSourceAlpha;
-
-        _spriteBatch.Begin(SpriteSortMode.Immediate, bs, SamplerState.PointClamp, null, null, WorldEffectManager.CurrentEffect, Matrix.CreateScale(scale.Value));
-        Render(0f, frame, displayEditor);
-        _spriteBatch.End();
-
-        // Global.Game.GraphicsDevice.SetRenderTarget(prevRT);
-        // Global.Game.GraphicsDevice.Clear(Color.Transparent);
-
         return renderRT;
     }
 
-    private void Render(float totalDepth, int frame = 0, bool displayEditor = true) {
+    private void Render(float totalDepth, int frame = 0, float scale = 1f, bool displayEditor = true) {
         DebugTimer debugTimer = new DebugTimer();
 
         Grid grid = World.Instance.Grid;
@@ -109,9 +94,21 @@ public class WorldRenderer : Singleton<WorldRenderer> {
         // Execute render commands
         // PASS 0: Default
         // PASS 1: Silhouettes
-        for (int pass = 0; pass < 2; pass++) {
-            ExecuteRenderCommandsPass(pass);
-        }
+        // PASS 2: Post-Shader
+        _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.PointClamp, null, null, WorldEffectManager.CurrentEffect, Matrix.CreateScale(scale));
+        ExecuteRenderCommandsPass(0);
+        ExecuteRenderCommandsPass(1);
+        _spriteBatch.End();
+
+        var preserveAlphaBS = new BlendState();
+        preserveAlphaBS.ColorSourceBlend = Blend.SourceAlpha;
+        preserveAlphaBS.AlphaSourceBlend = Blend.Zero;
+        preserveAlphaBS.ColorDestinationBlend = Blend.InverseSourceAlpha;
+        preserveAlphaBS.AlphaDestinationBlend = Blend.One;
+
+        _spriteBatch.Begin(SpriteSortMode.Immediate, preserveAlphaBS, SamplerState.PointClamp, null, null, null, Matrix.CreateScale(scale));
+        ExecuteRenderCommandsPass(2);
+        _spriteBatch.End();
     }
 
     private void ExecuteRenderCommandsPass(int pass) {

@@ -1,3 +1,5 @@
+// QMEDITOR USER VARIABLE 0.0 10.0
+
 // Defines
 #if OPENGL
 	#define SV_POSITION POSITION

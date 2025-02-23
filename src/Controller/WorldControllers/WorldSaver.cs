@@ -11,7 +11,7 @@ public class WorldSaver {
 
         // Shader
         if (WorldEffectManager.CurrentEffect != null) {
-            parser.SetValue("shader_path", WorldEffectManager.CurrentEffect.GetShaderPath());
+            parser.SetValue("shader_path", $"\"{WorldEffectManager.CurrentEffect.GetShaderPath()}\"");
             parser.SetValue("shader_user_variable", WorldEffectManager.CurrentEffect.GetUserVariable().ToString());
         }
 

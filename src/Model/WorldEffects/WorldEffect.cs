@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Reflection;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -23,7 +24,7 @@ public class WorldEffect : Effect {
 
     public float GetUserVariable() => _userVariable;
 
-    public string GetShaderPath() => _shaderPath;
+    public string GetShaderPath() => $"assets\\{Path.GetRelativePath("assets", _shaderPath)}";
 
     public void SetParameter<T>(string name, T value) {
         EffectParameter parameter = Parameters[name];

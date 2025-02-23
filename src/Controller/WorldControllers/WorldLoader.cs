@@ -11,9 +11,9 @@ public class WorldLoader {
         var parser = new StringDataParser(path);
         parser.Load();
         try {
-        string saveVersion = parser.GetValue("editor_version");
-        if (saveVersion != AppSettings.Version.Get())
-            throw new Exception();
+            string saveVersion = parser.GetValue("editor_version");
+            if (saveVersion != AppSettings.Version.Get())
+                throw new Exception();
         } catch {
             ServiceLocator.MessageWindowsService.ErrorWindow($"Can not open save from different QM Editor versions.\nCurrent version: {AppSettings.Version.Get()}.");
             return;
@@ -22,7 +22,7 @@ public class WorldLoader {
         // Shader
         WorldEffectManager.ClearEffect();
         try {
-            string shaderPath = parser.GetValue("shader_path");
+            string shaderPath = parser.GetValue("shader_path").Replace("\"", "");
             string shaderUserVariable = parser.GetValue("shader_user_variable");
             float userVariable = float.Parse(shaderUserVariable.Replace(',', '.'), NumberStyles.Any, CultureInfo.InvariantCulture);
             WorldEffectManager.LoadEffect(shaderPath, userVariable);

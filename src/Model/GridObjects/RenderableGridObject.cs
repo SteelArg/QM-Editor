@@ -7,9 +7,8 @@ namespace QMEditor.Model;
 public abstract class RenderableGridObject : GridObject {
 
     [AddToInspection(InspectionProperty.PropertyType.Check)]
-    public bool Flip { get {return _flip;} set {_flip = value;} }
+    public bool Flip { get; set; }
 
-    private bool _flip;
     protected AssetBase _asset;
     public AssetBase Asset { get => _asset; private set { _asset = value; GetInspectionData()?.SetName(_asset.Name);} }
 
@@ -26,7 +25,7 @@ public abstract class RenderableGridObject : GridObject {
             Position = GetRenderPos(renderData),
             Color = renderData.GetObjectColor(),
             Depth = objectDepth,
-            Flip = _flip
+            Flip = Flip
         }, 0);
 
         return renderCommand;
@@ -39,14 +38,14 @@ public abstract class RenderableGridObject : GridObject {
     public override Dictionary<string, string> SaveToString(Dictionary<string, string> existingData = null) {
         existingData = base.SaveToString(existingData);
         existingData.Add("AssetName", _asset.Name);
-        existingData.Add("Flip", _flip.ToString());
+        existingData.Add("Flip", Flip.ToString());
         return existingData;
     }
 
     protected override void LoadFromString(Dictionary<string, string> stringData) {
         base.LoadFromString(stringData);
         Asset = AssetsLoader.Instance.GetAsset(stringData.GetValueOrDefault("AssetName"), AssetsFoldersHelper.FoldersByObjectType(this));
-        _flip = bool.Parse(stringData.GetValueOrDefault("Flip") ?? "False");
+        Flip = bool.Parse(stringData.GetValueOrDefault("Flip") ?? "False");
     }
 
 }
