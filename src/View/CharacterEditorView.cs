@@ -1,6 +1,7 @@
 using System;
 using Myra.Graphics2D;
 using Myra.Graphics2D.UI;
+using QMEditor.Controllers;
 
 namespace QMEditor.View;
 
@@ -37,7 +38,7 @@ public class CharacterEditorView {
         // Create button
         _createButton = new Button() {
             Content = new Label() {
-                Text = "Create", TextAlign = FontStashSharp.RichText.TextHorizontalAlignment.Center,
+                Text = "Create", TextAlign = FontStashSharp.RichText.TextHorizontalAlignment.Center, Font = FontLoader.GetFont(25),
                 HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center
             },
             HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Bottom,
@@ -73,7 +74,7 @@ public class CharacterEditorView {
         foreach (string variation in variations) {
             var radioButton = new RadioButton {
                 Content = new Label {
-                    Text = variation, TextAlign = FontStashSharp.RichText.TextHorizontalAlignment.Left,
+                    Text = variation, TextAlign = FontStashSharp.RichText.TextHorizontalAlignment.Left, Font = FontLoader.GetFont(25),
                     VerticalAlignment = VerticalAlignment.Center, HorizontalAlignment = HorizontalAlignment.Center,
                 },
                 Width = 200, Height = 30,
@@ -88,7 +89,7 @@ public class CharacterEditorView {
 
         var removeButton = new Button() {
             Content = new Label() {
-                Text = "Remove", TextAlign = FontStashSharp.RichText.TextHorizontalAlignment.Center
+                Text = "Remove", TextAlign = FontStashSharp.RichText.TextHorizontalAlignment.Center, Font = FontLoader.GetFont(15),
             },
             HorizontalAlignment = HorizontalAlignment.Right, VerticalAlignment = VerticalAlignment.Center
         };

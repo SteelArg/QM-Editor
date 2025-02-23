@@ -25,12 +25,12 @@ public class DefaultEditKeybindsGenerator : IEditKeybindsGenerator {
 
     private EditKeybind[] GetGridPositionOperationKeybinds() {
         return [
-            new EditKeybind(()=>Input.KeyFired(Keys.E), ()=>new RotateGridCommand(_worldEditor.GetEditContext(), true)),
-            new EditKeybind(()=>Input.KeyFired(Keys.Q), ()=>new RotateGridCommand(_worldEditor.GetEditContext(), false)),
-            new EditKeybind(()=>Input.KeyFired(Keys.Left), ()=>new MoveGridCommand(_worldEditor.GetEditContext(), [-1, 0])),
-            new EditKeybind(()=>Input.KeyFired(Keys.Up), ()=>new MoveGridCommand(_worldEditor.GetEditContext(), [0, -1])),
-            new EditKeybind(()=>Input.KeyFired(Keys.Right), ()=>new MoveGridCommand(_worldEditor.GetEditContext(), [1, 0])),
-            new EditKeybind(()=>Input.KeyFired(Keys.Down), ()=>new MoveGridCommand(_worldEditor.GetEditContext(), [0, 1]))
+            new EditKeybind(()=>Input.KeyHeld(Keys.LeftAlt)&&Input.KeyFired(Keys.E), ()=>new RotateGridCommand(_worldEditor.GetEditContext(), true)),
+            new EditKeybind(()=>Input.KeyHeld(Keys.LeftAlt)&&Input.KeyFired(Keys.Q), ()=>new RotateGridCommand(_worldEditor.GetEditContext(), false)),
+            new EditKeybind(()=>Input.KeyHeld(Keys.LeftAlt)&&Input.KeyFired(Keys.A), ()=>new MoveGridCommand(_worldEditor.GetEditContext(), [-1, 0])),
+            new EditKeybind(()=>Input.KeyHeld(Keys.LeftAlt)&&Input.KeyFired(Keys.W), ()=>new MoveGridCommand(_worldEditor.GetEditContext(), [0, -1])),
+            new EditKeybind(()=>Input.KeyHeld(Keys.LeftAlt)&&Input.KeyFired(Keys.D), ()=>new MoveGridCommand(_worldEditor.GetEditContext(), [1, 0])),
+            new EditKeybind(()=>Input.KeyHeld(Keys.LeftAlt)&&Input.KeyFired(Keys.S), ()=>new MoveGridCommand(_worldEditor.GetEditContext(), [0, 1]))
         ];
     }
 

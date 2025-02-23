@@ -1,6 +1,7 @@
 using System;
 using Myra.Graphics2D;
 using Myra.Graphics2D.UI;
+using QMEditor.Controllers;
 
 namespace QMEditor.View;
 
@@ -25,11 +26,11 @@ public class SceneTabView {
         Grid.SetColumn(mainGrid, 1);
 
         _stackPanel = new VerticalStackPanel {
-            Spacing = 20, VerticalAlignment = VerticalAlignment.Bottom
+            Spacing = 5, VerticalAlignment = VerticalAlignment.Bottom
         };
         Grid.SetRow(_stackPanel, 1);
 
-        var frameLooperAndShaderButtonStack = new HorizontalStackPanel() { Spacing = 20 };
+        var frameLooperAndShaderButtonStack = new HorizontalStackPanel() { Spacing = 10 };
 
         _frameLooper = new FrameLooperWidget();
         _shaderSelection = new ShaderSelectionWidget();
@@ -39,7 +40,7 @@ public class SceneTabView {
         var renderButtons = new HorizontalStackPanel {
             Spacing = 5, ShowGridLines = false,
             HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center,
-            Margin = new Thickness(20)
+            Margin = new Thickness(10)
         };
         renderButtons.Widgets.Add(BuildButton("Render", ()=>RenderClicked?.Invoke()));
         renderButtons.Widgets.Add(BuildButton("...", ()=>RenderSettingsClicked?.Invoke(), 80, 80));
@@ -55,7 +56,7 @@ public class SceneTabView {
     private Button BuildButton(string text, Action clickHandler, int width = 160, int height = 80) {
         var button = new Button() {
             Content = new Label() {
-                Text = text, TextAlign = FontStashSharp.RichText.TextHorizontalAlignment.Center,
+                Text = text, TextAlign = FontStashSharp.RichText.TextHorizontalAlignment.Center, Font = FontLoader.GetFont(35, FontLoader.FontType.Bold),
                 HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center
             },
             HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Bottom,

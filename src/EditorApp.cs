@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using QMEditor.Controllers;
 using QMEditor.Model;
 using QMEditor.View;
@@ -24,6 +23,7 @@ public class EditorApp : Game {
         new WorldEffectManager();
         new AppSettings();
         new Input();
+        new FontLoader();
 
         _tabsManager = new TabsManager([new SettingsTab(), new SceneTab(), new CharacterTab(), new AssetsTab()]);
     }
@@ -37,6 +37,7 @@ public class EditorApp : Game {
     }
 
     protected override void LoadContent() {
+        FontLoader.Instance.Load();
         _renderer.Load();
         _tabsManager.Load();
 
@@ -47,9 +48,6 @@ public class EditorApp : Game {
     }
 
     protected override void Update(GameTime gameTime) {
-        if (Keyboard.GetState().IsKeyDown(Keys.Escape))
-            Exit();
-
         _tabsManager.Update(gameTime);
 
         base.Update(gameTime);
@@ -61,11 +59,6 @@ public class EditorApp : Game {
         _renderer.Draw(gameTime);
 
         base.Draw(gameTime);
-    }
-
-    public new void Exit() {
-        AppSettings.Instance.Save();
-        base.Exit();
     }
 
 }

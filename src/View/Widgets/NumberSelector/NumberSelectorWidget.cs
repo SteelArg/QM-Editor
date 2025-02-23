@@ -1,6 +1,8 @@
 using System;
 using System.Globalization;
+using Microsoft.Xna.Framework.Input;
 using Myra.Graphics2D.UI;
+using QMEditor.Controllers;
 
 namespace QMEditor.View;
 
@@ -29,27 +31,24 @@ public abstract class NumberSelectorWidget : Panel {
     }
 
     private void BuildUI() {
-        int buttonSize = Height.Value/2;
-        int textBoxWidth = Width.Value-buttonSize;
+        int buttonSize = Height.Value;
+        int textBoxWidth = Width.Value-buttonSize*2;
         int textBoxHeight = Height.Value;
 
         var grid = new Grid {
-            DefaultRowProportion = new Proportion(ProportionType.Pixels, buttonSize),
-            Width = Width.Value, Height = Height.Value
+            DefaultColumnProportion = new Proportion(ProportionType.Pixels, buttonSize), Width = Width.Value, Height = Height.Value
         };
-        grid.ColumnsProportions.Add(new Proportion(ProportionType.Pixels, Width.Value - Height.Value/2));
-        grid.ColumnsProportions.Add(Proportion.Fill);
+        grid.ColumnsProportions.Add(new Proportion(ProportionType.Pixels, textBoxWidth));
 
         _textBox = new TextBox {
             Text = _value.ToString(),
             Width = textBoxWidth, Height = textBoxHeight,
         };
         _textBox.TextChangedByUser += (s, e) => { OnTextChanged(); };
-        Grid.SetRowSpan(_textBox, 2);
 
         grid.Widgets.Add(_textBox);
-        grid.Widgets.Add(BuildButton("+", buttonSize, IncreaseValue, [1,0]));
-        grid.Widgets.Add(BuildButton("-", buttonSize, DecreaseValue, [1,1]));
+        grid.Widgets.Add(BuildButton("-", buttonSize, DecreaseValue, [1,0]));
+        grid.Widgets.Add(BuildButton("+", buttonSize, IncreaseValue, [2,0]));
 
         Widgets.Add(grid);
     }
@@ -57,7 +56,7 @@ public abstract class NumberSelectorWidget : Panel {
     private Button BuildButton(string text, int size, Action callback = null, int[] gridPos = null) {
         var button = new Button {
             Content = new Label {
-                Text = text, TextAlign = FontStashSharp.RichText.TextHorizontalAlignment.Center,
+                Text = text, TextAlign = FontStashSharp.RichText.TextHorizontalAlignment.Center, Font = FontLoader.GetFont(20, FontLoader.FontType.Bold),
                 HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center
             },
             HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center,
@@ -74,9 +73,21 @@ public abstract class NumberSelectorWidget : Panel {
         return button;
     }
 
-    private void IncreaseValue() => ChangeValue(1);
-    private void DecreaseValue() => ChangeValue(-1);
+    private void IncreaseValue() => ChangeValue(GetIncrement());
+    private void DecreaseValue() => ChangeValue(GetIncrement() * -1f);
     private void ChangeValue(float delta) => SetValue(_value + delta);
+
+    private float GetIncrement() {
+        if (Input.KeyHeld(Keys.LeftAlt | Keys.LeftShift))
+            return 1000f;
+        if (Input.KeyHeld(Keys.LeftAlt))
+            return 100f;
+        if (Input.KeyHeld(Keys.LeftShift))
+            return 10f;
+        if (Input.KeyHeld(Keys.LeftControl))
+            return 0.1f;
+        return 1f;
+    }
 
     public void SetValue(float newValue) {
         newValue = Math.Max(newValue, (float)(_minValue ?? newValue));
@@ -84,7 +95,7 @@ public abstract class NumberSelectorWidget : Panel {
 
         if (newValue == _value) return;
 
-        _value = newValue;
+        _value = MathF.Round(newValue, 3);
         _textBox.Text = ValueToString(_value);
         ValueChanged?.Invoke(newValue);
     }

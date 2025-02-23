@@ -8,13 +8,14 @@ namespace QMEditor.Model;
 public class WorldEffect : Effect {
     
     private float _userVariable;
+    private readonly float[] _userVariableConstraints;
     private readonly string _shaderPath;
 
-    public WorldEffect(string shaderPath, byte[] byteCode, float defaultUserVariable=0f) : base(Global.Game.GraphicsDevice, byteCode) {
+    public WorldEffect(string shaderPath, byte[] byteCode, float defaultUserVariable=0f, float[] userVariableConstraints=null) : base(Global.Game.GraphicsDevice, byteCode) {
         _shaderPath = shaderPath;
         _userVariable = defaultUserVariable;
         SetUserVariable(defaultUserVariable);
-        // SetParameter("MatrixTransform", Matrix.CreateOrthographicOffCenter(0, Resolution.Current[0], Resolution.Current[1], 0, -2000.0f, 2000.0f));
+        _userVariableConstraints = userVariableConstraints;
     }
 
     public void SetUserVariable(float userVariable) {
@@ -23,6 +24,7 @@ public class WorldEffect : Effect {
     }
 
     public float GetUserVariable() => _userVariable;
+    public float[] GetUserVariableConstraints() => _userVariableConstraints;
 
     public string GetShaderPath() => $"assets\\{Path.GetRelativePath("assets", _shaderPath)}";
 

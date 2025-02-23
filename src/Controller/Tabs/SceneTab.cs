@@ -45,7 +45,7 @@ public partial class SceneTab : Tab {
 
         _sceneTabView.ShaderSelection.ShaderSelected += (p) => WorldEffectManager.LoadEffect(p);
         _sceneTabView.ShaderSelection.ShaderUserVariableSelected += (userVariable) => { WorldEffectManager.CurrentEffect?.SetUserVariable(userVariable); };
-        WorldEffectManager.EffectChanged += (WorldEffect we) => { _sceneTabView.ShaderSelection.SetEffectNameByPath(we?.GetShaderPath()); _sceneTabView.ShaderSelection.SetEffectUserVariable(we?.GetUserVariable() ?? 0f); };
+        WorldEffectManager.EffectChanged += (WorldEffect we) => { _sceneTabView.ShaderSelection.SetEffectNameByPath(we?.GetShaderPath(), we?.GetUserVariableConstraints()); _sceneTabView.ShaderSelection.SetEffectUserVariable(we?.GetUserVariable() ?? 0f); };
 
         SetEventsForFrameLooper();
 

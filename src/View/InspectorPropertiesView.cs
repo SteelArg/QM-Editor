@@ -41,11 +41,11 @@ public class InspectorPropertiesView {
 
     private StackPanel BuildDefaultPropertyStack(string stackName) {
         var stack = new HorizontalStackPanel {
-            Spacing = 5, ShowGridLines = false, Height = 50
+            Spacing = 5, ShowGridLines = false, Height = 35
         };
 
         var label = new Label {
-            Text = stackName, TextAlign = FontStashSharp.RichText.TextHorizontalAlignment.Left
+            Text = stackName, TextAlign = FontStashSharp.RichText.TextHorizontalAlignment.Left, VerticalAlignment = VerticalAlignment.Center
         };
 
         stack.Widgets.Add(label);
@@ -69,7 +69,7 @@ public class InspectorPropertiesView {
     private void AddInteger(ref StackPanel stack, InspectionProperty property) {
         stack = BuildDefaultPropertyStack(property.GetName());
         
-        var intSelector = new IntSelectorWidget(80, 40, null, null, (int)property.GetValue());
+        var intSelector = new IntSelectorWidget(100, 20, null, null, (int)property.GetValue()) { VerticalAlignment = VerticalAlignment.Center };
         intSelector.ValueChanged += (v) => { property.SetValue(v); };
         stack.Widgets.Add(intSelector);
     }
@@ -80,7 +80,7 @@ public class InspectorPropertiesView {
         var textBox = new TextBox {
             Text = (string)property.GetValue(),
             HorizontalAlignment = HorizontalAlignment.Left, VerticalAlignment = VerticalAlignment.Center,
-            Width = 120, Height = 40
+            Width = 120, Height = 30
         };
         textBox.TextChangedByUser += (s, e) => { property.SetValue(textBox.Text); };
         stack.Widgets.Add(textBox);
@@ -90,7 +90,7 @@ public class InspectorPropertiesView {
         stack = BuildDefaultPropertyStack(property.GetName());
         
         var checkButton = new CheckButton {
-            HorizontalAlignment = HorizontalAlignment.Left, VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Left, VerticalAlignment = VerticalAlignment.Center, IsChecked = (bool)property.GetValue(),
             Width = 40, Height = 40
         };
         checkButton.Click += (s, e) => { property.SetValue(checkButton.IsChecked); };
@@ -101,14 +101,14 @@ public class InspectorPropertiesView {
         stack = BuildDefaultPropertyStack(property.GetName());
 
         int[] defaultPos = (int[])property.GetValue() ?? [0,0];
-        var xSelector = new IntSelectorWidget(60, 40, 0, null, defaultPos[0]);
-        var ySelector = new IntSelectorWidget(60, 40, 0, null, defaultPos[1]);
+        var xSelector = new IntSelectorWidget(80, 20, 0, null, defaultPos[0]) { VerticalAlignment = VerticalAlignment.Center };
+        var ySelector = new IntSelectorWidget(80, 20, 0, null, defaultPos[1]) { VerticalAlignment = VerticalAlignment.Center };
         xSelector.ValueChanged += (v) => { property.SetValue(new int[] {xSelector.Value, ySelector.Value}); };
         ySelector.ValueChanged += (v) => { property.SetValue(new int[] {xSelector.Value, ySelector.Value}); };
 
-        stack.Widgets.Add(new Label { Text="X" });
+        stack.Widgets.Add(new Label { Text="X", Font=FontLoader.GetFont(20), VerticalAlignment = VerticalAlignment.Center });
         stack.Widgets.Add(xSelector);
-        stack.Widgets.Add(new Label { Text="Y" });
+        stack.Widgets.Add(new Label { Text="Y", Font=FontLoader.GetFont(20), VerticalAlignment = VerticalAlignment.Center });
         stack.Widgets.Add(ySelector);
     }
 

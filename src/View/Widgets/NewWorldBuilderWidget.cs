@@ -1,4 +1,5 @@
 using Myra.Graphics2D.UI;
+using QMEditor.Controllers;
 
 namespace QMEditor.View;
 
@@ -26,14 +27,14 @@ public class NewWorldBuilderWidget : Grid {
             Spacing = 8, ShowGridLines = false,
             VerticalAlignment = VerticalAlignment.Center, HorizontalAlignment = HorizontalAlignment.Left,
         };
-        sizeSelectStack.Widgets.Add(new Label { Text="X", Width = 10 });
+        sizeSelectStack.Widgets.Add(new Label { Text="X", Font = FontLoader.GetFont(25), Width = 10 });
         sizeSelectStack.Widgets.Add(xSizeSelector);
-        sizeSelectStack.Widgets.Add(new Label { Text="Y", Width = 10 });
+        sizeSelectStack.Widgets.Add(new Label { Text="Y", Font = FontLoader.GetFont(25), Width = 10 });
         sizeSelectStack.Widgets.Add(ySizeSelector);
 
         _fillCheckButton = new CheckButton() {
             Content = new Label() {
-                Text = "Fill the World Grid with a Tile", TextAlign = FontStashSharp.RichText.TextHorizontalAlignment.Left,
+                Text = "Fill the World Grid with a Tile", TextAlign = FontStashSharp.RichText.TextHorizontalAlignment.Left, Font = FontLoader.GetFont(20),
                 VerticalAlignment = VerticalAlignment.Center
             },
             VerticalAlignment = VerticalAlignment.Center,

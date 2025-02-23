@@ -1,3 +1,4 @@
+using FontStashSharp;
 using Myra.Graphics2D.UI;
 using QMEditor.Model;
 using QMEditor.View;
@@ -28,10 +29,10 @@ public class Inspector {
             VerticalAlignment = VerticalAlignment.Top,
             DefaultRowProportion = Proportion.Auto
         };
-        grid.RowsProportions.Add(new Proportion(ProportionType.Pixels, 70));
+        grid.RowsProportions.Add(new Proportion(ProportionType.Pixels, 35));
 
         _inspectableName = new Label {
-            Text = "Not selected", TextAlign = FontStashSharp.RichText.TextHorizontalAlignment.Center,
+            Text = "Not selected", TextAlign = FontStashSharp.RichText.TextHorizontalAlignment.Center, Font = FontLoader.GetFont(30, FontLoader.FontType.Bold),
             VerticalAlignment = VerticalAlignment.Center, HorizontalAlignment = HorizontalAlignment.Center,
         };
 
@@ -55,7 +56,7 @@ public class Inspector {
     }
 
     private void ClearProperties() {
-        _inspectableName.Text = "NotSelected";
+        _inspectableName.Text = "Not Selected";
         _inspectableDataPanel.Widgets.Clear();
     }
 
@@ -65,8 +66,6 @@ public class Inspector {
         widget.Enabled = property.IsEditable();
 
         return widget;
-    }
-
-    
+    }  
 
 }

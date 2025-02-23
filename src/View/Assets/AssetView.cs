@@ -2,6 +2,7 @@ using System;
 using Microsoft.Xna.Framework.Graphics;
 using Myra.Graphics2D.TextureAtlases;
 using Myra.Graphics2D.UI;
+using QMEditor.Controllers;
 
 namespace QMEditor.View;
 
@@ -40,16 +41,18 @@ public class AssetView {
 
         var button = new Button {
             Content = new Label {
-                Text = "Place", TextAlign = FontStashSharp.RichText.TextHorizontalAlignment.Center
+                Text = "Place", TextAlign = FontStashSharp.RichText.TextHorizontalAlignment.Center, Font = FontLoader.GetFont(25),
+                HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center
             },
-            HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center
+            HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center,
+            Width = 100, Height = 50, Margin = new Myra.Graphics2D.Thickness(10)
         };
         button.Click += (s, e) => { PlaceAsset?.Invoke(); };
 
         _stack.Widgets.Clear();
         _stack.Widgets.Add(name);
-        _stack.Widgets.Add(image);
         _stack.Widgets.Add(button);
+        _stack.Widgets.Add(image);
     }
 
 }

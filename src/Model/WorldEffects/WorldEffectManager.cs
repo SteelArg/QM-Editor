@@ -1,10 +1,13 @@
 using System;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 
 namespace QMEditor.Model;
 
 public class WorldEffectManager : Singleton<WorldEffectManager> {
+
+    private const string UserVariableConstraintsStr = "// QMEDITOR USER VARIABLE ";
 
     public static WorldEffect CurrentEffect { get { return Instance?._effect; } }
     public static Action<WorldEffect> EffectChanged;
@@ -18,7 +21,20 @@ public class WorldEffectManager : Singleton<WorldEffectManager> {
             ServiceLocator.MessageWindowsService.ErrorWindow($"Failed to load shader.\nFile {path} does not exist.");
             return;
         }
-        Instance._effect = Instance.CompileEffect(path, userVariable);
+        
+        float[] userVariableConstraints = null;
+        foreach (string line in File.ReadAllLines(path)) {
+            if (line.StartsWith(UserVariableConstraintsStr)) {
+                string[] nums = line.Substring(UserVariableConstraintsStr.Length).Split(' ');
+                userVariableConstraints = new float[nums.Length];
+                for (int i = 0; i < nums.Length; i++) {
+                    userVariableConstraints[i] = float.Parse(nums[i], NumberStyles.Any, CultureInfo.InvariantCulture);
+                }
+            }
+        }
+
+        byte[] byteCode = Instance.CompileEffect(path);
+        Instance._effect = new WorldEffect(path, byteCode, userVariable, userVariableConstraints);
         EffectChanged?.Invoke(Instance._effect);
     }
 
@@ -27,14 +43,14 @@ public class WorldEffectManager : Singleton<WorldEffectManager> {
         EffectChanged?.Invoke(null);
     }
 
-    private WorldEffect CompileEffect(string shaderPath, float userVariable = 0f) {
+    private byte[] CompileEffect(string shaderPath) {
         Assembly mgfxc = Assembly.LoadFrom("mgfxc");
 
         string compiledShaderPath = $"{Path.GetDirectoryName(shaderPath)}\\{Path.GetFileNameWithoutExtension(shaderPath)}_compiled.txt";
         object output = mgfxc.EntryPoint.Invoke(null, [new string [] {shaderPath, compiledShaderPath, "/Profile:OpenGL", "/Debug"}]);
         Console.WriteLine(output);
 
-        return new WorldEffect(shaderPath, File.ReadAllBytes(compiledShaderPath), userVariable);
+        return File.ReadAllBytes(compiledShaderPath);
     }
 
 }

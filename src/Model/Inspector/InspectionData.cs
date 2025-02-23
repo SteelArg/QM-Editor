@@ -32,7 +32,11 @@ public class InspectionData {
     public void SetName(string objectName) {
         objectName = objectName ?? string.Empty;
         _objectName = objectName == string.Empty ? "Unnamed" : objectName;
-        _objectName = _objectName[0].ToString().ToUpper() + _objectName.Substring(1);
+        string upperCasedName = string.Empty;
+        foreach (string word in _objectName.Replace('_', ' ').Split(' ')) {
+            upperCasedName += word[0].ToString().ToUpper() + word.Substring(1) + " ";
+        }
+        _objectName = upperCasedName.Remove(upperCasedName.Length - 1);
     }
 
     public string GetName() {

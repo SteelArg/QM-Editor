@@ -39,7 +39,7 @@ public class RenderSettingsWidget : Myra.Graphics2D.UI.Grid {
         DefaultRowProportion = new Proportion(ProportionType.Pixels, 50);
 
         // Render Offset
-        (Widget renderOffsetWidget, _renderOffset) = BuildIntArraySelector(AppSettings.RenderOffset.Get());
+        (Widget renderOffsetWidget, _renderOffset) = BuildIntArraySelector(AppSettings.RenderOffset.Get(), "Offset");
         Widgets.Add(renderOffsetWidget);
 
         // Frame Count
@@ -51,7 +51,7 @@ public class RenderSettingsWidget : Myra.Graphics2D.UI.Grid {
         Widgets.Add(frameDurationWidget);
 
         // Render Size
-        (Widget renderSizeWidget, _outputSize) = BuildIntArraySelector(AppSettings.RenderOutputSize.Get(), 3, 1);
+        (Widget renderSizeWidget, _outputSize) = BuildIntArraySelector(AppSettings.RenderOutputSize.Get(), "Render Size", 3, 1);
         Widgets.Add(renderSizeWidget);
 
         // Render Upscaling
@@ -74,28 +74,34 @@ public class RenderSettingsWidget : Myra.Graphics2D.UI.Grid {
         Widgets.Add(buttonsStack);
     }
 
-    private (Widget, IntSelectorWidget[]) BuildIntArraySelector(int[] defaultValue, int row = 0, int? minValue = null) {
+    private (Widget, IntSelectorWidget[]) BuildIntArraySelector(int[] defaultValue, string label, int row = 0, int? minValue = null) {
+        var totalStack = new VerticalStackPanel {
+            Spacing = 0, ShowGridLines = false,
+            HorizontalAlignment = HorizontalAlignment.Left, VerticalAlignment = VerticalAlignment.Center
+        };
         var xSelector = new IntSelectorWidget(100, 40, minValue, null, defaultValue[0]);
         var ySelector = new IntSelectorWidget(100, 40, minValue, null, defaultValue[1]);        
         var stack = new HorizontalStackPanel {
             Spacing = 5, ShowGridLines = false,
             HorizontalAlignment = HorizontalAlignment.Left, VerticalAlignment = VerticalAlignment.Center
         };
-        stack.Widgets.Add(new Label { Text="X", Width = 10 });
+        stack.Widgets.Add(new Label { Text="X", Font = FontLoader.GetFont(25), Width = 10 });
         stack.Widgets.Add(xSelector);
-        stack.Widgets.Add(new Label { Text="Y", Width = 10 });
+        stack.Widgets.Add(new Label { Text="Y", Font = FontLoader.GetFont(25), Width = 10 });
         stack.Widgets.Add(ySelector);
-        SetRow(stack, row);
-        return (stack, [xSelector, ySelector]);
+        totalStack.Widgets.Add(new Label { Text=$"{label}:", Font = FontLoader.GetFont(25) });
+        totalStack.Widgets.Add(stack);
+        SetRow(totalStack, row);
+        return (totalStack, [xSelector, ySelector]);
     }
 
     private (Widget, IntSelectorWidget) BuildSingleIntSelector(int defaultValue, string label, int row = 0, int? minValue = null) {
-        var selector = new IntSelectorWidget(60, 40, minValue, null, defaultValue);
+        var selector = new IntSelectorWidget(80, 20, minValue, null, defaultValue) { VerticalAlignment = VerticalAlignment.Center } ;
         var stack = new HorizontalStackPanel {
             Spacing = 5, ShowGridLines = false,
             HorizontalAlignment = HorizontalAlignment.Left, VerticalAlignment = VerticalAlignment.Center
         };
-        stack.Widgets.Add(new Label { Text=$"{label}: " });
+        stack.Widgets.Add(new Label { Text=$"{label}: ", Font = FontLoader.GetFont(25) });
         stack.Widgets.Add(selector);
         SetRow(stack, row);
         return (stack, selector);
@@ -104,7 +110,7 @@ public class RenderSettingsWidget : Myra.Graphics2D.UI.Grid {
     private Button BuildButton(string label, int width = 80) {
         var button = new Button {
             Content = new Label {
-                Text=label, TextAlign = FontStashSharp.RichText.TextHorizontalAlignment.Center,
+                Text=label, TextAlign = FontStashSharp.RichText.TextHorizontalAlignment.Center, Font = FontLoader.GetFont(25),
                 HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center
             },
             HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, Width = width, Height = 30

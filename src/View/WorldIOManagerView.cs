@@ -1,5 +1,6 @@
 using System;
 using Myra.Graphics2D.UI;
+using QMEditor.Controllers;
 
 namespace QMEditor.View;
 
@@ -57,7 +58,7 @@ public class WorldIOManagerView {
     private Button BuildButton(string text, int width = 120, int height = 70, int column = 0) {
         var button = new Button() {
             Content = new Label () {
-                Text = text, TextAlign = FontStashSharp.RichText.TextHorizontalAlignment.Center,
+                Text = text, TextAlign = FontStashSharp.RichText.TextHorizontalAlignment.Center, Font = FontLoader.GetFont(35),
                 HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center
             },
             Width = width, Height = height

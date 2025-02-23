@@ -91,20 +91,26 @@ public class WorldRenderer : Singleton<WorldRenderer> {
             _cellRenderCommands.Add((x,y), new CellRenderCommands(tileRenderCommand, contentsRenderCommands.ToArray(), cellRenderData.CellLift));
         }, grid.Size);
 
-        // Execute render commands
-        // PASS 0: Default
-        // PASS 1: Silhouettes
-        // PASS 2: Post-Shader
-        _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.PointClamp, null, null, WorldEffectManager.CurrentEffect, Matrix.CreateScale(scale));
-        ExecuteRenderCommandsPass(0);
-        ExecuteRenderCommandsPass(1);
-        _spriteBatch.End();
+        var renderBS = new BlendState();
+        renderBS.ColorSourceBlend = Blend.SourceAlpha;
+        renderBS.AlphaSourceBlend = Blend.One;
+        renderBS.ColorDestinationBlend = Blend.InverseSourceAlpha;
+        renderBS.AlphaDestinationBlend = Blend.InverseSourceAlpha;
 
         var preserveAlphaBS = new BlendState();
         preserveAlphaBS.ColorSourceBlend = Blend.SourceAlpha;
         preserveAlphaBS.AlphaSourceBlend = Blend.Zero;
         preserveAlphaBS.ColorDestinationBlend = Blend.InverseSourceAlpha;
         preserveAlphaBS.AlphaDestinationBlend = Blend.One;
+
+        // Execute render commands
+        // PASS 0: Default
+        // PASS 1: Silhouettes
+        // PASS 2: Post-Shader
+        _spriteBatch.Begin(SpriteSortMode.Immediate, renderBS, SamplerState.PointClamp, null, null, WorldEffectManager.CurrentEffect, Matrix.CreateScale(scale));
+        ExecuteRenderCommandsPass(0);
+        ExecuteRenderCommandsPass(1);
+        _spriteBatch.End();
 
         _spriteBatch.Begin(SpriteSortMode.Immediate, preserveAlphaBS, SamplerState.PointClamp, null, null, null, Matrix.CreateScale(scale));
         ExecuteRenderCommandsPass(2);

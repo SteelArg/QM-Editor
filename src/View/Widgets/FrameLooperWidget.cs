@@ -1,5 +1,6 @@
 using System;
 using Myra.Graphics2D.UI;
+using QMEditor.Controllers;
 
 namespace QMEditor.View;
 
@@ -28,9 +29,9 @@ public class FrameLooperWidget : Panel {
         };
 
         _frameCount = new Label {
-            Text = "Frame: 0", TextAlign = FontStashSharp.RichText.TextHorizontalAlignment.Center,
+            Text = "Frame: 0", TextAlign = FontStashSharp.RichText.TextHorizontalAlignment.Center, Font = FontLoader.GetFont(25),
             HorizontalAlignment = HorizontalAlignment.Left, VerticalAlignment = VerticalAlignment.Center,
-            Height = 50
+            Height = 30
         };
         Grid.SetColumnSpan(_frameCount, 3);
         _grid.Widgets.Add(_frameCount);
@@ -49,10 +50,10 @@ public class FrameLooperWidget : Panel {
     private Button BuildButton(string label, Action clickEvent, int row = 0, int column = 0) {
         var button = new Button {
             Content = new Label {
-                Text = label, TextAlign = FontStashSharp.RichText.TextHorizontalAlignment.Center,
+                Text = label, TextAlign = FontStashSharp.RichText.TextHorizontalAlignment.Center, Font = FontLoader.GetFont(20),
                 HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center
             },
-            Width = 70, Height = 70, Padding = new Myra.Graphics2D.Thickness(20),
+            Width = 50, Height = 50,
             HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center
         };
         button.Click += (s, e) => {clickEvent?.Invoke();};
