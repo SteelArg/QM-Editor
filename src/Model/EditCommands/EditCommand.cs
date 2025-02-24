@@ -37,14 +37,8 @@ public abstract class EditCommandBase : IEditCommand {
 
 }
 
-public struct EditContext {
+public record EditContext (int[] CursorGridPosition = null, bool HoveredThisFrame = false) {
 
-    public static readonly EditContext Empty = new EditContext(null);
-
-    public readonly int[] CursorGridPosition;
-    
-    public EditContext(int[] cursorGridPosition) {
-        CursorGridPosition = cursorGridPosition;
-    }
+    public static readonly EditContext Empty = new EditContext();
 
 }

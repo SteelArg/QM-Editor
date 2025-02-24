@@ -6,18 +6,15 @@ using QMEditor.View;
 namespace QMEditor.Controllers;
 
 public class DefaultEditKeybindsGenerator : IEditKeybindsGenerator {
-    
-    private readonly WorldEditor _worldEditor;
-
-    public DefaultEditKeybindsGenerator(WorldEditor worldEditor) {
-        _worldEditor = worldEditor;
-    }
 
     public List<EditKeybind> Generate() {
         List<EditKeybind> keybinds = [
-            new EditKeybind(()=>Input.MouseButtonClicked(0), ()=>new PlaceGridObjectCommand(_worldEditor.GetEditContext(), World.Cursor.GetCopyOfObject())),
-            new EditKeybind(()=>Input.MouseButtonClicked(1), ()=>new ClearGridCellCommand(_worldEditor.GetEditContext(), Input.KeyHeld(Keys.LeftShift))),
-            new EditKeybind(()=>Input.MouseButtonClicked(2), ()=>new CopyGridObjectCommand(_worldEditor.GetEditContext(), Input.KeyHeld(Keys.LeftShift))),
+            new EditKeybind((ctx)=>KeybindHelper.MouseClickOverTile(0, ctx), (ctx)=>new PlaceGridObjectCommand(ctx, World.Cursor.GetCopyOfObject())),
+            new EditKeybind((ctx)=>KeybindHelper.MouseClickOverTile(1, ctx), (ctx)=>new ClearGridCellCommand(ctx, Input.KeyHeld(Keys.LeftShift))),
+            new EditKeybind((ctx)=>KeybindHelper.MouseClickOverTile(2, ctx), (ctx)=>new CopyGridObjectCommand(ctx, Input.KeyHeld(Keys.LeftShift))),
+
+            new EditKeybind((ctx)=>KeybindHelper.KeyPressWhileHolding(Keys.C, Keys.LeftAlt), (ctx)=>new ClearCursorCommand(ctx)),
+
             .. GetGridPositionOperationKeybinds(),
         ];
         return keybinds;
@@ -25,12 +22,12 @@ public class DefaultEditKeybindsGenerator : IEditKeybindsGenerator {
 
     private EditKeybind[] GetGridPositionOperationKeybinds() {
         return [
-            new EditKeybind(()=>Input.KeyHeld(Keys.LeftAlt)&&Input.KeyFired(Keys.E), ()=>new RotateGridCommand(_worldEditor.GetEditContext(), true)),
-            new EditKeybind(()=>Input.KeyHeld(Keys.LeftAlt)&&Input.KeyFired(Keys.Q), ()=>new RotateGridCommand(_worldEditor.GetEditContext(), false)),
-            new EditKeybind(()=>Input.KeyHeld(Keys.LeftAlt)&&Input.KeyFired(Keys.A), ()=>new MoveGridCommand(_worldEditor.GetEditContext(), [-1, 0])),
-            new EditKeybind(()=>Input.KeyHeld(Keys.LeftAlt)&&Input.KeyFired(Keys.W), ()=>new MoveGridCommand(_worldEditor.GetEditContext(), [0, -1])),
-            new EditKeybind(()=>Input.KeyHeld(Keys.LeftAlt)&&Input.KeyFired(Keys.D), ()=>new MoveGridCommand(_worldEditor.GetEditContext(), [1, 0])),
-            new EditKeybind(()=>Input.KeyHeld(Keys.LeftAlt)&&Input.KeyFired(Keys.S), ()=>new MoveGridCommand(_worldEditor.GetEditContext(), [0, 1]))
+            new EditKeybind((ctx)=>KeybindHelper.KeyPressWhileHolding(Keys.E, Keys.LeftAlt), (ctx)=>new RotateGridCommand(ctx, true)),
+            new EditKeybind((ctx)=>KeybindHelper.KeyPressWhileHolding(Keys.Q, Keys.LeftAlt), (ctx)=>new RotateGridCommand(ctx, false)),
+            new EditKeybind((ctx)=>KeybindHelper.KeyPressWhileHolding(Keys.A, Keys.LeftAlt), (ctx)=>new MoveGridCommand(ctx, [-1, 0])),
+            new EditKeybind((ctx)=>KeybindHelper.KeyPressWhileHolding(Keys.W, Keys.LeftAlt), (ctx)=>new MoveGridCommand(ctx, [0, -1])),
+            new EditKeybind((ctx)=>KeybindHelper.KeyPressWhileHolding(Keys.D, Keys.LeftAlt), (ctx)=>new MoveGridCommand(ctx, [1, 0])),
+            new EditKeybind((ctx)=>KeybindHelper.KeyPressWhileHolding(Keys.S, Keys.LeftAlt), (ctx)=>new MoveGridCommand(ctx, [0, 1]))
         ];
     }
 

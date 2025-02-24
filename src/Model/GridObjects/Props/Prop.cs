@@ -22,7 +22,7 @@ public class Prop : RenderableGridObject {
 
     public override RenderCommandBase GetRenderCommand(GridObjectRenderData renderData) {
         RenderCommandBase renderCommand = base.GetRenderCommand(renderData);
-        renderCommand.SetPass(RenderPostShader ? 2 : 0);
+        renderCommand.SetPass(RenderPostShader && !renderData.IsPreview ? 2 : 0);
         return renderCommand;
     }
 

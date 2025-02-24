@@ -20,13 +20,23 @@ public class CopyGridObjectCommand : EditCommandBase {
             return;
         }
 
-        // Else (Character)
-        Character character = null;
+        // Else (prefer Character)
+        GridObject objectToCopy = null;
         foreach (GridObject gridObject in cell.Objects) {
             if (gridObject is Character)
-                character = (Character)gridObject;
+                objectToCopy = gridObject;
         }
-        World.Cursor.SetCopyOfObject(character);
+
+        // Any GridObject (non-Tile)
+        if (objectToCopy == null && cell.Objects.Length > (cell.Tile == null ? 0 : 1)) {
+            foreach (GridObject gridObject in cell.Objects) {
+                if (gridObject is Tile) continue;
+                objectToCopy = gridObject;
+                break;
+            }
+        }
+
+        World.Cursor.SetCopyOfObject(objectToCopy);
     }
 
     protected override void OnUndo() {

@@ -28,7 +28,7 @@ public partial class SceneTab : Tab {
         _inspector = new Inspector();
 
         _editStack = new EditCommandsStack();
-        _editKeybindsGenerator = new DefaultEditKeybindsGenerator(_worldEditor);
+        _editKeybindsGenerator = new DefaultEditKeybindsGenerator();
         _editKeybinds = _editKeybindsGenerator.Generate();
     }
 
@@ -86,7 +86,7 @@ public partial class SceneTab : Tab {
         EditContext ctx = _worldEditor.GetEditContext();
 
         foreach (EditKeybind keybind in _editKeybinds) {
-            _editStack.AddAndExecuteCommand(keybind.CreateCommandIfKeybindFired());
+            _editStack.AddAndExecuteCommand(keybind.CreateCommandIfKeybindFired(ctx));
         }
         
         if (Input.KeyFired(Keys.Z) && Input.KeyHeld(Keys.LeftControl))

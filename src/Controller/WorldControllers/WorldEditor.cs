@@ -12,7 +12,13 @@ public class WorldEditor {
         }
     }
 
-    public EditContext GetEditContext() => new EditContext(CursorGridPosition);
+    private int[] _previousCursorGridPosition;
+
+    public EditContext GetEditContext() {
+        var editContext = new EditContext(CursorGridPosition, !_previousCursorGridPosition.IsSameAs(CursorGridPosition));
+        _previousCursorGridPosition = CursorGridPosition;
+        return editContext;
+    }
 
     public void Render(SpriteBatch spriteBatch) {
         if (World.Cursor.IsEmpty || CursorGridPosition == null) return;

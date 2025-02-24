@@ -11,4 +11,11 @@ public static class GridPositionExtensions {
         return originalPos;
     }
 
+    public static bool IsSameAs(this int[] pos1, int[] pos2) {
+        if (pos1 == null && pos2 == null) return true;
+        if (pos1 == null || pos2 == null) return false;
+
+        return pos1[0] == pos2[0] && pos1[1] == pos2[1];
+    }
+
 }
