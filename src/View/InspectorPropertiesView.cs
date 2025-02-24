@@ -1,4 +1,6 @@
+using Microsoft.Xna.Framework;
 using Myra.Graphics2D.UI;
+using Myra.Graphics2D.UI.ColorPicker;
 using QMEditor.Controllers;
 using QMEditor.Model;
 
@@ -33,6 +35,9 @@ public class InspectorPropertiesView {
                 break;
             case InspectionProperty.PropertyType.InspectablesLinkArray:
                 AddInspectablesLinkArray(ref stack, property);
+                break;
+            case InspectionProperty.PropertyType.Color:
+                AddColor(ref stack, property);
                 break;
         }
 
@@ -110,6 +115,32 @@ public class InspectorPropertiesView {
         stack.Widgets.Add(xSelector);
         stack.Widgets.Add(new Label { Text="Y", Font=FontLoader.GetFont(20), VerticalAlignment = VerticalAlignment.Center });
         stack.Widgets.Add(ySelector);
+    }
+
+    private void AddColor(ref StackPanel stack, InspectionProperty property) {
+        stack = BuildDefaultPropertyStack(property.GetName());
+        
+        var button = new Button {
+            Content = new Label {
+                Text = "Pick", TextAlign = FontStashSharp.RichText.TextHorizontalAlignment.Center, Font = FontLoader.GetFont(20),
+                VerticalAlignment = VerticalAlignment.Center, HorizontalAlignment = HorizontalAlignment.Center
+            },
+            HorizontalAlignment = HorizontalAlignment.Left, VerticalAlignment = VerticalAlignment.Center,
+            Width = 120, Height = 40
+        };
+        
+        button.Click += (s, e) => { 
+            var colorDialog = new ColorPickerDialog {
+                Color = (Color)property.GetValue()
+            };
+            colorDialog.Closed += (s, e) => { 
+                if (!colorDialog.Result) return;
+                property.SetValue(colorDialog.Color);
+            };
+            colorDialog.ShowModal(Global.Desktop);
+         };
+        
+        stack.Widgets.Add(button);
     }
 
     private void AddSingleInspectableLink(ref StackPanel stack, InspectionProperty property) {

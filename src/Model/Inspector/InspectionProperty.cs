@@ -33,7 +33,8 @@ public class InspectionProperty {
         Check,
         GridPosition,
         InspectableLink,
-        InspectablesLinkArray
+        InspectablesLinkArray,
+        Color
     }
 
 }
