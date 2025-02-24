@@ -11,8 +11,6 @@ public class EditorApp : Game {
     private ScreenRenderer _renderer;
     private TabsManager _tabsManager;
 
-    private Texture2D _testTexture;
-
     public EditorApp(bool launchSmall = false) {
         Global.SetGame(this);
 
@@ -45,7 +43,6 @@ public class EditorApp : Game {
         var defaultTile = new Tile(AssetsLoader.Instance.GetAsset("default", AssetsFolders.Tiles) ?? AssetsLoader.Instance.GetAnyAsset(AssetsFolders.Tiles));
         var tileFactory = new TileFactory(defaultTile);
         tileFactory.FillGrid(World.Instance.Grid);
-        _testTexture = defaultTile.Asset.GetTexture();
     }
 
     protected override void Update(GameTime gameTime) {

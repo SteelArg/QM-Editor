@@ -1,5 +1,5 @@
 volume=1
-editor_version=v1.0.0-preview
+editor_version=v1.0.0-lts
 render_offset=82 28
 render_tile_top_size=16 9
 render_tile_height=5
