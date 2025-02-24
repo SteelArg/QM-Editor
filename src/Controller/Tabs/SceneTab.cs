@@ -26,6 +26,7 @@ public partial class SceneTab : Tab {
         _frameLooper = FrameLooper.FromAppSettings();
         _sceneTabView = new SceneTabView();
         _inspector = new Inspector();
+        _inspector.ExecuteCommand += AddAndExecuteEditCommand;
 
         _editStack = new EditCommandsStack();
         _editKeybindsGenerator = new DefaultEditKeybindsGenerator();
@@ -97,6 +98,10 @@ public partial class SceneTab : Tab {
             _inspector.Inspect(cell);
         }
     }
+
+    public void AddAndExecuteEditCommand(EditCommandBase editCommand) => _editStack.AddAndExecuteCommand(editCommand);
+
+    public void ClearEditCommandStack() => _editStack.Clear();
 
     public override RenderTarget2D Draw(SpriteBatch spriteBatch) {
         RenderTarget2D worldRT = _worldRenderer.RenderToTarget(_frameLooper.CurrentFrame, null, null, true);

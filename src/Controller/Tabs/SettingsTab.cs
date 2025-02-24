@@ -58,10 +58,13 @@ public class SettingsTab : Tab {
         string saveName = Path.GetFileName(path);
         worldIOManagerView.SetSaveName(saveName);
         _currentSavePath = path;
+
         if (fileMode == FileDialogMode.OpenFile)
             _worldLoader.Load(path);
         else if (fileMode == FileDialogMode.SaveFile)
             _worldSaver.Save(path);
+        
+        OnWorldChanged();
     }
 
     public void NewWorld(int[] size, bool fillGrid) {
@@ -77,6 +80,12 @@ public class SettingsTab : Tab {
         defaultTileAsset = defaultTileAsset ?? AssetsLoader.Instance.GetAnyAsset(AssetsFolders.Tiles);
         var defaultTileFactory = new TileFactory(defaultTileAsset);
         defaultTileFactory.FillGrid(World.Instance.Grid);
+
+        OnWorldChanged();
+    }
+
+    public void OnWorldChanged() {
+        _manager.GetTab<SceneTab>().ClearEditCommandStack();
     }
     
     public override RenderTarget2D Draw(SpriteBatch spriteBatch) {

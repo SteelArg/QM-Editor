@@ -7,6 +7,8 @@ namespace QMEditor.Model;
 
 public class InspectionData {
 
+    public dynamic InspectedObject { get => _inspectedObject; }
+    
     private readonly dynamic _inspectedObject;
     private readonly Type _type;
     private List<InspectionProperty> _properties = new List<InspectionProperty>();

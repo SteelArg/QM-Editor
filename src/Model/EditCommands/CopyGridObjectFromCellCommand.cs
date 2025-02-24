@@ -1,12 +1,12 @@
 namespace QMEditor.Model;
 
-public class CopyGridObjectCommand : EditCommandBase {
+public class CopyGridObjectFromCellCommand : EditCommandBase {
 
     private readonly bool _copyTileOnly;
 
     private GridObject _previousGridObjectInCursor;
 
-    public CopyGridObjectCommand(EditContext ctx, bool copyTileOnly = false) : base(ctx) {
+    public CopyGridObjectFromCellCommand(EditContext ctx, bool copyTileOnly = false) : base(ctx) {
         _copyTileOnly = copyTileOnly;
     }
 

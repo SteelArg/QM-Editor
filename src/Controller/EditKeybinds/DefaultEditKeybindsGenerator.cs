@@ -11,7 +11,7 @@ public class DefaultEditKeybindsGenerator : IEditKeybindsGenerator {
         List<EditKeybind> keybinds = [
             new EditKeybind((ctx)=>KeybindHelper.MouseClickOverTile(0, ctx), (ctx)=>new PlaceGridObjectCommand(ctx, World.Cursor.GetCopyOfObject())),
             new EditKeybind((ctx)=>KeybindHelper.MouseClickOverTile(1, ctx), (ctx)=>new ClearGridCellCommand(ctx, Input.KeyHeld(Keys.LeftShift))),
-            new EditKeybind((ctx)=>KeybindHelper.MouseClickOverTile(2, ctx), (ctx)=>new CopyGridObjectCommand(ctx, Input.KeyHeld(Keys.LeftShift))),
+            new EditKeybind((ctx)=>KeybindHelper.MouseClickOverTile(2, ctx), (ctx)=>new CopyGridObjectFromCellCommand(ctx, Input.KeyHeld(Keys.LeftShift))),
 
             new EditKeybind((ctx)=>KeybindHelper.KeyPressWhileHolding(Keys.C, Keys.LeftAlt), (ctx)=>new ClearCursorCommand(ctx)),
 

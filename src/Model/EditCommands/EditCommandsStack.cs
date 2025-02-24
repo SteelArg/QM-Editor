@@ -22,5 +22,7 @@ public class EditCommandsStack {
         if (commandsStack.Count > 0)
             commandsStack.Pop().Undo();
     }
-    
+
+    public void Clear() => commandsStack.Clear();
+
 }
