@@ -3,22 +3,27 @@
 You have the ability to create and edit a grid of tiles with characters and objects on it.
 Then you can export your artwork as a GIF to use in a chat-game or anywhere else for visuals.
 
-![Showcase1](https://github.com/user-attachments/assets/b5a7944c-ff6b-4acc-8271-3a32d06f580b)
-![EditorScreenshot1](https://github.com/user-attachments/assets/5b7ad57f-7353-484a-9ff9-db8ed8b7631f)
+![render_showcase_1](https://github.com/user-attachments/assets/7e0d309b-2a31-478f-b744-6aef6a8ff3c5)
+![render_qm_lightning](https://github.com/user-attachments/assets/d571536e-ca7d-428d-847f-a0e7c0b08ee4)
 
 ## Features
 * **Custom Assets.** You are be able to drop your own game assets in a folder to use them in the editor.
 * **Built-in Tilemap.** Edit the grid directly with UI. You have a preview of the end result right away.
-* **Fast and Easy** Create or edit your world with a few clicks. No more time spent on drawing and animating anything by hand.
+* **Shaders.** The editor supports custom shaders written in HLSL. Create any effect you can imagine.
+* **Fast and Easy.** Create or edit your world with a few clicks. No more time spent on drawing and animating anything by hand.
+
+![EditorScreenshot2](https://github.com/user-attachments/assets/6ea85dab-d2b7-4279-823d-e79a673fd6a7)
+
+## How to use
+1. Download the latest version
+2. Unpack the .zip file
+3. Launch "QM Editor.exe"
+4. User manual is avaliable in the **wiki page**
 
 ## Status
-**In development...**
+**Released!**
 
-Full Release Preview: **[PREVIEW v1.0.0](https://github.com/SteelArg/QM-Editor/releases/tag/v1.0.0-preview)**
-
-Latest avaliable version: **[DEMO v0.1.0](https://github.com/SteelArg/QM-Editor/releases/tag/demo)**
-
-Scheduled Release date: 24 Feb 2025
+Latest avaliable version: **[v1.0.0](https://github.com/SteelArg/QM-Editor/releases/tag/v1.0.0-lts)**
 
 ## Tools
 **[C#](https://dotnet.microsoft.com/)**
