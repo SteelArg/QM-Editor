@@ -3,7 +3,7 @@
 You have the ability to create and edit a grid of tiles with characters and objects on it.
 Then you can export your artwork as a GIF to use in a chat-game or anywhere else for visuals.
 
-![render_showcase_1](https://github.com/user-attachments/assets/7e0d309b-2a31-478f-b744-6aef6a8ff3c5)
+![render_showcase_1](https://github.com/user-attachments/assets/c105bcd8-57f1-4493-a029-4dc065c507dd)
 ![render_qm_lightning](https://github.com/user-attachments/assets/d571536e-ca7d-428d-847f-a0e7c0b08ee4)
 
 ## Features
@@ -23,7 +23,7 @@ Then you can export your artwork as a GIF to use in a chat-game or anywhere else
 ## Status
 **Released!**
 
-Latest avaliable version: **[v1.0.0](https://github.com/SteelArg/QM-Editor/releases/tag/v1.0.0-lts)**
+Latest avaliable version: **[v1.0.1](https://github.com/SteelArg/QM-Editor/releases/tag/v1.0.1-lts)**
 
 ## Tools
 **[C#](https://dotnet.microsoft.com/)**
