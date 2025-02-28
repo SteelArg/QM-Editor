@@ -71,7 +71,7 @@ public class WorldRenderer : Singleton<WorldRenderer> {
 
         LoopThroughPositions.Every((x, y) => {
             float tileDepth = x + y;
-            bool hovered = cursorPos != null && cursorPos[0] == x && cursorPos[1] == y && displayEditor;
+            bool hovered = cursorPos != null && cursorPos[0] == x && cursorPos[1] == y && displayEditor && !Global.Desktop.HasModalWidget;
             GridCell cell = grid.GetGridCell([x,y]);
 
             GridObjectRenderData cellRenderData = defaultRenderData.WithAddedDepth(tileDepth) with { 

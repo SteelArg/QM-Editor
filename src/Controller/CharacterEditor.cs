@@ -23,6 +23,7 @@ public class CharacterEditor {
         CharacterChanged?.Invoke(_character);
     }
     public void AddAccessoryAsset(AssetBase accessoryAsset) {
+        if (_character == null) return;
         _character.AddAccessory(new Accessory(accessoryAsset));
         AccessoriesChanged?.Invoke(_character.Accessories);
     }

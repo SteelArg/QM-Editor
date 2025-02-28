@@ -79,8 +79,8 @@ public class RenderSettingsWidget : Myra.Graphics2D.UI.Grid {
             Spacing = 0, ShowGridLines = false,
             HorizontalAlignment = HorizontalAlignment.Left, VerticalAlignment = VerticalAlignment.Center
         };
-        var xSelector = new IntSelectorWidget(100, 40, minValue, null, defaultValue[0]);
-        var ySelector = new IntSelectorWidget(100, 40, minValue, null, defaultValue[1]);        
+        var xSelector = new IntSelectorWidget(100, 20, minValue, null, defaultValue[0]);
+        var ySelector = new IntSelectorWidget(100, 20, minValue, null, defaultValue[1]);        
         var stack = new HorizontalStackPanel {
             Spacing = 5, ShowGridLines = false,
             HorizontalAlignment = HorizontalAlignment.Left, VerticalAlignment = VerticalAlignment.Center

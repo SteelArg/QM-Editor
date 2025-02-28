@@ -59,7 +59,7 @@ public record GridObjectRenderData(
         color[0] *= Color?[0] ?? 1f;
         color[1] *= Color?[1] ?? 1f;
         color[2] *= Color?[2] ?? 1f;
-        color[3] *= Alpha * Color?[3] ?? 1f;
+        color[3] *= Alpha * (Color?[3] ?? 1f);
 
         return Palette.ToColor(color);
     }

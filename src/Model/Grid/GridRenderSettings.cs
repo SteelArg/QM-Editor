@@ -40,15 +40,20 @@ public struct GridRenderSettings {
         return pos;
     }
 
-    public Vector2 CalculateTilePosition(int[] gridCell, int? tileHeight = null) {
+    public Vector2 CalculateTilePosition(int[] gridCell, int[] tileSize = null) {
         Vector2 pos = Vector2.Zero;
 
         pos += gridCell[0] * StepX;
         pos += gridCell[1] * StepY;
 
-        if (tileHeight.HasValue)
-            pos -= new Vector2(0, CalculateTileLift(tileHeight.Value));
-        
+        if (tileSize == null)
+            return pos + Offset;
+
+        pos -= new Vector2(0, CalculateTileLift(tileSize[1]));
+
+        pos += new Vector2(StepX.X, 0f);
+        pos += new Vector2(MathF.Ceiling(-tileSize[0]/2f), 0f);
+
         return pos + Offset;
     }
 

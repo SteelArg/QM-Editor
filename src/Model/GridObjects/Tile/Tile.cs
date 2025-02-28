@@ -19,7 +19,7 @@ public class Tile : RenderableGridObject {
     }
 
     protected override Vector2 GetRenderPos(GridObjectRenderData renderData) {
-        return renderData.RenderSettings.CalculateTilePosition(GridPosition, _asset.GetSize()[1]);
+        return renderData.RenderSettings.CalculateTilePosition(GridPosition, _asset.GetSize());
     }
 
 }

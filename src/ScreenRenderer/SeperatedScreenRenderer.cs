@@ -17,6 +17,12 @@ public class SeperatedScreenRenderer : ScreenRenderer {
         UIRenderList.Render();
 
         // All sprites fit into empty space
+
+        // BlendState bs = new BlendState() {
+        //     ColorSourceBlend = Blend.InverseSourceAlpha, AlphaSourceBlend = Blend.One,
+        //     ColorDestinationBlend = Blend.One, AlphaDestinationBlend = Blend.One,
+        // };
+
         _spriteBatch.Begin(SpriteSortMode.Immediate, blendState: BlendState.Additive, samplerState: SamplerState.PointClamp);
         _spriteBatch.Draw(spritesRT, AppLayout.DrawPos, null, Color.White, 0f, Vector2.Zero, CalculateScale(), SpriteEffects.None, 0f);
         _spriteBatch.End();

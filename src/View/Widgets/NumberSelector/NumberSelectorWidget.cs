@@ -78,7 +78,7 @@ public abstract class NumberSelectorWidget : Panel {
     private void ChangeValue(float delta) => SetValue(_value + delta);
 
     private float GetIncrement() {
-        if (Input.KeyHeld(Keys.LeftAlt | Keys.LeftShift))
+        if (Input.KeyHeld(Keys.LeftAlt) && Input.KeyHeld(Keys.LeftShift))
             return 1000f;
         if (Input.KeyHeld(Keys.LeftAlt))
             return 100f;

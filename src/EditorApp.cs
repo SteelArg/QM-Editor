@@ -1,5 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Myra;
 using QMEditor.Controllers;
 using QMEditor.Model;
 using QMEditor.View;
@@ -46,9 +48,11 @@ public class EditorApp : Game {
     }
 
     protected override void Update(GameTime gameTime) {
-        _tabsManager.Update(gameTime);
-
         base.Update(gameTime);
+
+        if (!IsActive) return;
+
+        _tabsManager.Update(gameTime);
 
         Input.LateUpdate();
     }

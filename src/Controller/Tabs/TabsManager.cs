@@ -91,6 +91,8 @@ public class TabsManager : Singleton<TabsManager> {
         Grid grid = (Grid)rootGrid.Widgets[1];
         grid.Widgets.Clear();
         grid.Widgets.Add(CurrentTab.Widget);
+
+        ServiceLocator.LoggerService.Log($"Switched to {CurrentTab.GetType().Name}.");
     }
 
     public T GetTab<T>() where T : Tab {
