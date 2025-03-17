@@ -75,7 +75,7 @@ public class InspectorPropertiesView {
         stack = BuildDefaultPropertyStack(property.GetName());
         
         var intSelector = new IntSelectorWidget(100, 20, null, null, (int)property.GetValue()) { VerticalAlignment = VerticalAlignment.Center };
-        intSelector.ValueChanged += (v) => { property.SetValue(v); };
+        intSelector.ValueChanged += (v) => { property.SetValue((int)v); };
         stack.Widgets.Add(intSelector);
     }
 
