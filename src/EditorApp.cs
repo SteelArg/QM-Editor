@@ -1,7 +1,4 @@
-﻿using System;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Myra;
+﻿using Microsoft.Xna.Framework;
 using QMEditor.Controllers;
 using QMEditor.Model;
 using QMEditor.View;
