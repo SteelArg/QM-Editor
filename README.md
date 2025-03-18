@@ -23,7 +23,7 @@ Then you can export your artwork as a GIF to use in a chat-game or anywhere else
 ## Status
 **Released!**
 
-Latest avaliable version: **[v1.0.1](https://github.com/SteelArg/QM-Editor/releases/tag/v1.0.1-lts)**
+Latest avaliable version: **[v1.0.2](https://github.com/SteelArg/QM-Editor/releases/tag/v1.0.2-lts)**
 
 ## Tools
 **[C#](https://dotnet.microsoft.com/)**
